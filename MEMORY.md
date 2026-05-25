@@ -57,6 +57,16 @@
 
 ---
 
+## Установленные инструменты
+
+**2026-05-25** — установлены скиллы в `.claude/skills/`:
+- `discovery-interview` — интервью по ТЗ (из github.com/parcadei/Continuous-Claude-v3)
+- `content-creator`, `fullstack-developer`, `frontend-design`, `reminder`, `server-setup` — из шаблона jarvis-architect
+
+Плагин `superpowers@claude-plugins-official` включён в `.claude/settings.json`.
+
+---
+
 ## Ключевые решения
 
 > Решения, которые приняты один раз и не обсуждаются повторно. Например: «работаем только по предоплате», «программу лояльности не делаем в этом квартале», «фронтенд только на React». Чтобы каждую неделю не возвращаться к одному и тому же.
