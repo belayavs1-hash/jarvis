@@ -62,8 +62,13 @@
 **2026-05-25** — установлены скиллы в `.claude/skills/`:
 - `discovery-interview` — интервью по ТЗ (из github.com/parcadei/Continuous-Claude-v3)
 - `content-creator`, `fullstack-developer`, `frontend-design`, `reminder`, `server-setup` — из шаблона jarvis-architect
+- `brainstorm`, `write-plan`, `execute-plan` — добавлены вручную, полный цикл от идеи до реализации
 
-Плагин `superpowers@claude-plugins-official` включён в `.claude/settings.json`.
+**2026-05-25** — плагин `superpowers@claude-plugins-official` v5.1.0 установлен глобально:
+- `~/.claude/settings.json` — `enabledPlugins` включён
+- `~/.claude/plugins/installed_plugins.json` — зарегистрирован
+- Кэш: `~/.claude/plugins/cache/claude-plugins-official/superpowers/f2cbfbefebbf`
+- Доступен во всех проектах, не только в jarvis/
 
 ---
 
