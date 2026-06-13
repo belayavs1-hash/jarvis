@@ -1139,23 +1139,6 @@ function sendMsg() {
 // ============================================================
 //  CLAUDE API
 // ============================================================
-function getApiKey() {
-  return LS.load('api_key', null);
-}
-function saveApiKey(key) {
-  LS.save('api_key', key.trim());
-}
-function promptForApiKey() {
-  const key = window.prompt('Введи API-ключ Anthropic (начинается с sk-ant-):\n\nПолучить на: console.anthropic.com → API Keys');
-  if (key && key.trim().startsWith('sk-ant-')) {
-    saveApiKey(key);
-    return key.trim();
-  } else if (key) {
-    alert('Ключ должен начинаться с sk-ant-. Попробуй ещё раз.');
-    return promptForApiKey();
-  }
-  return null;
-}
 
 const SYSTEM_PROMPTS = {
   math: `Ты Умник — добрый и терпеливый репетитор по математике для школьников 5-7 класса.
@@ -1199,12 +1182,6 @@ Rules:
 };
 
 async function askClaude(userText) {
-  let apiKey = getApiKey();
-  if (!apiKey) {
-    apiKey = promptForApiKey();
-    if (!apiKey) return null;
-  }
-
   const systemPrompt = (SYSTEM_PROMPTS[ST.zone] || SYSTEM_PROMPTS.math)
     .replace('{TASK}', ST.task)
     .replace('{NAME}', ST.user?.name || 'ученик');
@@ -1212,14 +1189,9 @@ async function askClaude(userText) {
   ST.msgs.push({ role: 'user', content: userText });
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-haiku-4-5',
         max_tokens: 512,
@@ -1230,11 +1202,7 @@ async function askClaude(userText) {
 
     if (!resp.ok) {
       const err = await resp.json().catch(() => ({}));
-      if (resp.status === 401) {
-        LS.del('api_key');
-        return '❌ Ключ не подошёл. Обнови страницу и введи правильный API-ключ.';
-      }
-      return `❌ Ошибка API (${resp.status}): ${err.error?.message || 'попробуй ещё раз'}`;
+      return `❌ Ошибка (${resp.status}): ${err.error?.message || 'попробуй ещё раз'}`;
     }
 
     const data = await resp.json();
