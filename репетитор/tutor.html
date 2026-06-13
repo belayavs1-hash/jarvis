@@ -1104,10 +1104,14 @@ function startChat() {
   updateHints();
   applyInputMode();
   show('screen-chat');
-  setTimeout(() => {
-    const dlg = DIALOGUE[ST.zone];
-    addBotMsg(dlg.opener(ST.user.name));
-    document.getElementById('chat-input').addEventListener('input', updateSendBtn);
+  document.getElementById('chat-input').addEventListener('input', updateSendBtn);
+  setTimeout(async () => {
+    showTyping();
+    // Первое приветствие — просим Claude открыть диалог с учеником
+    const openingPrompt = `Начни диалог: поздоровайся с учеником и задай первый наводящий вопрос по заданию. Не давай ответ, только помоги начать думать.`;
+    const opener = await askClaude(openingPrompt);
+    removeTyping();
+    if (opener) addBotMsg(opener);
     document.getElementById('chat-input').focus();
   }, 300);
 }
@@ -1132,44 +1136,137 @@ function sendMsg() {
   processResponse(text);
 }
 
-function processResponse(text) {
-  const dlg = DIALOGUE[ST.zone];
+// ============================================================
+//  CLAUDE API
+// ============================================================
+function getApiKey() {
+  return LS.load('api_key', null);
+}
+function saveApiKey(key) {
+  LS.save('api_key', key.trim());
+}
+function promptForApiKey() {
+  const key = window.prompt('Введи API-ключ Anthropic (начинается с sk-ant-):\n\nПолучить на: console.anthropic.com → API Keys');
+  if (key && key.trim().startsWith('sk-ant-')) {
+    saveApiKey(key);
+    return key.trim();
+  } else if (key) {
+    alert('Ключ должен начинаться с sk-ant-. Попробуй ещё раз.');
+    return promptForApiKey();
+  }
+  return null;
+}
+
+const SYSTEM_PROMPTS = {
+  math: `Ты Умник — добрый и терпеливый репетитор по математике для школьников 5-7 класса.
+Твой метод — сократический: ты НЕ даёшь готовые ответы, только наводящие вопросы.
+Задание ученика: {TASK}
+Имя ученика: {NAME}
+Правила:
+- Один вопрос за раз, короткий
+- Хвали усилия, а не результат («Хорошая попытка!», «Ты думаешь в правильном направлении»)
+- Если ученик застрял — дай маленькую подсказку, не решение
+- Отвечай на русском, тепло и с юмором
+- Максимум 3-4 предложения за ответ`,
+  russian: `Ты Умник — добрый репетитор по русскому языку для школьников 5-7 класса.
+Твой метод — сократический: ты НЕ даёшь готовые ответы, только наводящие вопросы.
+Задание ученика: {TASK}
+Имя ученика: {NAME}
+Правила:
+- Один вопрос за раз, короткий
+- Напоминай правила через вопросы, не объявления
+- Если ученик правильно — подтверди и переходи к следующему шагу
+- Отвечай на русском, тепло
+- Максимум 3-4 предложения за ответ`,
+  english: `You are Умник — a friendly English tutor for Russian schoolchildren grades 5-7.
+Use Socratic method: ask leading questions, don't give direct answers.
+Student's task: {TASK}
+Student's name: {NAME}
+Rules:
+- Mix Russian and English naturally (explain in Russian, practice in English)
+- One question at a time
+- Praise effort warmly
+- Max 3-4 sentences per reply`,
+  speech: `Ты Умник — добрый репетитор по развитию речи и письму для школьников 5-7 класса.
+Твой метод — сократический: помогаешь ученику самому найти идеи и слова.
+Задание ученика: {TASK}
+Имя ученика: {NAME}
+Правила:
+- Задавай вопросы об идеях и структуре, не правь текст сразу
+- Один вопрос за раз
+- Отвечай на русском, тепло и вдохновляюще
+- Максимум 3-4 предложения за ответ`,
+};
+
+async function askClaude(userText) {
+  let apiKey = getApiKey();
+  if (!apiKey) {
+    apiKey = promptForApiKey();
+    if (!apiKey) return null;
+  }
+
+  const systemPrompt = (SYSTEM_PROMPTS[ST.zone] || SYSTEM_PROMPTS.math)
+    .replace('{TASK}', ST.task)
+    .replace('{NAME}', ST.user?.name || 'ученик');
+
+  ST.msgs.push({ role: 'user', content: userText });
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5',
+        max_tokens: 512,
+        system: systemPrompt,
+        messages: ST.msgs,
+      }),
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      if (resp.status === 401) {
+        LS.del('api_key');
+        return '❌ Ключ не подошёл. Обнови страницу и введи правильный API-ключ.';
+      }
+      return `❌ Ошибка API (${resp.status}): ${err.error?.message || 'попробуй ещё раз'}`;
+    }
+
+    const data = await resp.json();
+    const reply = data.content[0].text;
+    ST.msgs.push({ role: 'assistant', content: reply });
+    return reply;
+  } catch (e) {
+    return '❌ Нет соединения. Проверь интернет и попробуй снова.';
+  }
+}
+
+async function processResponse(text) {
   const lower = text.toLowerCase();
-  const isPositive = ['понял','нашёл','нашел','получилось','ответ','равно','решил','знаю','вижу','да','понятно','верно'].some(w => lower.includes(w));
-  const isQuestion = text.includes('?') || ['почему','как','что','зачем','где','когда'].some(w => lower.startsWith(w));
-  const isHintReq = ['подсказк','намекни','помоги','не понимаю','не знаю','сложно','трудно','не могу'].some(w => lower.includes(w));
+  const isPositive = ['понял','нашёл','нашел','получилось','ответ','равно','решил','знаю','вижу','да','понятно','верно','решила','сделала'].some(w => lower.includes(w));
 
   showTyping();
-  const delay = 800 + Math.random() * 600;
-  setTimeout(() => {
-    removeTyping();
-    let reply = '';
-    if (isHintReq && ST.hints < dlg.hints.length) {
-      reply = dlg.hints[ST.hints];
-      ST.hints++;
-      updateHints();
-    } else if (isPositive && ST.stageIdx > 0) {
-      reply = dlg.praise[Math.floor(Math.random() * dlg.praise.length)];
-      if (Math.random() > 0.5) {
-        // Give XP reward
-        const topicXp = ST.topicId ? (CURRICULUM[ST.zone].topics.find(t => t.id === ST.topicId)?.xp || 10) : 10;
-        addXp(topicXp);
-        if (ST.topicId) ST.doneTopics[ST.topicId] = true;
-        saveState();
-        showPraise();
-      }
-      const nextStage = dlg.stages[ST.stageIdx];
-      if (nextStage) { ST.stageIdx++; setTimeout(() => addBotMsg(nextStage(ST.task)), 500); }
-    } else if (ST.stageIdx < dlg.stages.length) {
-      reply = dlg.stages[ST.stageIdx](ST.task);
-      ST.stageIdx++;
-    } else {
-      // Random response from mix
-      const pool = [...dlg.praise, ...dlg.wrong];
-      reply = pool[Math.floor(Math.random() * pool.length)];
+  const reply = await askClaude(text);
+  removeTyping();
+
+  if (reply) addBotMsg(reply);
+
+  // Геймификация: если ответ позитивный — начисляем XP
+  if (isPositive && reply && !reply.startsWith('❌')) {
+    const topicXp = ST.topicId ? (CURRICULUM[ST.zone].topics.find(t => t.id === ST.topicId)?.xp || 10) : 10;
+    addXp(Math.round(topicXp * 0.5));
+    if (ST.topicId && ST.msgs.length > 6) {
+      ST.doneTopics[ST.topicId] = true;
+      saveState();
+      showPraise();
     }
-    if (reply) addBotMsg(reply);
-  }, delay);
+    saveState();
+  }
 }
 
 function addBotMsg(text) {
