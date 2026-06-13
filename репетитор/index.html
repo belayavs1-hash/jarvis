@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Пятый Уровень — Репетитор</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0f1a;
+  --bg2: #131629;
+  --bg3: #1a1e35;
+  --card: #1e2340;
+  --border: #2d3460;
+  --accent: #f0c040;
+  --accent2: #ff8c42;
+  --math-color: #ffb347;
+  --math-bg: #2a1f0a;
+  --russian-color: #7ec8e3;
+  --russian-bg: #0a1f2a;
+  --english-color: #90ee90;
+  --english-bg: #0a2a0f;
+  --speech-color: #dda0dd;
+  --speech-bg: #1f0a2a;
+  --text: #e8eaf6;
+  --text2: #8892b0;
+  --text3: #4a5280;
+  --green: #4caf50;
+  --red: #ef5350;
+  --pixel: 'Press Start 2P', monospace;
+  --body: 'Nunito', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--body); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+/* SCREENS */
+.screen { display: none; min-height: 100vh; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ===== LOGIN ===== */
+#screen-login {
+  align-items: center; justify-content: center;
+  background: radial-gradient(ellipse at 50% 0%, #1a2050 0%, #0d0f1a 70%);
+  padding: 20px;
+}
+.login-wrap { width: 100%; max-width: 420px; }
+.login-logo { text-align: center; margin-bottom: 32px; }
+.logo-icon { font-size: 64px; display: block; animation: bob 2.5s ease-in-out infinite; }
+@keyframes bob { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-10px) rotate(3deg); } }
+.logo-title { font-family: var(--pixel); font-size: 18px; color: var(--accent); margin-top: 14px; letter-spacing: 2px; text-shadow: 0 0 20px #f0c04060; }
+.logo-sub { color: var(--text2); font-size: 14px; margin-top: 6px; font-weight: 600; }
+
+.card { background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 28px; }
+.field-label { font-size: 12px; font-weight: 700; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+.field-group { margin-bottom: 20px; }
+.input { background: var(--bg2); border: 1.5px solid var(--border); border-radius: 10px; padding: 13px 16px; color: var(--text); font-family: var(--body); font-size: 15px; width: 100%; outline: none; transition: border-color .2s; font-weight: 600; }
+.input:focus { border-color: var(--accent); }
+.input::placeholder { color: var(--text3); }
+
+.role-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.role-card { background: var(--bg2); border: 2px solid var(--border); border-radius: 12px; padding: 16px 12px; cursor: pointer; text-align: center; transition: all .2s; }
+.role-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.role-card.sel { border-color: var(--accent); background: #2a2510; }
+.role-card .ri { font-size: 28px; display: block; margin-bottom: 6px; }
+.role-card strong { font-size: 13px; font-weight: 800; color: var(--text); }
+.role-card span { display: block; font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+.btn-main { width: 100%; padding: 16px; background: var(--accent); color: #1a1400; font-family: var(--pixel); font-size: 11px; border: none; border-radius: 10px; cursor: pointer; transition: all .2s; letter-spacing: 1px; margin-top: 4px; }
+.btn-main:hover { background: #ffd060; transform: translateY(-2px); box-shadow: 0 8px 24px #f0c04040; }
+.btn-main:active { transform: translateY(0); }
+.btn-main:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ===== HOME MAP ===== */
+#screen-home { max-width: 480px; margin: 0 auto; width: 100%; }
+.home-top { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.home-top .logo-sm { font-family: var(--pixel); font-size: 8px; color: var(--accent); }
+.home-top-right { display: flex; gap: 12px; align-items: center; }
+.xp-pill { background: var(--bg3); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 800; color: var(--accent); }
+.icon-btn { background: none; border: none; cursor: pointer; font-size: 18px; padding: 4px; border-radius: 6px; transition: background .15s; }
+.icon-btn:hover { background: var(--bg3); }
+
+.home-body { flex: 1; padding: 16px; overflow-y: auto; }
+
+/* Hero greeting */
+.hero { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 20px; background: var(--bg3); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+.hero-char { font-size: 40px; animation: bob 3s ease-in-out infinite; flex-shrink: 0; }
+.hero-text .name { font-size: 16px; font-weight: 900; color: var(--accent); }
+.hero-text .msg { font-size: 13px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
+
+/* Daily quest */
+.daily-quest { background: linear-gradient(135deg, #1e2b10, #111d08); border: 1.5px solid #3a5020; border-radius: 14px; padding: 14px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: all .2s; }
+.daily-quest:hover { border-color: #6a8040; transform: translateY(-1px); }
+.dq-icon { font-size: 28px; }
+.dq-text .label { font-size: 10px; font-weight: 700; color: #6a8040; letter-spacing: 1px; text-transform: uppercase; }
+.dq-text .title { font-size: 14px; font-weight: 800; color: #90c040; margin-top: 2px; }
+.dq-xp { margin-left: auto; background: #2a4010; border: 1px solid #4a6020; border-radius: 8px; padding: 6px 10px; font-family: var(--pixel); font-size: 8px; color: #90c040; }
+
+/* Zone header */
+.section-title { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+
+/* Zone cards */
+.zone-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.zone-card { border-radius: 16px; border: 2px solid; padding: 18px 16px; cursor: pointer; transition: all .2s; position: relative; overflow: hidden; }
+.zone-card:hover { transform: translateY(-3px); filter: brightness(1.1); }
+.zone-card:active { transform: translateY(0); }
+.zone-card .z-bg { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 64px; opacity: .08; pointer-events: none; }
+.zone-inner { display: flex; gap: 14px; align-items: center; position: relative; }
+.zone-icon-box { width: 54px; height: 54px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 30px; flex-shrink: 0; border: 2px solid; }
+.zone-info { flex: 1; }
+.zone-name { font-size: 16px; font-weight: 900; }
+.zone-desc { font-size: 12px; opacity: .7; margin-top: 2px; }
+.zone-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; border: 1px solid; margin-top: 5px; text-transform: uppercase; letter-spacing: .5px; }
+.zone-lvl { font-family: var(--pixel); font-size: 8px; opacity: .6; margin-top: 4px; }
+.zone-arrow { font-size: 18px; margin-left: auto; opacity: .6; }
+
+/* Math */
+.math .zone-card { border-color: #f59e0b44; background: linear-gradient(135deg, #2a1f0a, #1a1205); }
+.math .zone-icon-box { background: #f59e0b18; border-color: #f59e0b44; }
+.math .zone-name, .math .zone-tag { color: var(--math-color); }
+.math .zone-tag { border-color: #f59e0b44; }
+/* Russian */
+.russian .zone-card { border-color: #7ec8e344; background: linear-gradient(135deg, #0a1f2a, #050f15); }
+.russian .zone-icon-box { background: #7ec8e318; border-color: #7ec8e344; }
+.russian .zone-name, .russian .zone-tag { color: var(--russian-color); }
+.russian .zone-tag { border-color: #7ec8e344; }
+/* English */
+.english .zone-card { border-color: #90ee9044; background: linear-gradient(135deg, #0a2a0f, #051508); }
+.english .zone-icon-box { background: #90ee9018; border-color: #90ee9044; }
+.english .zone-name, .english .zone-tag { color: var(--english-color); }
+.english .zone-tag { border-color: #90ee9044; }
+/* Speech */
+.speech .zone-card { border-color: #dda0dd44; background: linear-gradient(135deg, #1f0a2a, #100515); }
+.speech .zone-icon-box { background: #dda0dd18; border-color: #dda0dd44; }
+.speech .zone-name, .speech .zone-tag { color: var(--speech-color); }
+.speech .zone-tag { border-color: #dda0dd44; }
+
+/* Progress bar */
+.prog-bar { height: 5px; background: var(--bg3); border-radius: 99px; margin-top: 8px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 99px; transition: width .5s ease; }
+
+/* ===== ZONE MAP (topic list) ===== */
+#screen-zone { max-width: 480px; margin: 0 auto; width: 100%; }
+.zone-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.back-btn { background: none; border: none; cursor: pointer; font-size: 20px; color: var(--text2); padding: 4px 8px; border-radius: 6px; transition: all .15s; }
+.back-btn:hover { color: var(--text); background: var(--bg3); }
+.zone-header-title { font-size: 14px; font-weight: 900; }
+.zone-header-icon { font-size: 22px; }
+
+.zone-body { flex: 1; overflow-y: auto; padding: 16px; }
+.topic-list { display: flex; flex-direction: column; gap: 8px; }
+.topic-item { background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: 14px; }
+.topic-item:hover { border-color: var(--accent); transform: translateX(4px); }
+.topic-item.locked { opacity: .4; cursor: not-allowed; }
+.topic-item.locked:hover { transform: none; border-color: var(--border); }
+.topic-item.done { background: #0f1e0f; border-color: #2a4020; }
+.t-num { font-family: var(--pixel); font-size: 9px; color: var(--text3); width: 24px; flex-shrink: 0; }
+.t-info { flex: 1; }
+.t-name { font-size: 14px; font-weight: 800; }
+.t-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.t-status { font-size: 16px; flex-shrink: 0; }
+.t-xp { font-family: var(--pixel); font-size: 8px; color: var(--text3); }
+
+/* ===== TASK INPUT ===== */
+#screen-task { max-width: 480px; margin: 0 auto; width: 100%; }
+.task-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.task-body { flex: 1; padding: 16px; overflow-y: auto; }
+.task-title { font-size: 16px; font-weight: 900; margin-bottom: 4px; }
+.task-subtitle { font-size: 13px; color: var(--text2); margin-bottom: 16px; line-height: 1.5; }
+textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 14px; }
+.quick-examples { margin-top: 12px; }
+.quick-label { font-size: 11px; color: var(--text3); font-weight: 700; margin-bottom: 8px; display: block; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { background: var(--bg3); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 700; color: var(--text2); cursor: pointer; transition: all .15s; }
+.tag:hover { border-color: var(--accent); color: var(--accent); }
+
+.or-divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; color: var(--text3); font-size: 12px; }
+.or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* Manual task input */
+.topic-selector { display: flex; flex-direction: column; gap: 8px; }
+.topic-pill { background: var(--bg3); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all .15s; display: flex; align-items: center; gap: 10px; }
+.topic-pill:hover, .topic-pill.sel { border-color: var(--accent); background: #2a2510; }
+.topic-pill .tp-icon { font-size: 18px; }
+.topic-pill .tp-text { font-size: 13px; font-weight: 700; }
+
+/* ===== CHAT ===== */
+#screen-chat { max-width: 480px; margin: 0 auto; width: 100%; height: 100vh; }
+.chat-header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--border); }
+.chat-char { font-size: 26px; }
+.chat-info .cname { font-size: 14px; font-weight: 900; }
+.chat-info .cstatus { font-size: 11px; color: var(--text3); }
+.chat-hright { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+.task-badge { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin: 8px 14px; font-size: 12px; display: flex; align-items: flex-start; gap: 10px; }
+.task-badge-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.task-badge-text { flex: 1; line-height: 1.5; color: var(--text2); }
+.task-badge-text strong { color: var(--text); }
+.task-badge-change { font-size: 11px; color: var(--text3); cursor: pointer; display: block; margin-top: 4px; }
+.task-badge-change:hover { color: var(--text2); }
+
+.chat-msgs { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.msg { display: flex; gap: 8px; max-width: 88%; }
+.msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.msg.bot { align-self: flex-start; }
+.m-avatar { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.m-bubble { padding: 11px 14px; border-radius: 14px; font-size: 14px; line-height: 1.65; font-weight: 600; }
+.msg.bot .m-bubble { background: var(--card); border: 1px solid var(--border); border-top-left-radius: 4px; }
+.msg.user .m-bubble { background: #1a2a4a; border: 1px solid #2d4070; border-top-right-radius: 4px; }
+
+/* Hint dots */
+.hint-row { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+.hdot { width: 8px; height: 8px; border-radius: 50%; background: var(--bg3); border: 1.5px solid var(--border); transition: all .3s; }
+.hdot.used { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 8px var(--accent); }
+
+.chat-input-area { padding: 10px 14px; border-top: 1px solid var(--border); }
+.chat-row { display: flex; gap: 8px; align-items: flex-end; }
+.chat-row textarea { flex: 1; resize: none; min-height: 44px; max-height: 100px; line-height: 1.5; padding: 10px 13px; font-size: 14px; }
+.send-btn { width: 44px; height: 44px; background: var(--accent); border: none; border-radius: 10px; cursor: pointer; font-size: 18px; flex-shrink: 0; transition: all .15s; color: #1a1400; font-weight: 900; }
+.send-btn:hover:not(:disabled) { background: #ffd060; }
+.send-btn:disabled { opacity: .3; cursor: not-allowed; }
+
+/* Typing animation */
+.typing-dots { display: flex; gap: 5px; align-items: center; padding: 12px 14px; }
+.td { width: 7px; height: 7px; background: var(--text3); border-radius: 50%; animation: tdance .8s infinite; }
+.td:nth-child(2) { animation-delay: .15s; }
+.td:nth-child(3) { animation-delay: .3s; }
+@keyframes tdance { 0%,100% { transform: translateY(0); opacity: .4; } 50% { transform: translateY(-6px); opacity: 1; } }
+
+/* Praise message */
+.praise-msg { background: linear-gradient(135deg, #1a2a10, #0f1a08); border: 1.5px solid #3a5020; border-radius: 12px; padding: 14px 16px; margin: 8px 14px; display: flex; align-items: center; gap: 12px; animation: popIn .3s ease; }
+@keyframes popIn { from { transform: scale(.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.praise-icon { font-size: 24px; }
+.praise-text { font-size: 14px; font-weight: 700; color: #90c040; }
+
+/* XP popup */
+.xp-popup { position: fixed; top: 60px; right: 20px; background: var(--accent); color: #1a1400; font-family: var(--pixel); font-size: 10px; padding: 8px 16px; border-radius: 8px; animation: floatUp 2s forwards; pointer-events: none; z-index: 999; }
+@keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-40px); } }
+
+/* ===== CHEATSHEET ===== */
+#screen-cheat { max-width: 480px; margin: 0 auto; width: 100%; }
+.cheat-body { flex: 1; padding: 16px; overflow-y: auto; }
+.cheat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
+.cheat-card h3 { font-size: 13px; font-weight: 900; margin-bottom: 8px; color: var(--accent); }
+.cheat-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 12px; line-height: 1.5; }
+.cheat-row:last-child { border-bottom: none; }
+.cheat-row .ck { color: var(--text2); flex: 0 0 40%; }
+.cheat-row .cv { color: var(--text); font-weight: 700; flex: 1; text-align: right; }
+.cheat-formula { font-family: monospace; background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 11px; color: var(--accent2); }
+
+/* ===== TEST ===== */
+#screen-test { max-width: 480px; margin: 0 auto; width: 100%; }
+.test-body { flex: 1; padding: 16px; overflow-y: auto; }
+.test-progress { background: var(--bg3); border-radius: 99px; height: 6px; margin-bottom: 20px; overflow: hidden; }
+.test-fill { background: var(--accent); height: 100%; border-radius: 99px; transition: width .4s; }
+.q-num { font-size: 11px; color: var(--text3); font-weight: 700; margin-bottom: 8px; }
+.q-text { font-size: 17px; font-weight: 800; line-height: 1.5; margin-bottom: 20px; }
+.answers { display: flex; flex-direction: column; gap: 8px; }
+.answer-btn { background: var(--bg3); border: 2px solid var(--border); border-radius: 12px; padding: 14px 16px; font-family: var(--body); font-size: 14px; font-weight: 700; cursor: pointer; text-align: left; color: var(--text); transition: all .2s; }
+.answer-btn:hover:not(:disabled) { border-color: var(--accent); }
+.answer-btn.correct { border-color: var(--green); background: #0f2510; color: var(--green); }
+.answer-btn.wrong { border-color: var(--red); background: #250f0f; color: var(--red); }
+.answer-btn:disabled { cursor: not-allowed; }
+.explain-box { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-top: 14px; font-size: 13px; color: var(--text2); line-height: 1.6; display: none; }
+.explain-box.show { display: block; }
+.explain-box strong { color: var(--text); }
+.test-result { text-align: center; padding: 32px 16px; }
+.result-score { font-family: var(--pixel); font-size: 32px; color: var(--accent); margin-bottom: 12px; }
+.result-msg { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.result-sub { font-size: 13px; color: var(--text2); margin-bottom: 24px; }
+
+/* ===== ACHIEVEMENTS ===== */
+#screen-ach { max-width: 480px; margin: 0 auto; width: 100%; }
+.ach-body { flex: 1; padding: 16px; overflow-y: auto; }
+.ach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ach-card { background: var(--card); border: 1.5px solid; border-radius: 14px; padding: 16px 14px; transition: all .2s; }
+.ach-card.unlocked { border-color: #f0c04033; }
+.ach-card.locked { border-color: var(--border); opacity: .45; }
+.ach-icon { font-size: 30px; margin-bottom: 8px; }
+.ach-name { font-size: 12px; font-weight: 900; margin-bottom: 4px; }
+.ach-desc { font-size: 11px; color: var(--text2); line-height: 1.4; }
+.ach-card.unlocked .ach-name { color: var(--accent); }
+
+/* ===== PARENT ===== */
+#screen-parent { max-width: 480px; margin: 0 auto; width: 100%; }
+.parent-body { flex: 1; padding: 16px; overflow-y: auto; }
+.stat-row { display: flex; gap: 10px; margin-bottom: 16px; }
+.stat-box { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 12px; text-align: center; }
+.stat-num { font-family: var(--pixel); font-size: 18px; color: var(--accent); display: block; margin-bottom: 4px; }
+.stat-label { font-size: 11px; color: var(--text2); }
+.insight-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
+.insight-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px; font-weight: 800; }
+.insight-body { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.zone-prog-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.zone-prog-item:last-child { border-bottom: none; }
+.zp-icon { font-size: 18px; }
+.zp-info { flex: 1; }
+.zp-name { font-size: 13px; font-weight: 700; }
+.zp-bar { height: 4px; background: var(--bg); border-radius: 99px; margin-top: 4px; overflow: hidden; }
+.zp-fill { height: 100%; border-radius: 99px; }
+.zp-pct { font-size: 12px; font-weight: 800; }
+
+/* Utility */
+.mt1 { margin-top: 4px; }
+.mt2 { margin-top: 8px; }
+.mt3 { margin-top: 14px; }
+.separator { height: 1px; background: var(--border); margin: 16px 0; }
+.text-sm { font-size: 13px; }
+.text-xs { font-size: 11px; }
+.text-dim { color: var(--text2); }
+.text-dimmer { color: var(--text3); }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.pixel { font-family: var(--pixel); }
+.scroll-snap { scroll-snap-type: y mandatory; }
+</style>
+</head>
+<body>
+
+<!-- ======= LOGIN ======= -->
+<div id="screen-login" class="screen active">
+  <div class="login-wrap">
+    <div class="login-logo">
+      <span class="logo-icon">🎮</span>
+      <div class="logo-title">ПЯТЫЙ УРОВЕНЬ</div>
+      <div class="logo-sub">Учебный мир для 5 класса · СПб</div>
+    </div>
+    <div class="card">
+      <div class="field-group">
+        <label class="field-label">Как тебя зовут?</label>
+        <input id="inp-name" class="input" type="text" placeholder="Напиши своё имя" autofocus onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Кто ты?</label>
+        <div class="role-row">
+          <div class="role-card sel" id="rc-pupil" onclick="setRole('pupil')">
+            <span class="ri">🎒</span>
+            <strong>Ученик</strong>
+            <span>Учусь и прокачиваюсь</span>
+          </div>
+          <div class="role-card" id="rc-parent" onclick="setRole('parent')">
+            <span class="ri">🛡️</span>
+            <strong>Родитель</strong>
+            <span>Смотрю прогресс</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-group" id="mode-group">
+        <label class="field-label">Как общаться с Умником?</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <div class="role-card sel" id="rm-text" onclick="setInputMode('text')" style="padding:12px 8px">
+            <span class="ri">⌨️</span>
+            <strong style="font-size:12px">Текст</strong>
+            <span>Пишу</span>
+          </div>
+          <div class="role-card" id="rm-voice" onclick="setInputMode('voice')" style="padding:12px 8px">
+            <span class="ri">🎤</span>
+            <strong style="font-size:12px">Голос</strong>
+            <span>Говорю</span>
+          </div>
+          <div class="role-card" id="rm-both" onclick="setInputMode('both')" style="padding:12px 8px">
+            <span class="ri">🔀</span>
+            <strong style="font-size:12px">Оба</strong>
+            <span>Как удобно</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn-main" onclick="doLogin()">▶ ВОЙТИ В ИГРУ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======= HOME ======= -->
+<div id="screen-home" class="screen">
+  <div class="home-top">
+    <span class="logo-sm">🎮 ПЯТЫЙ УРОВЕНЬ</span>
+    <div class="home-top-right">
+      <div class="xp-pill">⚡ <span id="xp-count">0</span> XP</div>
+      <button class="icon-btn" onclick="showAch()" title="Достижения">🏆</button>
+      <button class="icon-btn" onclick="doLogout()" title="Выйти">🚪</button>
+    </div>
+  </div>
+  <div class="home-body">
+    <div class="hero">
+      <div class="hero-char">🧙</div>
+      <div class="hero-text">
+        <div class="name" id="hero-name">Привет!</div>
+        <div class="msg" id="hero-msg">Выбери зону и начнём разбираться вместе.</div>
+      </div>
+    </div>
+
+    <div class="daily-quest" onclick="startDailyQuest()">
+      <div class="dq-icon">📜</div>
+      <div class="dq-text">
+        <div class="label">🗺 Ежедневный квест</div>
+        <div class="title" id="dq-title">Загружается...</div>
+      </div>
+      <div class="dq-xp" id="dq-xp">+15 XP</div>
+    </div>
+
+    <div class="section-title">🗺 Выбери зону</div>
+    <div class="zone-grid">
+      <div class="math" onclick="openZone('math')">
+        <div class="zone-card">
+          <div class="z-bg">⚙️</div>
+          <div class="zone-inner">
+            <div class="zone-icon-box" style="border-color:#f59e0b44;background:#f59e0b18">⚙️</div>
+            <div class="zone-info">
+              <div class="zone-name" style="color:var(--math-color)">Математическая Шахта</div>
+              <div class="zone-desc">Числа, дроби, проценты, уравнения</div>
+              <div class="zone-tag" style="color:var(--math-color);border-color:#f59e0b44">Виленкин 5кл</div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-math" style="width:0%;background:var(--math-color)"></div></div>
+            </div>
+            <div class="zone-arrow" style="color:var(--math-color)">›</div>
+          </div>
+        </div>
+      </div>
+      <div class="russian" onclick="openZone('russian')">
+        <div class="zone-card">
+          <div class="z-bg">🏰</div>
+          <div class="zone-inner">
+            <div class="zone-icon-box" style="border-color:#7ec8e344;background:#7ec8e318">🏰</div>
+            <div class="zone-info">
+              <div class="zone-name" style="color:var(--russian-color)">Башня Русского</div>
+              <div class="zone-desc">Орфография, пунктуация, сочинения</div>
+              <div class="zone-tag" style="color:var(--russian-color);border-color:#7ec8e344">Ладыженская 5кл</div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-russian" style="width:0%;background:var(--russian-color)"></div></div>
+            </div>
+            <div class="zone-arrow" style="color:var(--russian-color)">›</div>
+          </div>
+        </div>
+      </div>
+      <div class="english" onclick="openZone('english')">
+        <div class="zone-card">
+          <div class="z-bg">🌳</div>
+          <div class="zone-inner">
+            <div class="zone-icon-box" style="border-color:#90ee9044;background:#90ee9018">🌳</div>
+            <div class="zone-info">
+              <div class="zone-name" style="color:var(--english-color)">Английская Деревня</div>
+              <div class="zone-desc">Слова, грамматика, чтение, перевод</div>
+              <div class="zone-tag" style="color:var(--english-color);border-color:#90ee9044">Ваулина 5кл</div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-english" style="width:0%;background:var(--english-color)"></div></div>
+            </div>
+            <div class="zone-arrow" style="color:var(--english-color)">›</div>
+          </div>
+        </div>
+      </div>
+      <div class="speech" onclick="openZone('speech')">
+        <div class="zone-card">
+          <div class="z-bg">🔮</div>
+          <div class="zone-inner">
+            <div class="zone-icon-box" style="border-color:#dda0dd44;background:#dda0dd18">🔮</div>
+            <div class="zone-info">
+              <div class="zone-name" style="color:var(--speech-color)">Мастерская Речи</div>
+              <div class="zone-desc">Сочинения, изложения, описание</div>
+              <div class="zone-tag" style="color:var(--speech-color);border-color:#dda0dd44">Развитие речи</div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-speech" style="width:0%;background:var(--speech-color)"></div></div>
+            </div>
+            <div class="zone-arrow" style="color:var(--speech-color)">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;justify-content:center;padding:8px 0;border-top:1px solid var(--border)">
+      <button class="icon-btn text-xs text-dimmer" onclick="showParent()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:6px 12px">👨‍👩‍👧 Кабинет родителя</button>
+      <button class="icon-btn text-xs text-dimmer" onclick="showAch()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:6px 12px">🏆 Достижения</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======= ZONE (topic list) ======= -->
+<div id="screen-zone" class="screen">
+  <div class="zone-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <span id="zh-icon" class="zone-header-icon"></span>
+    <span id="zh-title" class="zone-header-title"></span>
+  </div>
+  <div class="zone-body">
+    <div class="topic-list" id="topic-list"></div>
+    <div class="mt3">
+      <button class="btn-main" style="font-size:9px" onclick="openTaskInput()">📝 ЗАДАТЬ СВОЙ ВОПРОС / ДОМАШКУ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======= TASK INPUT ======= -->
+<div id="screen-task" class="screen">
+  <div class="task-header">
+    <button class="back-btn" id="task-back-btn">←</button>
+    <span id="task-zone-icon" style="font-size:22px"></span>
+    <span id="task-zone-title" style="font-size:14px;font-weight:900"></span>
+  </div>
+  <div class="task-body">
+    <div class="task-title">Введи задание</div>
+    <div class="task-subtitle">Напиши условие задачи или вопрос — Умник разберёт его вместе с тобой шаг за шагом. Готовый ответ он не даст — поможет дойти до него самому.</div>
+    <textarea id="task-input" class="input" rows="5" placeholder="Например: из условия задачи №5 стр. 47..."></textarea>
+    <div class="quick-examples mt2">
+      <span class="quick-label">Быстрые примеры:</span>
+      <div class="tags" id="quick-tags"></div>
+    </div>
+    <div class="or-divider">или выбери тему</div>
+    <div class="topic-selector" id="mini-topic-list"></div>
+    <button class="btn-main mt3" onclick="startChat()">▶ РАЗОБРАТЬ С УМНИКОМ</button>
+  </div>
+</div>
+
+<!-- ======= CHAT ======= -->
+<div id="screen-chat" class="screen">
+  <div class="chat-header">
+    <button class="back-btn" onclick="goToTask()">←</button>
+    <div class="chat-char">🧙</div>
+    <div class="chat-info">
+      <div class="cname">Умник</div>
+      <div class="cstatus" id="chat-status">онлайн</div>
+    </div>
+    <div class="chat-hright">
+      <button class="icon-btn" onclick="openCheatSheet()" title="Шпаргалка">📋</button>
+      <button class="icon-btn" onclick="openTest()" title="Тест по теме">✏️</button>
+    </div>
+  </div>
+  <div id="task-badge" class="task-badge" style="display:none">
+    <div class="task-badge-icon">📝</div>
+    <div class="task-badge-text">
+      <strong id="tb-subject"></strong>
+      <span id="tb-text"></span>
+      <a class="task-badge-change" onclick="goToTask()">← изменить задание</a>
+    </div>
+  </div>
+  <div id="chat-msgs" class="chat-msgs"></div>
+  <div id="chat-input-area" class="chat-input-area">
+    <div class="hint-row">
+      <span>Подсказок:</span>
+      <div class="hdot" id="hd1"></div><div class="hdot" id="hd2"></div>
+      <div class="hdot" id="hd3"></div><div class="hdot" id="hd4"></div>
+      <div class="hdot" id="hd5"></div>
+      <span id="voice-status" style="margin-left:auto;font-size:11px;color:var(--text3);display:none">🎤 слушаю...</span>
+    </div>
+    <div class="chat-row">
+      <textarea id="chat-input" class="input" rows="1" placeholder="Напиши ответ или вопрос..." onkeydown="chatKey(event)"></textarea>
+      <button class="send-btn" id="mic-btn" onclick="toggleVoice()" style="display:none;background:var(--bg3);font-size:16px" title="Голосовой ввод">🎤</button>
+      <button class="send-btn" id="send-btn" onclick="sendMsg()" disabled>↑</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======= CHEATSHEET ======= -->
+<div id="screen-cheat" class="screen">
+  <div class="zone-header">
+    <button class="back-btn" onclick="backFromCheat()">←</button>
+    <span style="font-size:20px">📋</span>
+    <span style="font-size:14px;font-weight:900;margin-left:8px">Шпаргалка</span>
+  </div>
+  <div class="cheat-body" id="cheat-body"></div>
+</div>
+
+<!-- ======= TEST ======= -->
+<div id="screen-test" class="screen">
+  <div class="zone-header">
+    <button class="back-btn" onclick="backFromTest()">←</button>
+    <span style="font-size:20px">✏️</span>
+    <span id="test-header-title" style="font-size:14px;font-weight:900;margin-left:8px"></span>
+  </div>
+  <div class="test-body" id="test-body"></div>
+</div>
+
+<!-- ======= ACHIEVEMENTS ======= -->
+<div id="screen-ach" class="screen">
+  <div class="zone-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <span style="font-size:20px">🏆</span>
+    <span style="font-size:14px;font-weight:900;margin-left:8px">Достижения</span>
+  </div>
+  <div class="ach-body">
+    <div class="ach-grid" id="ach-grid"></div>
+  </div>
+</div>
+
+<!-- ======= PARENT ======= -->
+<div id="screen-parent" class="screen">
+  <div class="zone-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <span style="font-size:20px">👨‍👩‍👧</span>
+    <span style="font-size:14px;font-weight:900;margin-left:8px">Кабинет родителя</span>
+  </div>
+  <div class="parent-body" id="parent-body"></div>
+</div>
+
+<script>
+// ============================================================
+//  DATA: Curriculum 5th grade Russia (Vilenkin, Ladyzhenskaya, Vaulina)
+// ============================================================
+const CURRICULUM = {
+  math: {
+    name: 'Математическая Шахта', icon: '⚙️', color: '#ffb347',
+    topics: [
+      { id: 'm1', name: 'Натуральные числа', sub: 'Чтение, запись, сравнение', xp: 10 },
+      { id: 'm2', name: 'Сложение и вычитание', sub: 'Свойства, порядок действий', xp: 10 },
+      { id: 'm3', name: 'Умножение и деление', sub: 'Свойства, распределительный закон', xp: 10 },
+      { id: 'm4', name: 'Делимость чисел', sub: 'Признаки, простые числа, НОД, НОК', xp: 15 },
+      { id: 'm5', name: 'Обыкновенные дроби', sub: 'Сравнение, сокращение, основное свойство', xp: 15 },
+      { id: 'm6', name: 'Действия с дробями', sub: 'Сложение, вычитание, умножение, деление', xp: 20 },
+      { id: 'm7', name: 'Смешанные числа', sub: 'Перевод, действия со смешанными', xp: 15 },
+      { id: 'm8', name: 'Десятичные дроби', sub: 'Запись, чтение, сравнение', xp: 15 },
+      { id: 'm9', name: 'Действия с десятичными', sub: 'Сложение, вычитание, умножение, деление', xp: 20 },
+      { id: 'm10', name: 'Проценты', sub: 'Нахождение процентов, числа по проценту', xp: 20 },
+      { id: 'm11', name: 'Уравнения', sub: 'Линейные уравнения с одной переменной', xp: 20 },
+      { id: 'm12', name: 'Геометрические фигуры', sub: 'Треугольник, многоугольник, окружность', xp: 15 },
+      { id: 'm13', name: 'Площадь и периметр', sub: 'Прямоугольник, квадрат, треугольник', xp: 15 },
+      { id: 'm14', name: 'Геометрические тела', sub: 'Куб, параллелепипед, объём', xp: 15 },
+      { id: 'm15', name: 'Текстовые задачи', sub: 'Движение, работа, проценты, смеси', xp: 20 },
+      { id: 'm16', name: 'Статистика', sub: 'Таблицы, диаграммы, среднее арифметическое', xp: 10 },
+    ],
+    examples: ['Задача: из 120 яблок взяли 25%. Сколько осталось?','Реши уравнение: 3x + 7 = 22','Найди НОД(24, 36)','Переведи 2⅗ в неправильную дробь'],
+    cheatsheet: [
+      { title: '🔢 Порядок действий', rows: [
+        { k: 'Сначала', v: 'Скобки' },
+        { k: 'Затем', v: 'Умножение / Деление' },
+        { k: 'В конце', v: 'Сложение / Вычитание' },
+      ]},
+      { title: '📐 Признаки делимости', rows: [
+        { k: 'На 2', v: 'Чётное (0,2,4,6,8)' },
+        { k: 'На 3', v: 'Сумма цифр делится на 3' },
+        { k: 'На 5', v: 'Оканчивается на 0 или 5' },
+        { k: 'На 10', v: 'Оканчивается на 0' },
+        { k: 'На 9', v: 'Сумма цифр делится на 9' },
+      ]},
+      { title: '🍕 Дроби', rows: [
+        { k: 'Сложение/вычит.', v: 'Привести к общему знам.' },
+        { k: 'Умножение', v: 'Числ. × числ. / Знам. × знам.' },
+        { k: 'Деление', v: 'Умножить на перевёрнутую' },
+        { k: 'Осн. свойство', v: 'a/b = (a×n)/(b×n)' },
+      ]},
+      { title: '% Проценты', rows: [
+        { k: 'p% от числа', v: 'Число × p ÷ 100' },
+        { k: 'Число по %', v: 'Часть ÷ p × 100' },
+        { k: 'Сколько %', v: 'Часть ÷ Целое × 100' },
+      ]},
+      { title: '📏 Формулы геометрии', rows: [
+        { k: 'Перим. прямоугольника', v: '2×(a + b)' },
+        { k: 'S прямоугольника', v: 'a × b' },
+        { k: 'S треугольника', v: '(a × h) ÷ 2' },
+        { k: 'V параллелепипеда', v: 'a × b × c' },
+      ]},
+    ],
+    tests: [
+      { q: 'Сколько будет 25% от числа 200?', opts: ['50','25','75','100'], ans: 0, exp: '25% — это ¼. 200 ÷ 4 = 50' },
+      { q: 'Чему равна дробь ½ + ⅓?', opts: ['5/6','2/6','1/6','3/5'], ans: 0, exp: 'Общий знаменатель 6: 3/6 + 2/6 = 5/6' },
+      { q: 'На какой признак: число оканчивается на 0 или 5?', opts: ['На 5','На 2','На 10','На 3'], ans: 0, exp: 'Признак делимости на 5: оканчивается на 0 или 5' },
+      { q: 'Реши уравнение: x + 15 = 40', opts: ['25','55','15','40'], ans: 0, exp: 'x = 40 − 15 = 25' },
+      { q: 'Площадь прямоугольника 4×7 см равна?', opts: ['28 см²','22 см²','11 см²','14 см²'], ans: 0, exp: 'S = 4 × 7 = 28 см²' },
+    ],
+  },
+  russian: {
+    name: 'Башня Русского', icon: '🏰', color: '#7ec8e3',
+    topics: [
+      { id: 'r1', name: 'Фонетика', sub: 'Звуки, буквы, слоги, ударение', xp: 10 },
+      { id: 'r2', name: 'Лексика', sub: 'Синонимы, антонимы, омонимы', xp: 10 },
+      { id: 'r3', name: 'Морфология: части речи', sub: 'Существительное, прилагательное, глагол', xp: 15 },
+      { id: 'r4', name: 'Глагол', sub: 'Спряжение, времена, наклонения', xp: 15 },
+      { id: 'r5', name: 'Имя существительное', sub: 'Род, число, падежи, склонение', xp: 15 },
+      { id: 'r6', name: 'Имя прилагательное', sub: 'Степени сравнения, склонение', xp: 15 },
+      { id: 'r7', name: 'Орфография: безударные гласные', sub: 'Проверка ударением, словарные слова', xp: 20 },
+      { id: 'r8', name: 'Орфография: согласные', sub: 'Звонкие/глухие, непроизносимые', xp: 15 },
+      { id: 'r9', name: 'Орфография: приставки и суффиксы', sub: 'Правила правописания морфем', xp: 20 },
+      { id: 'r10', name: 'Синтаксис', sub: 'Словосочетание, предложение', xp: 15 },
+      { id: 'r11', name: 'Пунктуация', sub: 'Знаки в простом предложении', xp: 20 },
+      { id: 'r12', name: 'Сочинение-описание', sub: 'Структура, план, языковые средства', xp: 25 },
+      { id: 'r13', name: 'Сочинение-повествование', sub: 'События, хронология, связность', xp: 25 },
+      { id: 'r14', name: 'Словарные слова', sub: 'Тренировка написания', xp: 10 },
+      { id: 'r15', name: 'Подготовка к диктанту', sub: 'Правила + практика', xp: 15 },
+    ],
+    examples: ['Вставь пропущенную букву: «уч_ник», «в_да»','Назови падеж слова «маме» в предложении','Определи спряжение глагола «бежать»','Найди ошибки: «едиш», «поедте»'],
+    cheatsheet: [
+      { title: '📖 Падежи', rows: [
+        { k: 'Им. (кто? что?)', v: 'мама, стол' },
+        { k: 'Род. (кого? чего?)', v: 'мамы, стола' },
+        { k: 'Дат. (кому? чему?)', v: 'маме, столу' },
+        { k: 'Вин. (кого? что?)', v: 'маму, стол' },
+        { k: 'Тв. (кем? чем?)', v: 'мамой, столом' },
+        { k: 'Пр. (о ком? о чём?)', v: 'о маме, о столе' },
+      ]},
+      { title: '🔤 Спряжения глаголов', rows: [
+        { k: 'I спр. (-ешь/-ет)', v: 'читает, пишет' },
+        { k: 'II спр. (-ишь/-ит)', v: 'говорит, строит' },
+        { k: 'Искл. II', v: 'гнать, держать, дышать...' },
+        { k: 'Искл. I', v: 'брить, стелить' },
+      ]},
+      { title: '✍️ Безударные гласные', rows: [
+        { k: 'Проверяй', v: 'Подбери однокоренное с ударением' },
+        { k: 'Нельзя проверить', v: 'Словарные слова — учи наизусть' },
+        { k: 'В приставках', v: 'за-, на-, по-, до-, со-, пере-' },
+      ]},
+    ],
+    tests: [
+      { q: 'В каком падеже стоит слово в скобках: «иду к (школа)»?', opts: ['Дательный','Родительный','Творительный','Предложный'], ans: 0, exp: 'К кому? К чему? — Дательный падеж. Иду к школе.' },
+      { q: 'К какому спряжению относится глагол «строить»?', opts: ['II','I','Разноспрягаемый','Не спрягается'], ans: 0, exp: 'Глаголы на -ить (кроме брить, стелить) — II спряжение' },
+      { q: 'Какое слово написано правильно?', opts: ['вода','вада','вОда','вЪда'], ans: 0, exp: 'Проверяем ударением: вОды → вода' },
+      { q: 'Что такое синоним?', opts: ['Слово с похожим значением','Слово с противоположным смыслом','Слово с одинаковым написанием','Слово с двойным значением'], ans: 0, exp: 'Синонимы — слова близкие по смыслу: большой — огромный' },
+    ],
+  },
+  english: {
+    name: 'Английская Деревня', icon: '🌳', color: '#90ee90',
+    topics: [
+      { id: 'e1', name: 'Алфавит и чтение', sub: 'Транскрипция, правила чтения', xp: 10 },
+      { id: 'e2', name: 'Числа и даты', sub: 'Порядковые и количественные', xp: 10 },
+      { id: 'e3', name: 'Present Simple', sub: 'Настоящее простое время', xp: 20 },
+      { id: 'e4', name: 'Present Continuous', sub: 'Настоящее длительное время', xp: 20 },
+      { id: 'e5', name: 'Past Simple', sub: 'Прошедшее простое, правильные глаголы', xp: 20 },
+      { id: 'e6', name: 'Past Simple: неправильные', sub: 'Неправильные глаголы, список', xp: 20 },
+      { id: 'e7', name: 'Future Simple', sub: 'Will + инфинитив', xp: 15 },
+      { id: 'e8', name: 'Артикли a/an, the', sub: 'Правила употребления', xp: 15 },
+      { id: 'e9', name: 'Местоимения', sub: 'Личные, притяжательные', xp: 15 },
+      { id: 'e10', name: 'Предлоги места/времени', sub: 'in, on, at, under, next to...', xp: 15 },
+      { id: 'e11', name: 'Словарь: Семья', sub: 'Family members vocabulary', xp: 10 },
+      { id: 'e12', name: 'Словарь: Школа', sub: 'School subjects, classroom', xp: 10 },
+      { id: 'e13', name: 'Словарь: Хобби/Спорт', sub: 'Sports, hobbies, activities', xp: 10 },
+      { id: 'e14', name: 'Перевод предложений', sub: 'Рус → Англ и обратно', xp: 20 },
+      { id: 'e15', name: 'Сочинение: Моя семья', sub: 'My family — письменная работа', xp: 25 },
+    ],
+    examples: ['Поставь глагол в форму Present Simple: She (go) to school every day.','Переведи: «Я делаю уроки сейчас»','Составь вопрос к предложению: He plays football.','Вставь артикль: ___ dog is sleeping.'],
+    cheatsheet: [
+      { title: '⏰ Времена: кратко', rows: [
+        { k: 'Present Simple', v: 'V / V+s(3л.ед.) — каждый день' },
+        { k: 'Present Cont.', v: 'am/is/are + V-ing — сейчас' },
+        { k: 'Past Simple', v: 'V+ed / неправ. — вчера/в прошлом' },
+        { k: 'Future Simple', v: 'will + V — завтра/потом' },
+      ]},
+      { title: '📌 Артикли', rows: [
+        { k: 'a/an', v: 'Впервые, не конкретное (a cat)' },
+        { k: 'the', v: 'Уже известное, конкретное' },
+        { k: 'Без артикля', v: 'Имена, страны, языки' },
+      ]},
+      { title: '🔄 Частые неправ. глаголы', rows: [
+        { k: 'go → went', v: 'идти' },
+        { k: 'see → saw', v: 'видеть' },
+        { k: 'have → had', v: 'иметь' },
+        { k: 'do → did', v: 'делать' },
+        { k: 'come → came', v: 'приходить' },
+        { k: 'take → took', v: 'брать' },
+      ]},
+    ],
+    tests: [
+      { q: 'Какое время: «She plays tennis every Sunday»?', opts: ['Present Simple','Present Continuous','Past Simple','Future Simple'], ans: 0, exp: 'Every Sunday — регулярное действие → Present Simple' },
+      { q: 'Правильная форма: «He (not/watch) TV now»?', opts: ['is not watching','does not watch','not watched','will not watch'], ans: 0, exp: 'NOW + действие в процессе → Present Continuous: is not watching' },
+      { q: 'Вставь артикль: «I have ___ cat»', opts: ['a','the','an','—'], ans: 0, exp: 'Кошка упоминается впервые, это не конкретная → a cat' },
+      { q: 'Past Simple от глагола «go»?', opts: ['went','goed','goes','going'], ans: 0, exp: 'go — неправильный глагол, его форма Past Simple: went' },
+      { q: 'Переведи: «Я делаю уроки каждый день»', opts: ['I do homework every day','I am doing homework every day','I did homework every day','I will do homework every day'], ans: 0, exp: 'Каждый день — регулярное действие → Present Simple: I do homework every day' },
+    ],
+  },
+  speech: {
+    name: 'Мастерская Речи', icon: '🔮', color: '#dda0dd',
+    topics: [
+      { id: 'sp1', name: 'Что такое текст', sub: 'Признаки текста, тема, идея', xp: 10 },
+      { id: 'sp2', name: 'Типы речи', sub: 'Описание, повествование, рассуждение', xp: 15 },
+      { id: 'sp3', name: 'Сочинение-описание', sub: 'Структура: вступление, основная, заключение', xp: 25 },
+      { id: 'sp4', name: 'Сочинение-повествование', sub: 'События, завязка, кульминация, развязка', xp: 25 },
+      { id: 'sp5', name: 'Сочинение-рассуждение', sub: 'Тезис, аргументы, вывод', xp: 25 },
+      { id: 'sp6', name: 'Изложение', sub: 'Сжатое и подробное изложение текста', xp: 20 },
+      { id: 'sp7', name: 'Выразительные средства', sub: 'Эпитет, метафора, сравнение', xp: 20 },
+      { id: 'sp8', name: 'Стили речи', sub: 'Разговорный, научный, художественный', xp: 15 },
+      { id: 'sp9', name: 'Сборка текста из частей', sub: 'Квест: составить рассказ', xp: 20 },
+    ],
+    examples: ['Напиши 3 предложения-описания осени в парке','Определи тип речи: «Солнце медленно опустилось за горизонт»','Найди эпитеты в тексте: «золотые листья, тихий вечер»','Составь план сочинения-рассуждения'],
+    cheatsheet: [
+      { title: '📝 Типы речи', rows: [
+        { k: 'Описание', v: 'Какой? Каков? — признаки предмета' },
+        { k: 'Повествование', v: 'Что произошло? — события, действия' },
+        { k: 'Рассуждение', v: 'Почему? — тезис + аргументы + вывод' },
+      ]},
+      { title: '✍️ Структура сочинения', rows: [
+        { k: 'Вступление', v: '1-2 предложения, тема' },
+        { k: 'Основная часть', v: 'Главное содержание, примеры' },
+        { k: 'Заключение', v: 'Вывод, мысль автора' },
+      ]},
+      { title: '🎨 Выразительные средства', rows: [
+        { k: 'Эпитет', v: '«Золотая осень» — яркий образный признак' },
+        { k: 'Метафора', v: '«Море огней» — скрытое сравнение' },
+        { k: 'Сравнение', v: '«Быстрый, как ветер» — прямое сравнение' },
+      ]},
+    ],
+    tests: [
+      { q: 'Какой тип речи: «Листья жёлтые, хрупкие, пахнущие осенью»?', opts: ['Описание','Повествование','Рассуждение','Диалог'], ans: 0, exp: 'Отвечает на вопрос «Какие?» → описание' },
+      { q: 'Что такое тезис в сочинении-рассуждении?', opts: ['Главная мысль, которую доказываешь','Список аргументов','Заключительное предложение','Описание событий'], ans: 0, exp: 'Тезис — это утверждение, которое нужно доказать аргументами' },
+      { q: 'Найди эпитет в предложении «Тихий вечер опустился на город»', opts: ['Тихий','Вечер','Опустился','Город'], ans: 0, exp: 'Эпитет — образное прилагательное: «тихий» создаёт настроение' },
+    ],
+  },
+};
+
+// ============================================================
+//  DIALOGUE ENGINE (Socratic method)
+// ============================================================
+const DIALOGUE = {
+  math: {
+    opener: (name) => `Привет, ${name}! Я прочитал задачу. Давай не торопиться — разберём по шагам. Сначала скажи: что нужно найти в задаче? Что является ответом?`,
+    stages: [
+      (t) => `Хорошо! Теперь посмотри на условие — какие числа или данные там есть? Запиши их.`,
+      (t) => `Отлично! Теперь подумай: какое математическое действие поможет найти ответ? Сложение, вычитание, умножение или деление?`,
+      (t) => `Правильное направление! Попробуй записать пример и посчитать. Что получается?`,
+      (t) => `Уже близко! Проверь ответ: если подставить его обратно в условие — всё сходится?`,
+    ],
+    hints: [
+      `💡 Подсказка: выдели ключевые слова в условии — «осталось», «взяли», «нашли» подскажут действие.`,
+      `💡 Попробуй нарисовать схему или краткую запись. Иногда это помогает увидеть решение.`,
+      `💡 Если застрял на дробях — найди общий знаменатель. Если на процентах — вспомни: 1% = число ÷ 100.`,
+    ],
+    praise: [
+      `Вот! Ты сам это нашёл — вот что значит думать, а не угадывать.`,
+      `Точно! Видишь — ты умеешь. Просто надо было не торопиться.`,
+      `Верно! Запомни этот шаг — он встретится ещё не раз.`,
+    ],
+    wrong: [
+      `Хм, не совсем. Вернись к данным — посмотри, всё ли ты учёл?`,
+      `Почти! Но где-то закралась ошибка. Какой шаг ты сделал первым?`,
+      `Не расстраивайся — ошибка где-то рядом. Давай разберём подробнее.`,
+    ],
+  },
+  russian: {
+    opener: (name) => `Привет, ${name}! Посмотрел задание — интересное. Перед тем как вставлять буквы или расставлять знаки, скажи: какое правило сюда подходит? Ты его помнишь?`,
+    stages: [
+      (t) => `Хорошо! Теперь найди в тексте «слабое место» — ту букву или знак, где ты сомневаешься. Что там?`,
+      (t) => `Применяем правило. Как именно его нужно использовать здесь? Покажи шаг.`,
+      (t) => `Почти готово! Проверь: после применения правила всё выглядит правильно?`,
+    ],
+    hints: [
+      `💡 Попробуй поставить слово в другую форму — часто ударение подскажет нужную букву.`,
+      `💡 Если это глагол, определи сначала спряжение: поставь в инфинитив.`,
+      `💡 Для запятых: найди грамматическую основу (подлежащее + сказуемое) — это поможет.`,
+    ],
+    praise: [
+      `Молодец! Ты применил правило правильно — это самое важное.`,
+      `Верно! Именно так работает это правило. Запомни этот пример.`,
+      `Точно! Видишь — знание правила помогает.`,
+    ],
+    wrong: [
+      `Не совсем. Вернись к правилу — ты правильно его применил?`,
+      `Почти! Но есть ошибка. Что именно ты сделал в этом шаге?`,
+      `Ошибка близко. Проверь: это слово словарное или можно подобрать проверочное?`,
+    ],
+  },
+  english: {
+    opener: (name) => `Hi ${name}! 👋 Смотрел твоё задание. Давай разберёмся вместе. Сначала — какое время нам нужно? Есть ли в предложении слова-маркеры: every day, now, yesterday, tomorrow?`,
+    stages: [
+      (t) => `Good! Теперь вспомни правило для этого времени. Как строится утвердительное предложение?`,
+      (t) => `Отлично! Примени правило к конкретному предложению. Что получается?`,
+      (t) => `Проверь: окончание глагола правильное? Для 3-го лица ед.ч. Present Simple есть нюанс.`,
+    ],
+    hints: [
+      `💡 Маркеры времён: every day/always/usually → Present Simple; now/at the moment → Present Continuous; yesterday/ago → Past Simple.`,
+      `💡 Если сомневаешься в форме — поставь подлежащее и вспомни правило спряжения.`,
+      `💡 Артикли: a — первый раз, the — уже известный предмет, без артикля — имена, страны.`,
+    ],
+    praise: [
+      `Perfect! Exactly right! Ты вспомнил правило и применил его верно.`,
+      `Well done! Вот это уже настоящий английский — ты справился!`,
+      `Great job! Запомни эту форму — она встретится ещё много раз.`,
+    ],
+    wrong: [
+      `Not quite! Посмотри на подлежащее — 3-е лицо единственного числа или нет?`,
+      `Almost there! Но проверь маркеры времени в предложении.`,
+      `Try again! Вернись к правилу — может, спутал форму.`,
+    ],
+  },
+  speech: {
+    opener: (name) => `Привет, ${name}! Отличная тема для работы. Давай не спешить с текстом. Сначала подумай: о чём ты хочешь написать? Какова главная мысль?`,
+    stages: [
+      (t) => `Хорошо! Теперь составь план: что будет во вступлении, в основной части, в заключении?`,
+      (t) => `Отличный план! Начни с вступления — 2-3 предложения. Что там будет?`,
+      (t) => `Вступление готово! Теперь основная часть — раскрой главную мысль. Используй примеры.`,
+    ],
+    hints: [
+      `💡 Используй «слова-мостики» для связи предложений: «во-первых», «кроме того», «таким образом».`,
+      `💡 В описании: прилагательные, детали, ощущения. В рассуждении: потому что, поэтому, следовательно.`,
+      `💡 Проверь: в заключении должна быть мысль, которая подводит итог — не новые факты!`,
+    ],
+    praise: [
+      `Отлично! Текст получается живым и интересным.`,
+      `Хорошо! Вижу, что ты думаешь о читателе — это правильно.`,
+      `Молодец! Структура соблюдена, мысль понятна.`,
+    ],
+    wrong: [
+      `Почти! Но перечитай — есть ли здесь главная мысль?`,
+      `Хм, посмотри на план — ты следуешь ему?`,
+      `Попробуй ещё раз. Что ты хочешь сказать этим предложением?`,
+    ],
+  },
+};
+
+// ============================================================
+//  STATE & STORAGE
+// ============================================================
+const LS = {
+  save: (k, v) => { try { localStorage.setItem('umnik_' + k, JSON.stringify(v)); } catch(e){} },
+  load: (k, d) => { try { const v = localStorage.getItem('umnik_' + k); return v ? JSON.parse(v) : d; } catch(e) { return d; } },
+  del: (k) => localStorage.removeItem('umnik_' + k),
+};
+let ST = {
+  user: null,       // {name, role}
+  zone: null,       // 'math' | 'russian' | 'english' | 'speech'
+  topicId: null,
+  task: '',
+  taskSource: 'manual', // 'manual' | 'topic'
+  msgs: [],
+  hints: 0,
+  xp: 0,
+  doneTopics: {},    // {topicId: true}
+  progress: [],      // session logs
+  stageIdx: 0,
+  loading: false,
+  prevScreen: 'screen-zone',
+};
+
+function loadState() {
+  ST.user = LS.load('user', null);
+  ST.xp = LS.load('xp', 0);
+  ST.doneTopics = LS.load('done', {});
+  ST.progress = LS.load('progress', []);
+}
+function saveState() {
+  LS.save('user', ST.user);
+  LS.save('xp', ST.xp);
+  LS.save('done', ST.doneTopics);
+  LS.save('progress', ST.progress);
+}
+
+// ============================================================
+//  SCREENS
+// ============================================================
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goHome() { renderHome(); show('screen-home'); }
+
+// ============================================================
+//  LOGIN
+// ============================================================
+let _role = 'pupil';
+let _inputMode = 'text';
+
+function setRole(r) {
+  _role = r;
+  document.getElementById('rc-pupil').classList.toggle('sel', r === 'pupil');
+  document.getElementById('rc-parent').classList.toggle('sel', r === 'parent');
+  document.getElementById('mode-group').style.display = r === 'pupil' ? '' : 'none';
+}
+function setInputMode(m) {
+  _inputMode = m;
+  ['text','voice','both'].forEach(x => document.getElementById('rm-' + x).classList.toggle('sel', x === m));
+}
+function doLogin() {
+  const name = document.getElementById('inp-name').value.trim();
+  if (!name) { document.getElementById('inp-name').focus(); return; }
+  ST.user = { name, role: _role, inputMode: _inputMode };
+  saveState();
+  if (_role === 'parent') { showParent(); return; }
+  renderHome();
+  show('screen-home');
+}
+function doLogout() {
+  LS.del('user');
+  show('screen-login');
+}
+
+// ============================================================
+//  HOME
+// ============================================================
+const GREETINGS = [
+  (n) => `${n}, готов прокачать знания? Выбирай зону!`,
+  (n) => `Снова ты, ${n}! Продолжаем приключение.`,
+  (n) => `${n}, сегодня тоже разберёмся с любой задачей!`,
+  (n) => `Привет, ${n}! Что разбираем сегодня?`,
+];
+const DAILY_QUESTS = [
+  { title: 'Реши задачу на проценты', zone: 'math', topicId: 'm10', xp: 15 },
+  { title: 'Вставь пропущенные буквы', zone: 'russian', topicId: 'r7', xp: 15 },
+  { title: 'Поставь глагол в Present Simple', zone: 'english', topicId: 'e3', xp: 15 },
+  { title: 'Напиши 3 предложения-описания', zone: 'speech', topicId: 'sp3', xp: 15 },
+  { title: 'Найди НОД и НОК двух чисел', zone: 'math', topicId: 'm4', xp: 15 },
+  { title: 'Определи падеж трёх существительных', zone: 'russian', topicId: 'r5', xp: 15 },
+  { title: 'Переведи 5 предложений', zone: 'english', topicId: 'e14', xp: 15 },
+];
+function renderHome() {
+  if (!ST.user) return;
+  const g = GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
+  document.getElementById('hero-name').textContent = ST.user.name;
+  document.getElementById('hero-msg').textContent = g(ST.user.name).replace(ST.user.name + ', ', '');
+  document.getElementById('xp-count').textContent = ST.xp;
+  const today = new Date().getDay();
+  const dq = DAILY_QUESTS[today % DAILY_QUESTS.length];
+  document.getElementById('dq-title').textContent = dq.title;
+  // Progress bars
+  const zones = ['math', 'russian', 'english', 'speech'];
+  zones.forEach(z => {
+    const topics = CURRICULUM[z].topics;
+    const done = topics.filter(t => ST.doneTopics[t.id]).length;
+    const pct = topics.length ? Math.round(done / topics.length * 100) : 0;
+    const el = document.getElementById('prog-' + z);
+    if (el) el.style.width = pct + '%';
+  });
+}
+function startDailyQuest() {
+  const today = new Date().getDay();
+  const dq = DAILY_QUESTS[today % DAILY_QUESTS.length];
+  ST.zone = dq.zone;
+  openTaskInputForTopic(dq.topicId);
+}
+
+// ============================================================
+//  ZONE
+// ============================================================
+function openZone(zone) {
+  ST.zone = zone;
+  const cur = CURRICULUM[zone];
+  document.getElementById('zh-icon').textContent = cur.icon;
+  document.getElementById('zh-title').textContent = cur.name;
+  const list = document.getElementById('topic-list');
+  list.innerHTML = cur.topics.map((t, i) => {
+    const done = ST.doneTopics[t.id];
+    return `<div class="topic-item${done ? ' done' : ''}" onclick="openTaskInputForTopic('${t.id}')">
+      <span class="t-num">${String(i + 1).padStart(2, '0')}</span>
+      <div class="t-info">
+        <div class="t-name">${t.name}</div>
+        <div class="t-sub">${t.sub}</div>
+      </div>
+      <div>
+        <div class="t-status">${done ? '✅' : '○'}</div>
+        <div class="t-xp text-xs" style="color:var(--accent);text-align:right">+${t.xp} XP</div>
+      </div>
+    </div>`;
+  }).join('');
+  show('screen-zone');
+}
+function openTaskInput() {
+  ST.topicId = null;
+  ST.prevScreen = 'screen-zone';
+  renderTaskInput();
+  show('screen-task');
+}
+function openTaskInputForTopic(topicId) {
+  ST.topicId = topicId;
+  ST.prevScreen = 'screen-zone';
+  renderTaskInput();
+  show('screen-task');
+}
+
+// ============================================================
+//  TASK INPUT
+// ============================================================
+function renderTaskInput() {
+  const cur = CURRICULUM[ST.zone];
+  document.getElementById('task-zone-icon').textContent = cur.icon;
+  document.getElementById('task-zone-title').textContent = cur.name;
+  document.getElementById('task-back-btn').onclick = () => show('screen-zone');
+  const ta = document.getElementById('task-input');
+  ta.value = '';
+  if (ST.topicId) {
+    const topic = cur.topics.find(t => t.id === ST.topicId);
+    if (topic) {
+      ta.placeholder = `Тема: ${topic.name}\n\nВведи своё задание или задай вопрос по теме...`;
+    }
+  } else {
+    ta.placeholder = `Напиши условие задачи или свой вопрос...`;
+  }
+  // Quick tags
+  document.getElementById('quick-tags').innerHTML = cur.examples.map(e =>
+    `<div class="tag" onclick="setExample(this)">${e.length > 45 ? e.slice(0, 45) + '…' : e}</div>`
+  ).join('');
+  // Mini topic list
+  const ml = document.getElementById('mini-topic-list');
+  ml.innerHTML = cur.topics.slice(0, 6).map(t =>
+    `<div class="topic-pill${ST.topicId === t.id ? ' sel' : ''}" onclick="selectTopic('${t.id}')">
+      <span class="tp-icon">${cur.icon}</span>
+      <span class="tp-text">${t.name}</span>
+    </div>`
+  ).join('');
+}
+function setExample(el) {
+  document.getElementById('task-input').value = el.textContent.replace('…', '');
+}
+function selectTopic(id) {
+  ST.topicId = id;
+  document.querySelectorAll('.topic-pill').forEach(el => el.classList.remove('sel'));
+  event.currentTarget.classList.add('sel');
+}
+
+// ============================================================
+//  CHAT
+// ============================================================
+function startChat() {
+  const task = document.getElementById('task-input').value.trim();
+  if (!task) { document.getElementById('task-input').focus(); return; }
+  ST.task = task;
+  ST.msgs = [];
+  ST.hints = 0;
+  ST.stageIdx = 0;
+  ST.loading = false;
+  const cur = CURRICULUM[ST.zone];
+  const topicName = ST.topicId ? cur.topics.find(t => t.id === ST.topicId)?.name || '' : '';
+  document.getElementById('tb-subject').textContent = cur.name + (topicName ? ': ' + topicName : '') + ' — ';
+  document.getElementById('tb-text').textContent = task.length > 80 ? task.slice(0, 80) + '…' : task;
+  document.getElementById('task-badge').style.display = '';
+  document.getElementById('chat-msgs').innerHTML = '';
+  document.getElementById('chat-input').value = '';
+  document.getElementById('send-btn').disabled = true;
+  updateHints();
+  applyInputMode();
+  show('screen-chat');
+  document.getElementById('chat-input').addEventListener('input', updateSendBtn);
+  setTimeout(async () => {
+    showTyping();
+    // Первое приветствие — просим Claude открыть диалог с учеником
+    const openingPrompt = `Начни диалог: поздоровайся с учеником и задай первый наводящий вопрос по заданию. Не давай ответ, только помоги начать думать.`;
+    const opener = await askClaude(openingPrompt);
+    removeTyping();
+    if (opener) addBotMsg(opener);
+    document.getElementById('chat-input').focus();
+  }, 300);
+}
+function goToTask() {
+  show('screen-task');
+}
+
+function updateSendBtn() {
+  const v = document.getElementById('chat-input').value.trim();
+  document.getElementById('send-btn').disabled = !v || ST.loading;
+}
+function chatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+}
+function sendMsg() {
+  const el = document.getElementById('chat-input');
+  const text = el.value.trim();
+  if (!text || ST.loading) return;
+  el.value = '';
+  updateSendBtn();
+  addUserMsg(text);
+  processResponse(text);
+}
+
+// ============================================================
+//  CLAUDE API
+// ============================================================
+
+const SYSTEM_PROMPTS = {
+  math: `Ты Умник — добрый и терпеливый репетитор по математике для школьников 5-7 класса.
+Твой метод — сократический: ты НЕ даёшь готовые ответы, только наводящие вопросы.
+Задание ученика: {TASK}
+Имя ученика: {NAME}
+Правила:
+- Один вопрос за раз, короткий
+- Хвали усилия, а не результат («Хорошая попытка!», «Ты думаешь в правильном направлении»)
+- Если ученик застрял — дай маленькую подсказку, не решение
+- Отвечай на русском, тепло и с юмором
+- Максимум 3-4 предложения за ответ`,
+  russian: `Ты Умник — добрый репетитор по русскому языку для школьников 5-7 класса.
+Твой метод — сократический: ты НЕ даёшь готовые ответы, только наводящие вопросы.
+Задание ученика: {TASK}
+Имя ученика: {NAME}
+Правила:
+- Один вопрос за раз, короткий
+- Напоминай правила через вопросы, не объявления
+- Если ученик правильно — подтверди и переходи к следующему шагу
+- Отвечай на русском, тепло
+- Максимум 3-4 предложения за ответ`,
+  english: `You are Умник — a friendly English tutor for Russian schoolchildren grades 5-7.
+Use Socratic method: ask leading questions, don't give direct answers.
+Student's task: {TASK}
+Student's name: {NAME}
+Rules:
+- Mix Russian and English naturally (explain in Russian, practice in English)
+- One question at a time
+- Praise effort warmly
+- Max 3-4 sentences per reply`,
+  speech: `Ты Умник — добрый репетитор по развитию речи и письму для школьников 5-7 класса.
+Твой метод — сократический: помогаешь ученику самому найти идеи и слова.
+Задание ученика: {TASK}
+Имя ученика: {NAME}
+Правила:
+- Задавай вопросы об идеях и структуре, не правь текст сразу
+- Один вопрос за раз
+- Отвечай на русском, тепло и вдохновляюще
+- Максимум 3-4 предложения за ответ`,
+};
+
+async function askClaude(userText) {
+  const systemPrompt = (SYSTEM_PROMPTS[ST.zone] || SYSTEM_PROMPTS.math)
+    .replace('{TASK}', ST.task)
+    .replace('{NAME}', ST.user?.name || 'ученик');
+
+  ST.msgs.push({ role: 'user', content: userText });
+
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5',
+        max_tokens: 512,
+        system: systemPrompt,
+        messages: ST.msgs,
+      }),
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      return `❌ Ошибка (${resp.status}): ${err.error?.message || 'попробуй ещё раз'}`;
+    }
+
+    const data = await resp.json();
+    const reply = data.content[0].text;
+    ST.msgs.push({ role: 'assistant', content: reply });
+    return reply;
+  } catch (e) {
+    return '❌ Нет соединения. Проверь интернет и попробуй снова.';
+  }
+}
+
+async function processResponse(text) {
+  const lower = text.toLowerCase();
+  const isPositive = ['понял','нашёл','нашел','получилось','ответ','равно','решил','знаю','вижу','да','понятно','верно','решила','сделала'].some(w => lower.includes(w));
+
+  showTyping();
+  const reply = await askClaude(text);
+  removeTyping();
+
+  if (reply) addBotMsg(reply);
+
+  // Геймификация: если ответ позитивный — начисляем XP
+  if (isPositive && reply && !reply.startsWith('❌')) {
+    const topicXp = ST.topicId ? (CURRICULUM[ST.zone].topics.find(t => t.id === ST.topicId)?.xp || 10) : 10;
+    addXp(Math.round(topicXp * 0.5));
+    if (ST.topicId && ST.msgs.length > 6) {
+      ST.doneTopics[ST.topicId] = true;
+      saveState();
+      showPraise();
+    }
+    saveState();
+  }
+}
+
+function addBotMsg(text) {
+  const msgs = document.getElementById('chat-msgs');
+  const d = document.createElement('div');
+  d.className = 'msg bot';
+  d.innerHTML = `<div class="m-avatar">🧙</div><div class="m-bubble">${escHtml(text)}</div>`;
+  msgs.appendChild(d);
+  scrollDown();
+}
+function addUserMsg(text) {
+  const msgs = document.getElementById('chat-msgs');
+  const d = document.createElement('div');
+  d.className = 'msg user';
+  d.innerHTML = `<div class="m-bubble">${escHtml(text)}</div>`;
+  msgs.appendChild(d);
+  scrollDown();
+}
+function showTyping() {
+  ST.loading = true;
+  updateSendBtn();
+  document.getElementById('chat-status').textContent = 'думает...';
+  const msgs = document.getElementById('chat-msgs');
+  const d = document.createElement('div');
+  d.id = 'typing-ind';
+  d.className = 'msg bot';
+  d.innerHTML = `<div class="m-avatar">🧙</div><div class="m-bubble" style="padding:10px 14px"><div class="typing-dots"><div class="td"></div><div class="td"></div><div class="td"></div></div></div>`;
+  msgs.appendChild(d);
+  scrollDown();
+}
+function removeTyping() {
+  ST.loading = false;
+  document.getElementById('chat-status').textContent = 'онлайн';
+  const t = document.getElementById('typing-ind');
+  if (t) t.remove();
+}
+function updateHints() {
+  for (let i = 1; i <= 5; i++) {
+    const el = document.getElementById('hd' + i);
+    if (el) el.classList.toggle('used', i <= ST.hints);
+  }
+}
+function scrollDown() {
+  const m = document.getElementById('chat-msgs');
+  m.scrollTop = m.scrollHeight;
+}
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+function showPraise() {
+  const el = document.createElement('div');
+  el.className = 'praise-msg';
+  el.innerHTML = `<div class="praise-icon">⭐</div><div class="praise-text">Отлично! Сам разобрался — это настоящий прогресс!</div>`;
+  document.getElementById('chat-msgs').appendChild(el);
+  scrollDown();
+}
+function addXp(amount) {
+  ST.xp += amount;
+  saveState();
+  const el = document.createElement('div');
+  el.className = 'xp-popup';
+  el.textContent = '+' + amount + ' XP';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2100);
+  document.getElementById('xp-count').textContent = ST.xp;
+}
+
+// ============================================================
+//  CHEATSHEET
+// ============================================================
+function openCheatSheet() {
+  if (!ST.zone) return;
+  const data = CURRICULUM[ST.zone].cheatsheet;
+  let html = '';
+  data.forEach(section => {
+    html += `<div class="cheat-card"><h3>${section.title}</h3>`;
+    section.rows.forEach(row => {
+      html += `<div class="cheat-row"><span class="ck">${row.k}</span><span class="cv">${row.v}</span></div>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('cheat-body').innerHTML = html;
+  ST.prevScreen = 'screen-chat';
+  show('screen-cheat');
+}
+function backFromCheat() { show(ST.prevScreen || 'screen-chat'); }
+
+// ============================================================
+//  TEST
+// ============================================================
+let testState = { questions: [], idx: 0, score: 0, answered: false };
+function openTest() {
+  if (!ST.zone) return;
+  const tests = CURRICULUM[ST.zone].tests;
+  testState = { questions: [...tests], idx: 0, score: 0, answered: false };
+  document.getElementById('test-header-title').textContent = 'Тест: ' + CURRICULUM[ST.zone].name;
+  renderQuestion();
+  ST.prevScreen = 'screen-chat';
+  show('screen-test');
+}
+function renderQuestion() {
+  const { questions, idx } = testState;
+  if (idx >= questions.length) { renderResult(); return; }
+  const q = questions[idx];
+  const pct = Math.round(idx / questions.length * 100);
+  document.getElementById('test-body').innerHTML = `
+    <div class="test-progress"><div class="test-fill" style="width:${pct}%"></div></div>
+    <div class="q-num">Вопрос ${idx + 1} из ${questions.length}</div>
+    <div class="q-text">${escHtml(q.q)}</div>
+    <div class="answers">${q.opts.map((o, i) =>
+      `<button class="answer-btn" onclick="answerTest(${i})">${escHtml(o)}</button>`
+    ).join('')}</div>
+    <div class="explain-box" id="explain-box">${q.exp}</div>
+    <div id="next-btn" style="display:none;margin-top:16px">
+      <button class="btn-main" onclick="nextQuestion()" style="font-size:9px">СЛЕДУЮЩИЙ ВОПРОС →</button>
+    </div>
+  `;
+  testState.answered = false;
+}
+function answerTest(idx) {
+  if (testState.answered) return;
+  testState.answered = true;
+  const q = testState.questions[testState.idx];
+  const btns = document.querySelectorAll('.answer-btn');
+  btns.forEach(b => b.disabled = true);
+  if (idx === q.ans) {
+    btns[idx].classList.add('correct');
+    testState.score++;
+    addXp(5);
+  } else {
+    btns[idx].classList.add('wrong');
+    btns[q.ans].classList.add('correct');
+  }
+  document.getElementById('explain-box').classList.add('show');
+  document.getElementById('next-btn').style.display = '';
+}
+function nextQuestion() {
+  testState.idx++;
+  renderQuestion();
+}
+function renderResult() {
+  const { questions, score } = testState;
+  const pct = Math.round(score / questions.length * 100);
+  const msg = pct >= 80 ? '🏆 Отлично! Тема освоена!' : pct >= 60 ? '👍 Хорошо! Ещё чуть-чуть!' : '💪 Повтори тему — ты справишься!';
+  document.getElementById('test-body').innerHTML = `
+    <div class="test-result">
+      <div class="result-score">${score}/${questions.length}</div>
+      <div class="result-msg">${msg}</div>
+      <div class="result-sub">${pct}% правильных ответов${pct >= 80 ? ' · +20 XP за отличный результат!' : ''}</div>
+      <button class="btn-main" onclick="backFromTest()">← ВЕРНУТЬСЯ К УРОКУ</button>
+      <div style="margin-top:10px">
+        <button class="btn-main" style="background:var(--bg3);color:var(--text);font-size:9px" onclick="openTest()">ПРОЙТИ ЕЩЁ РАЗ</button>
+      </div>
+    </div>`;
+  if (pct >= 80) addXp(20);
+}
+function backFromTest() { show(ST.prevScreen || 'screen-chat'); }
+
+// ============================================================
+//  ACHIEVEMENTS
+// ============================================================
+const ACHIEVEMENTS = [
+  { key: 'first', icon: '🌱', name: 'Первый шаг', desc: 'Начал первый урок с Умником', check: () => ST.progress.length >= 1 },
+  { key: 'solo', icon: '⚡', name: 'Сам!', desc: 'Решил задание без подсказок', check: () => Object.keys(ST.doneTopics).length >= 1 },
+  { key: 'xp50', icon: '💰', name: '50 опыта', desc: 'Накоплено 50 XP', check: () => ST.xp >= 50 },
+  { key: 'xp200', icon: '💎', name: '200 опыта', desc: 'Накоплено 200 XP', check: () => ST.xp >= 200 },
+  { key: 'math3', icon: '⚙️', name: 'Шахтёр', desc: 'Изучено 3 темы по математике', check: () => CURRICULUM.math.topics.filter(t => ST.doneTopics[t.id]).length >= 3 },
+  { key: 'multi', icon: '🗺️', name: 'Путешественник', desc: 'Позанимался в 2 разных зонах', check: () => new Set(ST.progress.map(p => p.zone)).size >= 2 },
+  { key: 'test100', icon: '🎯', name: 'Снайпер', desc: 'Прошёл тест на 100%', check: () => false /* auto unlock via test */ },
+  { key: 'topics10', icon: '📚', name: 'Знаток', desc: 'Изучено 10 тем', check: () => Object.keys(ST.doneTopics).length >= 10 },
+  { key: 'cheat', icon: '📋', name: 'Справочник', desc: 'Открывал шпаргалку', check: () => ST.xp > 5 },
+  { key: 'streak', icon: '🔥', name: 'На волне', desc: 'Занимался 3 дня подряд', check: () => false },
+];
+function showAch() {
+  const grid = document.getElementById('ach-grid');
+  grid.innerHTML = ACHIEVEMENTS.map(a => {
+    const ok = a.check();
+    return `<div class="ach-card ${ok ? 'unlocked' : 'locked'}">
+      <div class="ach-icon">${ok ? a.icon : '🔒'}</div>
+      <div class="ach-name">${a.name}</div>
+      <div class="ach-desc">${a.desc}</div>
+    </div>`;
+  }).join('');
+  show('screen-ach');
+}
+
+// ============================================================
+//  PARENT DASHBOARD
+// ============================================================
+function showParent() {
+  const today = new Date().toLocaleDateString('ru-RU', { day:'numeric', month:'long' });
+  const totalTopics = Object.keys(ST.doneTopics).length;
+  const allTopics = Object.values(CURRICULUM).reduce((s, c) => s + c.topics.length, 0);
+  const pct = Math.round(totalTopics / allTopics * 100);
+  const sessions = ST.progress.length;
+  const name = ST.user?.name || 'Ученик';
+  let zoneHtml = '';
+  Object.entries(CURRICULUM).forEach(([z, c]) => {
+    const done = c.topics.filter(t => ST.doneTopics[t.id]).length;
+    const p = c.topics.length ? Math.round(done / c.topics.length * 100) : 0;
+    zoneHtml += `<div class="zone-prog-item">
+      <span class="zp-icon">${c.icon}</span>
+      <div class="zp-info">
+        <div class="zp-name">${c.name}</div>
+        <div class="zp-bar"><div class="zp-fill" style="width:${p}%;background:${c.color}"></div></div>
+      </div>
+      <div class="zp-pct" style="color:${c.color}">${p}%</div>
+    </div>`;
+  });
+  document.getElementById('parent-body').innerHTML = `
+    <div style="margin-bottom:16px;font-size:13px;color:var(--text2)">
+      Данные на <strong style="color:var(--text)">${today}</strong>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box"><span class="stat-num">${ST.xp}</span><span class="stat-label">XP заработано</span></div>
+      <div class="stat-box"><span class="stat-num">${totalTopics}</span><span class="stat-label">Тем изучено</span></div>
+      <div class="stat-box"><span class="stat-num">${pct}%</span><span class="stat-label">Прогресс</span></div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-header">📊 Прогресс по предметам</div>
+      <div>${zoneHtml}</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-header">💡 Для родителя</div>
+      <div class="insight-body">
+        Умник <strong>не даёт готовые ответы</strong> — задаёт вопросы и направляет.<br><br>
+        ${totalTopics === 0
+          ? `${name} ещё не прошёл ни одной темы. Самое время начать!`
+          : `${name} уже изучил ${totalTopics} тем${totalTopics >= 5 ? ' — хороший прогресс!' : '.'}${ST.xp >= 50 ? ' Набрал ' + ST.xp + ' XP — старается!' : ''}`}
+      </div>
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn-main" style="font-size:9px" onclick="show('screen-login')">← ВЫЙТИ</button>
+    </div>
+  `;
+  show('screen-parent');
+}
+
+// ============================================================
+//  VOICE INPUT (Web Speech API)
+// ============================================================
+let recognition = null;
+let isListening = false;
+
+function initVoice() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) return false;
+  recognition = new SpeechRecognition();
+  recognition.lang = 'ru-RU';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+  recognition.onresult = (e) => {
+    const text = e.results[0][0].transcript;
+    const inp = document.getElementById('chat-input');
+    inp.value = (inp.value ? inp.value + ' ' : '') + text;
+    updateSendBtn();
+    stopListening();
+  };
+  recognition.onerror = () => stopListening();
+  recognition.onend = () => stopListening();
+  return true;
+}
+function toggleVoice() {
+  if (isListening) { stopListening(); return; }
+  if (!recognition && !initVoice()) {
+    alert('Голосовой ввод не поддерживается в этом браузере. Используй Chrome.');
+    return;
+  }
+  isListening = true;
+  recognition.start();
+  document.getElementById('mic-btn').style.background = '#ef5350';
+  document.getElementById('mic-btn').textContent = '⏹';
+  document.getElementById('voice-status').style.display = '';
+}
+function stopListening() {
+  isListening = false;
+  if (recognition) try { recognition.stop(); } catch(e) {}
+  const btn = document.getElementById('mic-btn');
+  if (btn) { btn.style.background = 'var(--bg3)'; btn.textContent = '🎤'; }
+  const vs = document.getElementById('voice-status');
+  if (vs) vs.style.display = 'none';
+}
+
+function applyInputMode() {
+  const mode = ST.user?.inputMode || 'text';
+  const micBtn = document.getElementById('mic-btn');
+  const chatInp = document.getElementById('chat-input');
+  if (!micBtn || !chatInp) return;
+  if (mode === 'text') {
+    micBtn.style.display = 'none';
+    chatInp.placeholder = 'Напиши ответ или вопрос...';
+  } else if (mode === 'voice') {
+    micBtn.style.display = 'flex';
+    chatInp.placeholder = 'Нажми 🎤 и говори...';
+  } else {
+    micBtn.style.display = 'flex';
+    chatInp.placeholder = 'Напиши или нажми 🎤';
+  }
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+loadState();
+if (ST.user) {
+  if (ST.user.role === 'parent') {
+    showParent();
+  } else {
+    renderHome();
+    show('screen-home');
+  }
+}
+</script>
+</body>
+</html>
