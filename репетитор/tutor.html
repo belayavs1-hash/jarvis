@@ -254,6 +254,38 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
 .cheat-row .cv { color: var(--text); font-weight: 700; flex: 1; text-align: right; }
 .cheat-formula { font-family: monospace; background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 11px; color: var(--accent2); }
 
+/* ===== MY CHEATSHEETS ===== */
+#screen-mycheat { max-width: 480px; margin: 0 auto; width: 100%; }
+.mycheat-empty { text-align:center; padding: 48px 24px; color: var(--text3); }
+.mycheat-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 14px; overflow: hidden; }
+.mycheat-head { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--bg3); cursor:pointer; }
+.mycheat-title { font-size:13px; font-weight:900; }
+.mycheat-date { font-size:10px; color:var(--text3); }
+.mycheat-content { padding:14px 16px; font-size:13px; line-height:1.7; white-space:pre-wrap; }
+.mycheat-item { display:flex; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.mycheat-item:last-child { border-bottom:none; }
+.mycheat-q { color:var(--text3); flex:0 0 45%; }
+.mycheat-a { color:var(--text); font-weight:700; }
+
+/* ===== KNOW (Хочу всё знать) ===== */
+#screen-know { max-width: 480px; margin: 0 auto; width: 100%; }
+.know-body { flex:1; padding:16px; overflow-y:auto; }
+.know-tabs { display:flex; gap:8px; margin-bottom:16px; }
+.know-tab { flex:1; padding:8px; border-radius:10px; border:1.5px solid var(--border); background:var(--card); color:var(--text2); font-family:var(--pixel); font-size:9px; cursor:pointer; text-align:center; transition:all .15s; }
+.know-tab.active { border-color:var(--accent); color:var(--accent); background:var(--accent)18; }
+.know-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px 16px; margin-bottom:12px; cursor:pointer; transition:all .2s; }
+.know-card:hover { border-color:var(--accent); transform:translateY(-1px); }
+.know-emoji { font-size:28px; margin-bottom:8px; }
+.know-kw { font-size:10px; color:var(--accent); font-family:var(--pixel); margin-bottom:6px; letter-spacing:1px; }
+.know-fact { font-size:14px; line-height:1.6; }
+.know-src { font-size:10px; color:var(--text3); margin-top:8px; }
+
+/* ===== PHOTO CHECK ===== */
+.photo-drop { border:2px dashed var(--border); border-radius:16px; padding:32px 16px; text-align:center; cursor:pointer; transition:all .2s; margin-bottom:16px; }
+.photo-drop:hover, .photo-drop.drag { border-color:var(--accent); background:var(--accent)0f; }
+.photo-drop input { display:none; }
+.photo-preview { width:100%; border-radius:12px; margin-bottom:12px; display:none; }
+
 /* ===== TEST ===== */
 #screen-test { max-width: 480px; margin: 0 auto; width: 100%; }
 .test-body { flex: 1; padding: 16px; overflow-y: auto; }
@@ -491,9 +523,11 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
       </div>
     </div>
 
-    <div style="display:flex;gap:8px;justify-content:center;padding:8px 0;border-top:1px solid var(--border)">
-      <button class="icon-btn text-xs text-dimmer" onclick="showParent()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:6px 12px">👨‍👩‍👧 Кабинет родителя</button>
-      <button class="icon-btn text-xs text-dimmer" onclick="showAch()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:6px 12px">🏆 Достижения</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 0;border-top:1px solid var(--border)">
+      <button class="icon-btn text-xs text-dimmer" onclick="showMyCheat()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:8px">📒 Мои шпаргалки</button>
+      <button class="icon-btn text-xs text-dimmer" onclick="showKnow()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:8px">🔭 Хочу всё знать</button>
+      <button class="icon-btn text-xs text-dimmer" onclick="showParent()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:8px">👨‍👩‍👧 Кабинет родителя</button>
+      <button class="icon-btn text-xs text-dimmer" onclick="showAch()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:8px">🏆 Достижения</button>
     </div>
   </div>
 </div>
@@ -508,8 +542,9 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
   <div class="zone-body">
     <div id="zone-quest"></div>
     <div class="topic-list" id="topic-list"></div>
-    <div class="mt3">
+    <div class="mt3" style="display:flex;flex-direction:column;gap:10px">
       <button class="btn-main" style="font-size:9px" onclick="openTaskInput()">📝 ЗАДАТЬ СВОЙ ВОПРОС / ДОМАШКУ</button>
+      <button class="btn-sec" style="font-size:9px" onclick="openPhotoCheck()">📸 СДЕЛАЛА САМА — ПРОВЕРИТЬ</button>
     </div>
   </div>
 </div>
@@ -592,6 +627,55 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
     <span style="font-size:14px;font-weight:900;margin-left:8px">Шпаргалка</span>
   </div>
   <div class="cheat-body" id="cheat-body"></div>
+</div>
+
+<!-- ======= MY CHEATSHEETS ======= -->
+<div id="screen-mycheat" class="screen">
+  <div class="zone-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <span style="font-size:20px">📒</span>
+    <span style="font-size:14px;font-weight:900;margin-left:8px">Мои шпаргалки</span>
+  </div>
+  <div class="cheat-body" id="mycheat-body"></div>
+</div>
+
+<!-- ======= KNOW (Хочу всё знать) ======= -->
+<div id="screen-know" class="screen">
+  <div class="zone-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <span style="font-size:20px">🔭</span>
+    <span style="font-size:14px;font-weight:900;margin-left:8px">Хочу всё знать!</span>
+  </div>
+  <div class="know-body" id="know-body"></div>
+</div>
+
+<!-- ======= PHOTO CHECK ======= -->
+<div id="screen-photo" class="screen">
+  <div class="task-header">
+    <button class="back-btn" onclick="show('screen-zone')">←</button>
+    <span style="font-size:22px">📸</span>
+    <span style="font-size:14px;font-weight:900;margin-left:4px">Сделала сама</span>
+  </div>
+  <div class="task-body" style="padding:16px">
+    <div style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6">
+      Сфотографируй своё решение — Умник проверит и скажет что верно, а что нет.
+    </div>
+    <label class="photo-drop" id="photo-drop" onclick="document.getElementById('photo-file').click()">
+      <input type="file" id="photo-file" accept="image/*" capture="environment" onchange="onPhotoSelected(event)">
+      <div style="font-size:40px;margin-bottom:8px">📷</div>
+      <div style="font-size:14px;font-weight:800;color:var(--text2)">Нажми чтобы сфотографировать</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:4px">или выбрать из галереи</div>
+    </label>
+    <img id="photo-preview" class="photo-preview" alt="Твоё решение">
+    <div id="photo-topic-sel" style="margin-bottom:16px;display:none">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px;font-family:var(--pixel);letter-spacing:1px">ПО КАКОЙ ТЕМЕ?</div>
+      <div id="photo-topic-list" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </div>
+    <button class="btn-main" id="photo-send-btn" style="display:none" onclick="sendPhotoToCheck()">
+      🔍 ОТПРАВИТЬ НА ПРОВЕРКУ
+    </button>
+    <div id="photo-result" style="margin-top:16px"></div>
+  </div>
 </div>
 
 <!-- ======= TEST ======= -->
@@ -1488,6 +1572,7 @@ function sendMsg() {
   el.value = '';
   updateSendBtn();
   addUserMsg(text);
+  if (handleCheatAnswer(text)) return;
   processResponse(text);
 }
 
@@ -2141,15 +2226,19 @@ function renderBonusResult() {
       <div class="bonus-progress" style="margin-top:16px">
         ${BG.results.map(r => `<div class="bp-dot ${r ? 'done-ok' : 'done-no'}"></div>`).join('')}
       </div>
-      <button class="btn-main" style="margin-top:20px" onclick="exitBonus()">← ВЕРНУТЬСЯ К УРОКУ</button>
+      <button class="btn-main" style="margin-top:20px" onclick="exitBonusToCheat()">📒 СОСТАВИТЬ ШПАРГАЛКУ</button>
+      <button class="btn-main" style="margin-top:10px;background:var(--bg3);color:var(--text)" onclick="exitBonus()">← Вернуться к уроку</button>
       <div style="margin-top:10px">
         <button class="btn-main" style="background:var(--bg3);color:var(--text);font-size:9px" onclick="startBonus()">⚡ ЕЩЁ РАЗ</button>
       </div>
     </div>`;
 }
 
-function exitBonus() {
+function exitBonus() { show('screen-chat'); }
+
+function exitBonusToCheat() {
   show('screen-chat');
+  setTimeout(() => startCheatSession(), 300);
 }
 
 // ============================================================
@@ -2348,6 +2437,235 @@ a — основание, n — показатель степени.
     ]
   },
 };
+
+// ============================================================
+//  МОИ ШПАРГАЛКИ
+// ============================================================
+function saveMyCheat(zone, topicName, items) {
+  const saved = JSON.parse(localStorage.getItem('myCheatsheets') || '[]');
+  saved.unshift({
+    id: Date.now(),
+    zone, topicName,
+    date: new Date().toLocaleDateString('ru'),
+    items // [{q, a}]
+  });
+  if (saved.length > 30) saved.pop();
+  localStorage.setItem('myCheatsheets', JSON.stringify(saved));
+}
+
+function showMyCheat() {
+  const saved = JSON.parse(localStorage.getItem('myCheatsheets') || '[]');
+  const body = document.getElementById('mycheat-body');
+  if (!saved.length) {
+    body.innerHTML = `<div class="mycheat-empty">
+      <div style="font-size:48px;margin-bottom:12px">📒</div>
+      <div style="font-size:14px;font-weight:800;margin-bottom:8px">Пока пусто</div>
+      <div style="font-size:13px;color:var(--text3)">Шпаргалки появятся после того, как ты пройдёшь тему и составишь её вместе с Умником.</div>
+    </div>`;
+  } else {
+    body.innerHTML = saved.map(cs => `
+      <div class="mycheat-card">
+        <div class="mycheat-head" onclick="toggleMyCheat(${cs.id})">
+          <div>
+            <div class="mycheat-title">${cs.topicName}</div>
+            <div class="mycheat-date">${cs.zone} · ${cs.date}</div>
+          </div>
+          <span id="arrow-${cs.id}" style="font-size:18px;transition:.2s">›</span>
+        </div>
+        <div id="mcc-${cs.id}" style="display:none">
+          <div style="padding:14px 16px">
+            ${cs.items.map(it => `
+              <div class="mycheat-item">
+                <div class="mycheat-q">${it.q}</div>
+                <div class="mycheat-a">${it.a}</div>
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>`).join('');
+  }
+  show('screen-mycheat');
+}
+
+function toggleMyCheat(id) {
+  const el = document.getElementById('mcc-' + id);
+  const arr = document.getElementById('arrow-' + id);
+  const open = el.style.display !== 'none';
+  el.style.display = open ? 'none' : 'block';
+  arr.style.transform = open ? '' : 'rotate(90deg)';
+}
+
+// Режим создания шпаргалки — вызывается из чата после завершения темы
+var CHEAT_SESSION = { active: false, items: [], queueIdx: 0, questions: [] };
+
+function startCheatSession() {
+  const cur = CURRICULUM[ST.zone];
+  const topic = cur.topics.find(t => t.id === ST.topicId);
+  if (!topic) return;
+  const rule = RULES[ST.topicId];
+  const questions = rule ? rule.quiz.map(q => q.q) : [
+    'Что самое главное в этой теме?',
+    'Приведи пример из темы.',
+    'Что может быть ошибкой?',
+  ];
+  CHEAT_SESSION = { active: true, items: [], queueIdx: 0, questions, topicName: topic.name, zone: ST.zone };
+  const firstQ = questions[0];
+  appendMsg('bot', `📒 Отлично! Теперь составим шпаргалку — я задаю вопрос, ты отвечаешь своими словами.\n\n<b>Вопрос 1/${questions.length}:</b> ${firstQ}`);
+}
+
+function handleCheatAnswer(text) {
+  if (!CHEAT_SESSION.active) return false;
+  const idx = CHEAT_SESSION.queueIdx;
+  CHEAT_SESSION.items.push({ q: CHEAT_SESSION.questions[idx], a: text });
+  CHEAT_SESSION.queueIdx++;
+  if (CHEAT_SESSION.queueIdx < CHEAT_SESSION.questions.length) {
+    const nextQ = CHEAT_SESSION.questions[CHEAT_SESSION.queueIdx];
+    appendMsg('bot', `✅ Записала!\n\n<b>Вопрос ${CHEAT_SESSION.queueIdx + 1}/${CHEAT_SESSION.questions.length}:</b> ${nextQ}`);
+  } else {
+    CHEAT_SESSION.active = false;
+    saveMyCheat(CHEAT_SESSION.zone, CHEAT_SESSION.topicName, CHEAT_SESSION.items);
+    appendMsg('bot', `🏆 Шпаргалка готова! Сохранила в «Мои шпаргалки».\n\nТеперь ты можешь найти её в любой момент на главном экране. Отличная работа! ⭐`);
+  }
+  return true;
+}
+
+// ============================================================
+//  ХОЧУ ВСЁ ЗНАТЬ
+// ============================================================
+const KNOW_FACTS = {
+  math: [
+    { emoji:'🔢', title:'Откуда взялся ноль?', fact:'Ноль придумали в Индии около 628 года. До этого люди не знали как записать «ничего». Без нуля не было бы компьютеров!', tag:'История' },
+    { emoji:'🌀', title:'Число π — бесконечное', fact:'Число π = 3,14159265… не заканчивается никогда и не повторяется. Его вычислили уже до 100 триллионов знаков после запятой!', tag:'Факт' },
+    { emoji:'♾️', title:'Бесконечность бывает разной', fact:'Математик Кантор доказал что одних бесконечностей больше других. Например, вещественных чисел «больше» чем натуральных, хотя оба ряда бесконечны.', tag:'Удивительно' },
+    { emoji:'🐇', title:'Числа Фибоначчи в природе', fact:'1, 1, 2, 3, 5, 8, 13… — каждое число равно сумме двух предыдущих. Лепестки цветов, завитки ракушек, ветки деревьев — везде эти числа!', tag:'Природа' },
+    { emoji:'🎲', title:'Сколько атомов во вселенной?', fact:'Примерно 10⁸⁰ — единица с 80 нулями. Это число МЕНЬШЕ чем количество возможных партий в шахматы (10¹²⁰)!', tag:'Масштаб' },
+    { emoji:'📐', title:'Почему 360 градусов в круге?', fact:'Древние вавилоняне считали что в году 360 дней. Они разделили круг на 360 частей — по одной на каждый день. Мы пользуемся этим до сих пор!', tag:'История' },
+  ],
+  russian: [
+    { emoji:'📜', title:'Откуда взялась буква Ё?', fact:'Букву Ё придумала княгиня Дашкова в 1783 году. До этого писали «io» или «е». Первое слово напечатанное с Ё — «всё».', tag:'История' },
+    { emoji:'🌍', title:'Самый длинный глагол', fact:'«Переосвидетельствоваться» — 24 буквы. Но в словаре есть глагол ещё длиннее: «высокопревозноситься» — 21 буква, зато какой смысл!', tag:'Рекорды' },
+    { emoji:'🐦', title:'Слово-перевёртыш', fact:'«Кот» наоборот — «ток». «Лев» — «вел». Такие слова называются палиндромами. Целые предложения: «А роза упала на лапу Азора».', tag:'Игра слов' },
+    { emoji:'🤫', title:'Слова без гласных', fact:'В русском языке есть слова почти без гласных: «рт» (орган), «вздрогнуть», «взгляд». А слово «ею» состоит только из гласных!', tag:'Факт' },
+  ],
+  english: [
+    { emoji:'🌐', title:'Самый популярный язык', fact:'Английский — официальный язык в 67 странах. На нём говорят 1,5 миллиарда человек. Но китайский мандаринский — родной для большего числа людей.', tag:'Факт' },
+    { emoji:'📚', title:'Сколько слов в английском?', fact:'Около 170 000 слов в современном словаре. Шекспир использовал 30 000. Обычному человеку хватает 3 000–5 000 для свободного общения.', tag:'Цифры' },
+    { emoji:'🍕', title:'Слова которые мы взяли из английского', fact:'Интернет, компьютер, смартфон, пицца, джинсы, робот — всё это слова из других языков. Английский сам взял 10 000+ слов из французского!', tag:'Заимствования' },
+  ],
+  speech: [
+    { emoji:'🎭', title:'Зачем нужна риторика?', fact:'Риторика — наука убеждать словами. В Древней Греции её преподавали наравне с математикой. Хороший оратор мог изменить ход войны одной речью!', tag:'История' },
+    { emoji:'🧠', title:'Чтение делает умнее', fact:'Читающие дети в среднем имеют словарный запас в 3 раза больше нечитающих. Каждая прочитанная книга добавляет ~200 новых слов.', tag:'Наука' },
+  ],
+};
+
+function showKnow() {
+  const body = document.getElementById('know-body');
+  const zones = ['math','russian','english','speech'];
+  const labels = { math:'⚙️ Математика', russian:'🏰 Русский', english:'🌳 Английский', speech:'🔮 Речь' };
+  let activeZone = ST.zone || 'math';
+
+  function render(zone) {
+    const facts = KNOW_FACTS[zone] || KNOW_FACTS.math;
+    body.innerHTML = `
+      <div class="know-tabs">
+        ${zones.map(z => `<button class="know-tab${z===zone?' active':''}" onclick="renderKnow('${z}')">${labels[z]}</button>`).join('')}
+      </div>
+      ${facts.map(f => `
+        <div class="know-card">
+          <div class="know-emoji">${f.emoji}</div>
+          <div class="know-kw">${f.tag}</div>
+          <div style="font-size:14px;font-weight:900;margin-bottom:6px">${f.title}</div>
+          <div class="know-fact">${f.fact}</div>
+        </div>`).join('')}`;
+  }
+  window.renderKnow = render;
+  render(activeZone);
+  show('screen-know');
+}
+
+// ============================================================
+//  ФОТО — СДЕЛАЛА САМА
+// ============================================================
+var photoBase64 = null;
+
+function openPhotoCheck() {
+  photoBase64 = null;
+  document.getElementById('photo-preview').style.display = 'none';
+  document.getElementById('photo-send-btn').style.display = 'none';
+  document.getElementById('photo-result').innerHTML = '';
+  // показываем список тем текущей зоны
+  const cur = CURRICULUM[ST.zone];
+  const topList = document.getElementById('photo-topic-list');
+  topList.innerHTML = cur.topics.map(t =>
+    `<button class="ex-btn" data-tid="${t.id}" style="min-width:auto;height:auto;padding:6px 12px;font-size:11px;font-family:var(--body)"
+      onclick="selectPhotoTopic('${t.id}',this)">${t.name}</button>`
+  ).join('');
+  document.getElementById('photo-topic-sel').style.display = 'block';
+  show('screen-photo');
+}
+
+function selectPhotoTopic(id, el) {
+  ST.topicId = id;
+  document.querySelectorAll('#photo-topic-list .ex-btn').forEach(b => {
+    b.style.borderColor = ''; b.style.color = '';
+  });
+  el.style.borderColor = 'var(--accent)';
+  el.style.color = 'var(--accent)';
+}
+
+function onPhotoSelected(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    photoBase64 = e.target.result;
+    const img = document.getElementById('photo-preview');
+    img.src = photoBase64;
+    img.style.display = 'block';
+    document.getElementById('photo-send-btn').style.display = 'block';
+    document.getElementById('photo-drop').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function sendPhotoToCheck() {
+  const btn = document.getElementById('photo-send-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Умник смотрит...';
+  const cur = CURRICULUM[ST.zone];
+  const topic = cur.topics.find(t => t.id === ST.topicId);
+  const topicName = topic ? topic.name : 'по теме';
+  const resultEl = document.getElementById('photo-result');
+  resultEl.innerHTML = '';
+
+  // Polza.ai не поддерживает vision — отправляем описание-заглушку
+  // и просим ученика описать что написала
+  resultEl.innerHTML = `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px">
+      <div style="font-size:11px;color:var(--accent);font-family:var(--pixel);margin-bottom:10px">🧙 УМНИК ГОВОРИТ:</div>
+      <div style="font-size:14px;line-height:1.7">
+        Отлично что решила сама! 📸<br><br>
+        Чтобы я проверил — напиши ответ который у тебя получился, и я скажу верно ли.
+      </div>
+      <textarea id="photo-ans-input" class="input mt2" rows="3" placeholder="Напиши свой ответ..."></textarea>
+      <button class="btn-main mt2" onclick="checkPhotoAnswer('${topicName}')">Проверить ответ</button>
+    </div>`;
+  btn.disabled = false;
+  btn.style.display = 'none';
+}
+
+async function checkPhotoAnswer(topicName) {
+  const ans = document.getElementById('photo-ans-input').value.trim();
+  if (!ans) return;
+  ST.task = `Ученик решил задачу по теме "${topicName}" самостоятельно и получил ответ: ${ans}. Проверь правильность и похвали если верно, или мягко укажи на ошибку.`;
+  ST.msgs = [];
+  ST.zone = ST.zone || 'math';
+  const reply = await askClaude('Проверь мой ответ: ' + ans);
+  document.getElementById('photo-result').innerHTML += `
+    <div style="background:var(--card);border:1px solid #2a5a2a;border-radius:16px;padding:16px;margin-top:12px">
+      <div style="font-size:11px;color:#4caf50;font-family:var(--pixel);margin-bottom:8px">✅ ПРОВЕРКА:</div>
+      <div style="font-size:14px;line-height:1.7">${reply}</div>
+    </div>`;
+}
 
 // ============================================================
 //  INIT
