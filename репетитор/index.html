@@ -840,6 +840,112 @@ const CURRICULUM = {
 };
 
 // ============================================================
+//  ПРАВИЛА — база знаний по темам Виленкин 5 класс
+// ============================================================
+var RULES = {
+  'math-1': { title: 'Натуральные числа', rule: `Натуральные числа — это числа для счёта: 1, 2, 3, 4, 5...\n\nНуль (0) натуральным числом НЕ является.\n\nЦифры: 0 1 2 3 4 5 6 7 8 9\n\nРазряды: единицы → десятки → сотни → тысячи\nПример: 3 456 = 3 тысячи + 4 сотни + 5 десятков + 6 единиц`, example: 'Запиши: пять тысяч двести тридцать семь → 5 237', quiz: [ { q: 'Является ли 0 натуральным числом?', opts: ['Да', 'Нет', 'Иногда', 'Не знаю'], ans: 1 }, { q: 'Сколько цифр используется для записи чисел?', opts: ['8', '9', '10', '11'], ans: 2 }, { q: 'Какое число идёт после 999?', opts: ['1 000', '9 999', '100', '1 001'], ans: 0 }, { q: 'Цифра 4 в числе 3 487 стоит в разряде...', opts: ['единиц', 'десятков', 'сотен', 'тысяч'], ans: 2 } ] },
+  'math-2': { title: 'Числовые выражения', rule: `Числовое выражение — запись чисел со знаками действий.\n\nПримеры: 5 + 3, 12 − 4, 6 × 7, 24 ÷ 8\n\nЗначение выражения — результат вычисления.\n5 + 3 = 8 (значение равно 8)`, example: 'Найди значение: 24 − 7 + 5 = 17 + 5 = 22', quiz: [ { q: 'Что такое значение выражения?', opts: ['Сама запись', 'Результат вычисления', 'Знак действия', 'Число с буквой'], ans: 1 }, { q: '8 + 6 − 3 = ?', opts: ['11', '17', '5', '14'], ans: 0 }, { q: '5 × 4 − 10 = ?', opts: ['30', '10', '20', '15'], ans: 1 }, { q: 'Является ли число 7 числовым выражением?', opts: ['Нет', 'Да', 'Только если чётное', 'Зависит'], ans: 1 } ] },
+  'math-3': { title: 'Сравнение натуральных чисел', rule: `Из двух чисел меньше то, которое при счёте встречается раньше.\n\n• Число с меньшим кол-вом цифр — меньше: 99 < 100\n• При одинаковом кол-ве цифр — сравниваем слева направо\n• Знаки: < (меньше), > (больше), = (равно)`, example: '1 007 и 987: у первого 4 цифры, у второго 3 → 1 007 > 987', quiz: [ { q: 'Какое число больше: 1 000 или 999?', opts: ['999', '1 000', 'Равны', 'Не определить'], ans: 1 }, { q: 'Сравни: 3 456 и 3 465', opts: ['3 456 > 3 465', '3 456 = 3 465', '3 456 < 3 465', 'Нельзя'], ans: 2 }, { q: 'Знак: 72 ... 27', opts: ['<', '>', '=', '≠'], ans: 1 }, { q: 'Наименьшее двузначное число:', opts: ['11', '10', '99', '20'], ans: 1 } ] },
+  'math-4': { title: 'Сложение натуральных чисел', rule: `a + b = c, где a и b — слагаемые, c — сумма.\n\n• Переместительное: a + b = b + a\n• Сочетательное: (a + b) + c = a + (b + c)\n• a + 0 = a`, example: '358 + 274 = 632 (складываем столбиком)', quiz: [ { q: 'Как называются числа при сложении?', opts: ['Множители', 'Слагаемые', 'Делители', 'Вычитаемые'], ans: 1 }, { q: '345 + 0 = ?', opts: ['0', '345', '1', '3 450'], ans: 1 }, { q: 'Верно ли: 8 + 5 = 5 + 8?', opts: ['Нет', 'Да', 'Иногда', 'Только для чётных'], ans: 1 }, { q: '247 + 153 = ?', opts: ['390', '400', '410', '394'], ans: 1 } ] },
+  'math-5': { title: 'Вычитание натуральных чисел', rule: `a − b = c, где a — уменьшаемое, b — вычитаемое, c — разность.\n\n• a − 0 = a\n• a − a = 0\n• Проверка: разность + вычитаемое = уменьшаемое\n\nНельзя из меньшего вычесть большее!`, example: '523 − 178 = 345. Проверка: 345 + 178 = 523 ✓', quiz: [ { q: 'Результат вычитания называется...', opts: ['Сумма', 'Произведение', 'Разность', 'Частное'], ans: 2 }, { q: '75 − 75 = ?', opts: ['1', '75', '0', '150'], ans: 2 }, { q: 'Можно ли из 5 вычесть 8?', opts: ['Да, −3', 'Нет', 'Да, 3', 'Да, 13'], ans: 1 }, { q: '600 − 243 = ?', opts: ['357', '367', '343', '457'], ans: 0 } ] },
+  'math-6': { title: 'Умножение натуральных чисел', rule: `a × b = c, где a и b — множители, c — произведение.\n\n• Переместительное: a × b = b × a\n• Распределительное: a × (b + c) = a×b + a×c\n• a × 0 = 0,   a × 1 = a`, example: '5 × 4 = 5 + 5 + 5 + 5 = 20', quiz: [ { q: 'Числа при умножении называются...', opts: ['Слагаемые', 'Делители', 'Множители', 'Вычитаемые'], ans: 2 }, { q: '7 × 0 = ?', opts: ['7', '0', '1', '70'], ans: 1 }, { q: '1 × 999 = ?', opts: ['0', '998', '1 000', '999'], ans: 3 }, { q: '25 × 4 = ?', opts: ['90', '100', '80', '120'], ans: 1 } ] },
+  'math-7': { title: 'Деление натуральных чисел', rule: `a ÷ b = c, где a — делимое, b — делитель, c — частное.\n\n• На 0 делить НЕЛЬЗЯ!\n• 0 ÷ a = 0 (если a ≠ 0)\n• Проверка: частное × делитель = делимое`, example: '72 ÷ 8 = 9. Проверка: 9 × 8 = 72 ✓', quiz: [ { q: 'На что делить нельзя?', opts: ['На 1', 'На 0', 'На само себя', 'На чётное'], ans: 1 }, { q: '0 ÷ 5 = ?', opts: ['5', '1', '0', 'Нельзя'], ans: 2 }, { q: 'Результат деления называется...', opts: ['Сумма', 'Разность', 'Произведение', 'Частное'], ans: 3 }, { q: '56 ÷ 7 = ?', opts: ['6', '7', '8', '9'], ans: 2 } ] },
+  'math-8': { title: 'Степень числа', rule: `aⁿ = a × a × ... × a (n раз)\na — основание, n — показатель.\n\n• 2³ = 2×2×2 = 8\n• 5² = 25 («пять в квадрате»)\n• a¹ = a,   a⁰ = 1 (a ≠ 0)`, example: '4² = 16,  2⁵ = 32', quiz: [ { q: 'Как читается 7²?', opts: ['Семь два', 'Семь в квадрате', 'Два в степени семь', 'Семь плюс два'], ans: 1 }, { q: '3² = ?', opts: ['6', '9', '8', '12'], ans: 1 }, { q: '2⁴ = ?', opts: ['8', '6', '16', '24'], ans: 2 }, { q: 'Основание в 5³ — это...', opts: ['3', '5', '15', '125'], ans: 1 } ] },
+  'math-9': { title: 'Порядок действий', rule: `1️⃣ Скобки — первыми\n2️⃣ Умножение и деление — слева направо\n3️⃣ Сложение и вычитание — слева направо\n\n2 + 3 × 4 = 2 + 12 = 14 (сначала умножение!)\n(2 + 3) × 4 = 5 × 4 = 20 (сначала скобки!)`, example: '20 − 4 × 3 + 8 ÷ 2 = 20 − 12 + 4 = 12', quiz: [ { q: 'Что выполняется первым без скобок?', opts: ['Сложение', 'Вычитание', 'Умножение/деление', 'Всё равно'], ans: 2 }, { q: '2 + 3 × 4 = ?', opts: ['20', '14', '24', '18'], ans: 1 }, { q: '(2 + 3) × 4 = ?', opts: ['14', '24', '20', '10'], ans: 2 }, { q: '18 ÷ (2 + 1) = ?', opts: ['10', '9', '6', '3'], ans: 2 } ] },
+  'math-10': { title: 'Делители и кратные', rule: `Делитель — число, на которое делится без остатка.\nКратное — число, которое делится на b без остатка.\n\nДелители 12: 1, 2, 3, 4, 6, 12\nКратные 3: 3, 6, 9, 12, 15...\n\nПризнаки делимости:\n• На 2: последняя цифра чётная\n• На 5: последняя цифра 0 или 5\n• На 3: сумма цифр делится на 3`, example: 'Делители 18: 1,2,3,6,9,18. Кратные 4: 4,8,12,16,20', quiz: [ { q: '4 — делитель числа 20?', opts: ['Нет', 'Да', 'Только если 20 чётное', 'Нельзя'], ans: 1 }, { q: 'Кратное числа 7:', opts: ['15', '21', '25', '16'], ans: 1 }, { q: '135 делится на 5?', opts: ['Нет', 'Да', 'С остатком', 'Зависит'], ans: 1 }, { q: 'Сколько делителей у числа 6?', opts: ['2', '3', '4', '6'], ans: 2 } ] },
+};
+
+let RULE_QUIZ_STATE = { idx: 0, score: 0, answered: false };
+
+function openRule(topicId) {
+  const rule = RULES[topicId];
+  if (!rule) { ST.topicId = topicId; ST.prevScreen = 'screen-zone'; renderTaskInput(); show('screen-task'); return; }
+  ST.topicId = topicId;
+  ST.prevScreen = 'screen-zone';
+  document.getElementById('rule-topic-name').textContent = rule.title;
+  renderRuleScreen('rule');
+  show('screen-rule');
+}
+
+function renderRuleScreen(phase) {
+  const rule = RULES[ST.topicId];
+  const body = document.getElementById('rule-body');
+  if (phase === 'rule') {
+    body.innerHTML = `<div style="padding:16px">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px">
+        <div style="font-size:11px;color:var(--accent);font-family:var(--pixel);margin-bottom:12px">📖 ПРАВИЛО</div>
+        <div style="font-size:14px;line-height:1.7;white-space:pre-line">${rule.rule}</div>
+      </div>
+      <div style="background:#0a2a1a;border:1px solid #1a5a3a;border-radius:16px;padding:16px;margin-bottom:20px">
+        <div style="font-size:11px;color:#4caf50;font-family:var(--pixel);margin-bottom:8px">✏️ ПРИМЕР</div>
+        <div style="font-size:14px;line-height:1.6">${rule.example}</div>
+      </div>
+      <button class="btn-main" onclick="renderRuleScreen('quiz')">Всё понял! Проверь меня →</button>
+    </div>`;
+  } else {
+    RULE_QUIZ_STATE = { idx: 0, score: 0, answered: false };
+    renderRuleQuiz();
+  }
+}
+
+function renderRuleQuiz() {
+  const rule = RULES[ST.topicId];
+  const q = rule.quiz[RULE_QUIZ_STATE.idx];
+  const total = rule.quiz.length;
+  const dots = rule.quiz.map((_, i) => `<div class="bp-dot${i < RULE_QUIZ_STATE.idx ? ' done-ok' : ''}"></div>`).join('');
+  document.getElementById('rule-body').innerHTML = `<div style="padding:16px">
+    <div class="bonus-progress" style="margin-bottom:16px">${dots}</div>
+    <div style="font-size:11px;color:var(--accent);font-family:var(--pixel);margin-bottom:12px">❓ ВОПРОС ${RULE_QUIZ_STATE.idx + 1} из ${total}</div>
+    <div style="font-size:16px;font-weight:800;margin-bottom:20px;line-height:1.5">${q.q}</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${q.opts.map((o, i) => `<button class="bonus-opt" id="ropt-${i}" onclick="answerRuleQuiz(${i})" style="text-align:left;padding:14px 16px;font-family:var(--body);font-size:14px">${o}</button>`).join('')}
+    </div>
+    <div id="quiz-feedback" style="margin-top:16px;min-height:40px"></div>
+  </div>`;
+}
+
+function answerRuleQuiz(idx) {
+  if (RULE_QUIZ_STATE.answered) return;
+  RULE_QUIZ_STATE.answered = true;
+  const rule = RULES[ST.topicId];
+  const q = rule.quiz[RULE_QUIZ_STATE.idx];
+  const correct = idx === q.ans;
+  if (correct) RULE_QUIZ_STATE.score++;
+  document.querySelectorAll('[id^=ropt-]').forEach(b => b.disabled = true);
+  document.getElementById('ropt-' + idx).classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) document.getElementById('ropt-' + q.ans).classList.add('correct');
+  document.getElementById('quiz-feedback').innerHTML = correct
+    ? `<div style="color:var(--green);font-weight:800">✅ Верно!</div>`
+    : `<div style="color:var(--red);font-weight:800">❌ Правильно: ${q.opts[q.ans]}</div>`;
+  setTimeout(() => {
+    RULE_QUIZ_STATE.idx++;
+    RULE_QUIZ_STATE.answered = false;
+    if (RULE_QUIZ_STATE.idx < rule.quiz.length) renderRuleQuiz();
+    else renderRuleResult();
+  }, 1200);
+}
+
+function renderRuleResult() {
+  const rule = RULES[ST.topicId];
+  const score = RULE_QUIZ_STATE.score;
+  const total = rule.quiz.length;
+  const pct = Math.round(score / total * 100);
+  let icon, msg;
+  if (pct === 100) { icon = '🏆'; msg = 'Правило усвоено отлично! Теперь порешаем задачки.'; addXp(5); }
+  else if (pct >= 50) { icon = '👍'; msg = 'Неплохо! Можно приступать — Умник поможет.'; addXp(2); }
+  else { icon = '📖'; msg = 'Перечитай правило ещё раз. Но задание всё равно попробуй!'; }
+  document.getElementById('rule-body').innerHTML = `<div style="padding:24px;text-align:center">
+    <div style="font-size:56px;margin-bottom:12px">${icon}</div>
+    <div style="font-family:var(--pixel);font-size:12px;color:var(--accent);margin-bottom:8px">${score}/${total} верно</div>
+    <div style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px">${msg}</div>
+    <button class="btn-main" onclick="goToTaskFromRule()">Перейти к заданию →</button>
+    ${pct < 100 ? `<br><button class="btn-sec" style="margin-top:10px;width:100%" onclick="renderRuleScreen('rule')">← Повторить правило</button>` : ''}
+  </div>`;
+}
+
+function goToTaskFromRule() { renderTaskInput(); show('screen-task'); }
+
+// ============================================================
 //  DIALOGUE ENGINE (Socratic method)
 // ============================================================
 const DIALOGUE = {
@@ -1835,9 +1941,9 @@ function exitBonus() {
 }
 
 // ============================================================
-//  ПРАВИЛА — база знаний по темам Виленкин 5 класс
+//  INIT — удалён дубль RULES (перенесён выше)
 // ============================================================
-var RULES = {
+var RULES_PLACEHOLDER = {
   // МАТЕМАТИКА
   'math-1': {
     title: 'Натуральные числа',
@@ -2030,121 +2136,6 @@ a — основание, n — показатель степени.
     ]
   },
 };
-
-// ============================================================
-//  ЭКРАН ПРАВИЛА
-// ============================================================
-let RULE_QUIZ_STATE = { idx: 0, score: 0, answered: false };
-
-function openRule(topicId) {
-  const rule = RULES[topicId];
-  if (!rule) {
-    // Нет правила — сразу к заданию
-    openTaskInputForTopic(topicId);
-    return;
-  }
-  ST.topicId = topicId;
-  ST.prevScreen = 'screen-zone';
-  document.getElementById('rule-topic-name').textContent = rule.title;
-  renderRuleScreen('rule');
-  show('screen-rule');
-}
-
-function renderRuleScreen(phase) {
-  const rule = RULES[ST.topicId];
-  const body = document.getElementById('rule-body');
-  if (phase === 'rule') {
-    body.innerHTML = `
-      <div style="padding:16px">
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px">
-          <div style="font-size:11px;color:var(--accent);font-family:var(--pixel);margin-bottom:12px">📖 ПРАВИЛО</div>
-          <div style="font-size:14px;line-height:1.7;white-space:pre-line">${rule.rule}</div>
-        </div>
-        <div style="background:#0a2a1a;border:1px solid #1a5a3a;border-radius:16px;padding:16px;margin-bottom:20px">
-          <div style="font-size:11px;color:#4caf50;font-family:var(--pixel);margin-bottom:8px">✏️ ПРИМЕР</div>
-          <div style="font-size:14px;line-height:1.6">${rule.example}</div>
-        </div>
-        <button class="btn-main" onclick="renderRuleScreen('quiz')">Всё понял! Проверь меня →</button>
-      </div>`;
-  } else if (phase === 'quiz') {
-    RULE_QUIZ_STATE = { idx: 0, score: 0, answered: false };
-    renderRuleQuiz();
-  }
-}
-
-function renderRuleQuiz() {
-  const rule = RULES[ST.topicId];
-  const q = rule.quiz[RULE_QUIZ_STATE.idx];
-  const total = rule.quiz.length;
-  const body = document.getElementById('rule-body');
-  const dots = rule.quiz.map((_, i) => `<div class="bp-dot${i < RULE_QUIZ_STATE.idx ? ' done-ok' : ''}"></div>`).join('');
-
-  body.innerHTML = `
-    <div style="padding:16px">
-      <div class="bonus-progress" style="margin-bottom:16px">${dots}</div>
-      <div style="font-size:11px;color:var(--accent);font-family:var(--pixel);margin-bottom:12px">❓ ВОПРОС ${RULE_QUIZ_STATE.idx + 1} из ${total}</div>
-      <div style="font-size:16px;font-weight:800;margin-bottom:20px;line-height:1.5">${q.q}</div>
-      <div style="display:flex;flex-direction:column;gap:10px" id="quiz-opts">
-        ${q.opts.map((o, i) => `<button class="bonus-opt" id="ropt-${i}" onclick="answerRuleQuiz(${i})" style="text-align:left;padding:14px 16px;font-family:var(--body);font-size:14px">${o}</button>`).join('')}
-      </div>
-      <div id="quiz-feedback" style="margin-top:16px;min-height:40px"></div>
-    </div>`;
-}
-
-function answerRuleQuiz(idx) {
-  if (RULE_QUIZ_STATE.answered) return;
-  RULE_QUIZ_STATE.answered = true;
-  const rule = RULES[ST.topicId];
-  const q = rule.quiz[RULE_QUIZ_STATE.idx];
-  const correct = idx === q.ans;
-  if (correct) RULE_QUIZ_STATE.score++;
-
-  document.querySelectorAll('[id^=ropt-]').forEach(b => b.disabled = true);
-  document.getElementById('ropt-' + idx).classList.add(correct ? 'correct' : 'wrong');
-  if (!correct) document.getElementById('ropt-' + q.ans).classList.add('correct');
-
-  const fb = document.getElementById('quiz-feedback');
-  fb.innerHTML = correct
-    ? `<div style="color:var(--green);font-weight:800;font-size:14px">✅ Верно!</div>`
-    : `<div style="color:var(--red);font-weight:800;font-size:14px">❌ Правильный ответ: ${q.opts[q.ans]}</div>`;
-
-  setTimeout(() => {
-    RULE_QUIZ_STATE.idx++;
-    RULE_QUIZ_STATE.answered = false;
-    if (RULE_QUIZ_STATE.idx < rule.quiz.length) {
-      renderRuleQuiz();
-    } else {
-      renderRuleResult();
-    }
-  }, 1200);
-}
-
-function renderRuleResult() {
-  const rule = RULES[ST.topicId];
-  const total = rule.quiz.length;
-  const score = RULE_QUIZ_STATE.score;
-  const pct = Math.round(score / total * 100);
-  const body = document.getElementById('rule-body');
-
-  let icon, msg;
-  if (pct === 100) { icon = '🏆'; msg = 'Правило усвоено отлично! Теперь порешаем задачки.'; addXp(5); }
-  else if (pct >= 50) { icon = '👍'; msg = 'Неплохо! Можно приступать к заданию — Умник поможет.'; addXp(2); }
-  else { icon = '📖'; msg = 'Советую перечитать правило ещё раз. Но задание всё равно попробуй!'; }
-
-  body.innerHTML = `
-    <div style="padding:24px;text-align:center">
-      <div style="font-size:56px;margin-bottom:12px">${icon}</div>
-      <div style="font-family:var(--pixel);font-size:12px;color:var(--accent);margin-bottom:8px">${score}/${total} верно</div>
-      <div style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px">${msg}</div>
-      <button class="btn-main" onclick="goToTaskFromRule()">Перейти к заданию →</button>
-      ${pct < 100 ? `<button class="btn-sec" style="margin-top:10px;width:100%" onclick="renderRuleScreen('rule')">← Повторить правило</button>` : ''}
-    </div>`;
-}
-
-function goToTaskFromRule() {
-  renderTaskInput();
-  show('screen-task');
-}
 
 // ============================================================
 //  INIT
