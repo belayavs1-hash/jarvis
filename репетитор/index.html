@@ -1090,7 +1090,7 @@ function openTaskInput() {
   show('screen-task');
 }
 function openTaskInputForTopic(topicId) {
-  if (RULES[topicId]) {
+  if (typeof RULES !== 'undefined' && RULES[topicId]) {
     openRule(topicId);
   } else {
     ST.topicId = topicId;
@@ -1837,7 +1837,7 @@ function exitBonus() {
 // ============================================================
 //  ПРАВИЛА — база знаний по темам Виленкин 5 класс
 // ============================================================
-const RULES = {
+var RULES = {
   // МАТЕМАТИКА
   'math-1': {
     title: 'Натуральные числа',
