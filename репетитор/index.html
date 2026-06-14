@@ -420,15 +420,6 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
       </div>
     </div>
 
-    <div class="daily-quest" onclick="startDailyQuest()">
-      <div class="dq-icon">📜</div>
-      <div class="dq-text">
-        <div class="label">🗺 Ежедневный квест</div>
-        <div class="title" id="dq-title">Загружается...</div>
-      </div>
-      <div class="dq-xp" id="dq-xp">+15 XP</div>
-    </div>
-
     <div class="section-title">🗺 Выбери зону</div>
     <div class="zone-grid">
       <div class="math" onclick="openZone('math')">
@@ -508,6 +499,7 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
     <span id="zh-title" class="zone-header-title"></span>
   </div>
   <div class="zone-body">
+    <div id="zone-quest"></div>
     <div class="topic-list" id="topic-list"></div>
     <div class="mt3">
       <button class="btn-main" style="font-size:9px" onclick="openTaskInput()">📝 ЗАДАТЬ СВОЙ ВОПРОС / ДОМАШКУ</button>
@@ -1129,24 +1121,12 @@ const GREETINGS = [
   (n) => `${n}, сегодня тоже разберёмся с любой задачей!`,
   (n) => `Привет, ${n}! Что разбираем сегодня?`,
 ];
-const DAILY_QUESTS = [
-  { title: 'Реши задачу на проценты', zone: 'math', topicId: 'm10', xp: 15 },
-  { title: 'Вставь пропущенные буквы', zone: 'russian', topicId: 'r7', xp: 15 },
-  { title: 'Поставь глагол в Present Simple', zone: 'english', topicId: 'e3', xp: 15 },
-  { title: 'Напиши 3 предложения-описания', zone: 'speech', topicId: 'sp3', xp: 15 },
-  { title: 'Найди НОД и НОК двух чисел', zone: 'math', topicId: 'm4', xp: 15 },
-  { title: 'Определи падеж трёх существительных', zone: 'russian', topicId: 'r5', xp: 15 },
-  { title: 'Переведи 5 предложений', zone: 'english', topicId: 'e14', xp: 15 },
-];
 function renderHome() {
   if (!ST.user) return;
   const g = GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
   document.getElementById('hero-name').textContent = ST.user.name;
   document.getElementById('hero-msg').textContent = g(ST.user.name).replace(ST.user.name + ', ', '');
   document.getElementById('xp-count').textContent = ST.xp;
-  const today = new Date().getDay();
-  const dq = DAILY_QUESTS[today % DAILY_QUESTS.length];
-  document.getElementById('dq-title').textContent = dq.title;
   // Progress bars
   const zones = ['math', 'russian', 'english', 'speech'];
   zones.forEach(z => {
@@ -1157,11 +1137,16 @@ function renderHome() {
     if (el) el.style.width = pct + '%';
   });
 }
-function startDailyQuest() {
-  const today = new Date().getDay();
-  const dq = DAILY_QUESTS[today % DAILY_QUESTS.length];
-  ST.zone = dq.zone;
-  openTaskInputForTopic(dq.topicId);
+
+function getDailyRepeatTopic(zone) {
+  const topics = CURRICULUM[zone].topics;
+  const done = topics.filter(t => ST.doneTopics[t.id]);
+  if (done.length === 0) return null;
+  // Берём случайную из пройденных, с seed от даты — каждый день другая
+  const seed = new Date().toDateString() + zone;
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) | 0;
+  return done[Math.abs(hash) % done.length];
 }
 
 // ============================================================
@@ -1172,6 +1157,24 @@ function openZone(zone) {
   const cur = CURRICULUM[zone];
   document.getElementById('zh-icon').textContent = cur.icon;
   document.getElementById('zh-title').textContent = cur.name;
+
+  // Квест повторения
+  const questEl = document.getElementById('zone-quest');
+  const repeatTopic = getDailyRepeatTopic(zone);
+  if (repeatTopic) {
+    questEl.innerHTML = `
+      <div class="daily-quest" onclick="openTaskInputForTopic('${repeatTopic.id}')" style="margin-bottom:16px">
+        <div class="dq-icon">🔁</div>
+        <div class="dq-text">
+          <div class="label">⚡ Квест дня — повторение</div>
+          <div class="title">${repeatTopic.name}</div>
+        </div>
+        <div class="dq-xp">+${repeatTopic.xp} XP</div>
+      </div>`;
+  } else {
+    questEl.innerHTML = '';
+  }
+
   const list = document.getElementById('topic-list');
   list.innerHTML = cur.topics.map((t, i) => {
     const done = ST.doneTopics[t.id];
