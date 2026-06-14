@@ -33,19 +33,43 @@ export default async function handler(req) {
     });
   }
 
-  const upstream = await fetch('https://api.anthropic.com/v1/messages', {
+  // Конвертируем Anthropic-формат в OpenAI-формат для Polza.ai
+  const messages = [];
+  if (body.system) {
+    messages.push({ role: 'system', content: body.system });
+  }
+  for (const msg of body.messages || []) {
+    messages.push({ role: msg.role, content: msg.content });
+  }
+
+  const openaiBody = {
+    model: 'claude-haiku-4-5',
+    max_tokens: body.max_tokens || 512,
+    messages,
+  };
+
+  const upstream = await fetch('https://api.polza.ai/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
+      'Authorization': `Bearer ${apiKey}`,
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify(openaiBody),
   });
 
   const data = await upstream.json();
 
-  return new Response(JSON.stringify(data), {
+  // Конвертируем ответ обратно в Anthropic-формат для tutor.html
+  let converted;
+  if (data.choices && data.choices[0]) {
+    converted = {
+      content: [{ text: data.choices[0].message.content }],
+    };
+  } else {
+    converted = { error: data.error || { message: 'Unknown error' } };
+  }
+
+  return new Response(JSON.stringify(converted), {
     status: upstream.status,
     headers: {
       'Content-Type': 'application/json',
