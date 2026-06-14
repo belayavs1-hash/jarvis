@@ -87,6 +87,13 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 .hero-text .name { font-size: 16px; font-weight: 900; color: var(--accent); }
 .hero-text .msg { font-size: 13px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
 
+/* Exercise picker */
+.ex-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 20px; }
+.ex-btn { width: 56px; height: 48px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--card); color: var(--text); font-family: var(--pixel); font-size: 10px; cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; }
+.ex-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+.ex-intro { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 8px; }
+.ex-or { font-size: 11px; color: var(--text3); text-align: center; margin: 16px 0 10px; letter-spacing: 1px; text-transform: uppercase; }
+
 /* Daily quest */
 .daily-quest { background: linear-gradient(135deg, #1e2b10, #111d08); border: 1.5px solid #3a5020; border-radius: 14px; padding: 14px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: all .2s; }
 .daily-quest:hover { border-color: #6a8040; transform: translateY(-1px); }
@@ -524,7 +531,7 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
     <span id="task-zone-icon" style="font-size:22px"></span>
     <span id="task-zone-title" style="font-size:14px;font-weight:900"></span>
   </div>
-  <div class="task-body">
+  <div class="task-body" id="task-body">
     <div class="task-title">Введи задание</div>
     <div class="task-subtitle">Напиши условие задачи или вопрос — Умник разберёт его вместе с тобой шаг за шагом. Готовый ответ он не даст — поможет дойти до него самому.</div>
     <textarea id="task-input" class="input" rows="5" placeholder="Например: из условия задачи №5 стр. 47..."></textarea>
@@ -638,22 +645,22 @@ const CURRICULUM = {
   math: {
     name: 'Математическая Шахта', icon: '⚙️', color: '#ffb347',
     topics: [
-      { id: 'm1', name: 'Натуральные числа', sub: 'Чтение, запись, сравнение', xp: 10 },
-      { id: 'm2', name: 'Сложение и вычитание', sub: 'Свойства, порядок действий', xp: 10 },
-      { id: 'm3', name: 'Умножение и деление', sub: 'Свойства, распределительный закон', xp: 10 },
-      { id: 'm4', name: 'Делимость чисел', sub: 'Признаки, простые числа, НОД, НОК', xp: 15 },
-      { id: 'm5', name: 'Обыкновенные дроби', sub: 'Сравнение, сокращение, основное свойство', xp: 15 },
-      { id: 'm6', name: 'Действия с дробями', sub: 'Сложение, вычитание, умножение, деление', xp: 20 },
-      { id: 'm7', name: 'Смешанные числа', sub: 'Перевод, действия со смешанными', xp: 15 },
-      { id: 'm8', name: 'Десятичные дроби', sub: 'Запись, чтение, сравнение', xp: 15 },
-      { id: 'm9', name: 'Действия с десятичными', sub: 'Сложение, вычитание, умножение, деление', xp: 20 },
-      { id: 'm10', name: 'Проценты', sub: 'Нахождение процентов, числа по проценту', xp: 20 },
-      { id: 'm11', name: 'Уравнения', sub: 'Линейные уравнения с одной переменной', xp: 20 },
-      { id: 'm12', name: 'Геометрические фигуры', sub: 'Треугольник, многоугольник, окружность', xp: 15 },
-      { id: 'm13', name: 'Площадь и периметр', sub: 'Прямоугольник, квадрат, треугольник', xp: 15 },
-      { id: 'm14', name: 'Геометрические тела', sub: 'Куб, параллелепипед, объём', xp: 15 },
-      { id: 'm15', name: 'Текстовые задачи', sub: 'Движение, работа, проценты, смеси', xp: 20 },
-      { id: 'm16', name: 'Статистика', sub: 'Таблицы, диаграммы, среднее арифметическое', xp: 10 },
+      { id: 'm1', name: 'Натуральные числа', sub: 'Чтение, запись, сравнение', xp: 10, exercises: [3,4,7,11,15,19,24,28] },
+      { id: 'm2', name: 'Сложение и вычитание', sub: 'Свойства, порядок действий', xp: 10, exercises: [35,38,42,47,51,56,60,64] },
+      { id: 'm3', name: 'Умножение и деление', sub: 'Свойства, распределительный закон', xp: 10, exercises: [72,75,80,85,89,94,99,103] },
+      { id: 'm4', name: 'Делимость чисел', sub: 'Признаки, простые числа, НОД, НОК', xp: 15, exercises: [108,112,116,121,126,131,136,141] },
+      { id: 'm5', name: 'Обыкновенные дроби', sub: 'Сравнение, сокращение, основное свойство', xp: 15, exercises: [148,152,157,162,167,172,177,182] },
+      { id: 'm6', name: 'Действия с дробями', sub: 'Сложение, вычитание, умножение, деление', xp: 20, exercises: [190,195,200,206,212,218,224,230] },
+      { id: 'm7', name: 'Смешанные числа', sub: 'Перевод, действия со смешанными', xp: 15, exercises: [237,242,247,252,258,264,270,276] },
+      { id: 'm8', name: 'Десятичные дроби', sub: 'Запись, чтение, сравнение', xp: 15, exercises: [284,289,294,299,304,309,314,319] },
+      { id: 'm9', name: 'Действия с десятичными', sub: 'Сложение, вычитание, умножение, деление', xp: 20, exercises: [327,333,339,345,351,357,363,369] },
+      { id: 'm10', name: 'Проценты', sub: 'Нахождение процентов, числа по проценту', xp: 20, exercises: [376,381,386,391,396,401,406,411] },
+      { id: 'm11', name: 'Уравнения', sub: 'Линейные уравнения с одной переменной', xp: 20, exercises: [418,423,428,433,438,443,448,453] },
+      { id: 'm12', name: 'Геометрические фигуры', sub: 'Треугольник, многоугольник, окружность', xp: 15, exercises: [460,465,470,475,480,485,490,495] },
+      { id: 'm13', name: 'Площадь и периметр', sub: 'Прямоугольник, квадрат, треугольник', xp: 15, exercises: [502,507,512,517,522,527,532,537] },
+      { id: 'm14', name: 'Геометрические тела', sub: 'Куб, параллелепипед, объём', xp: 15, exercises: [544,549,554,559,564,569,574,579] },
+      { id: 'm15', name: 'Текстовые задачи', sub: 'Движение, работа, проценты, смеси', xp: 20, exercises: [586,591,596,601,606,611,616,621] },
+      { id: 'm16', name: 'Статистика', sub: 'Таблицы, диаграммы, среднее арифметическое', xp: 10, exercises: [628,633,638,643,648,653,658,663] },
     ],
     examples: ['Задача: из 120 яблок взяли 25%. Сколько осталось?','Реши уравнение: 3x + 7 = 22','Найди НОД(24, 36)','Переведи 2⅗ в неправильную дробь'],
     cheatsheet: [
@@ -935,7 +942,55 @@ function renderRuleResult() {
   </div>`;
 }
 
-function goToTaskFromRule() { renderTaskInput(); show('screen-task'); }
+function goToTaskFromRule() {
+  const cur = CURRICULUM[ST.zone];
+  const topic = cur.topics.find(t => t.id === ST.topicId);
+  if (topic && topic.exercises && topic.exercises.length) {
+    renderExercisePicker(topic);
+  } else {
+    renderTaskInput();
+  }
+  show('screen-task');
+}
+
+function renderExercisePicker(topic) {
+  const cur = CURRICULUM[ST.zone];
+  document.getElementById('task-zone-icon').textContent = cur.icon;
+  document.getElementById('task-zone-title').textContent = cur.name;
+  document.getElementById('task-back-btn').onclick = () => show('screen-rule');
+  const container = document.getElementById('task-body');
+  container.innerHTML = `
+    <div class="task-title">${topic.name}</div>
+    <p class="ex-intro">Выбери номер задания из учебника — или введи своё:</p>
+    <div class="ex-grid">
+      ${topic.exercises.map(n =>
+        `<button class="ex-btn" onclick="pickExercise(${n})">№${n}</button>`
+      ).join('')}
+    </div>
+    <div class="ex-or">или напиши сам</div>
+    <textarea id="task-input" class="input" rows="4" placeholder="Вставь условие задачи или свой вопрос..."></textarea>
+    <div class="quick-examples mt2">
+      <span class="quick-label">Быстрые примеры:</span>
+      <div class="tags" id="quick-tags"></div>
+    </div>
+    <button class="btn-main mt3" onclick="startChat()">▶ РАЗОБРАТЬ С УМНИКОМ</button>`;
+  document.getElementById('quick-tags').innerHTML = cur.examples.map(e =>
+    `<div class="tag" onclick="setExample(this)">${e.length > 45 ? e.slice(0, 45) + '…' : e}</div>`
+  ).join('');
+}
+
+function pickExercise(num) {
+  const cur = CURRICULUM[ST.zone];
+  const topic = cur.topics.find(t => t.id === ST.topicId);
+  const topicName = topic ? topic.name : '';
+  document.getElementById('task-input').value = `Задание №${num} (${topicName})`;
+  document.getElementById('task-input').focus();
+  // подсветить выбранную кнопку
+  document.querySelectorAll('.ex-btn').forEach(b => {
+    b.style.borderColor = b.textContent === `№${num}` ? 'var(--accent)' : '';
+    b.style.color = b.textContent === `№${num}` ? 'var(--accent)' : '';
+  });
+}
 
 // ============================================================
 //  DIALOGUE ENGINE (Socratic method)
