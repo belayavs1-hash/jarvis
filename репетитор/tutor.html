@@ -1301,7 +1301,7 @@ async function processResponse(text) {
       }, 800);
     }
 
-    if (ST.msgs.length > 6) {
+    if (ST.msgs.length > 2) {
       if (ST.topicId) ST.doneTopics[ST.topicId] = true;
       saveState();
       showPraise();
