@@ -43,7 +43,7 @@ export default async function handler(req) {
   }
 
   const openaiBody = {
-    model: 'anthropic/claude-3-5-sonnet',
+    model: 'anthropic/claude-haiku-4.5',
     max_tokens: body.max_tokens || 512,
     messages,
   };
