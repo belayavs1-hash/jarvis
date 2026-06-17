@@ -532,7 +532,7 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
   </div>
 </div>
 
-<!-- ======= ZONE (topic list) ======= -->
+<!-- ======= ZONE (chapters/sections) ======= -->
 <div id="screen-zone" class="screen">
   <div class="zone-header">
     <button class="back-btn" onclick="goHome()">←</button>
@@ -540,18 +540,30 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
     <span id="zh-title" class="zone-header-title"></span>
   </div>
   <div class="zone-body">
-    <div id="zone-quest"></div>
-    <div class="topic-list" id="topic-list"></div>
+    <div id="section-list"></div>
     <div class="mt3" style="display:flex;flex-direction:column;gap:10px">
       <button class="btn-main" style="font-size:9px" onclick="openTaskInput()">📝 ЗАДАТЬ СВОЙ ВОПРОС / ДОМАШКУ</button>
     </div>
   </div>
 </div>
 
+<!-- ======= SECTION (topic list inside paragraph) ======= -->
+<div id="screen-section" class="screen">
+  <div class="zone-header">
+    <button class="back-btn" id="sec-back-btn" onclick="show('screen-zone')">←</button>
+    <span id="sec-icon" class="zone-header-icon"></span>
+    <span id="sec-title" class="zone-header-title"></span>
+  </div>
+  <div class="zone-body">
+    <div id="zone-quest"></div>
+    <div class="topic-list" id="topic-list"></div>
+  </div>
+</div>
+
 <!-- ======= RULE SCREEN ======= -->
 <div id="screen-rule" class="screen">
   <div class="task-header">
-    <button class="back-btn" onclick="show('screen-zone')">←</button>
+    <button class="back-btn" onclick="show('screen-section')">←</button>
     <span style="font-size:22px">📖</span>
     <span id="rule-topic-name" style="font-size:14px;font-weight:800;margin-left:4px"></span>
   </div>
@@ -725,6 +737,16 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
 const CURRICULUM = {
   math: {
     name: 'Математическая Шахта', icon: '⚙️', color: '#ffb347',
+    // Структура: Глава → Параграф → Темы
+    sections: [
+      { id: 's1', chapter: 'Глава I. Натуральные числа', name: '§1. Натуральные числа и нуль. Шкалы', icon: '🔢', page: 7, topicIds: ['m1t1','m1t2','m1t3','m1t4','m1t5','m1t6','m1t7'] },
+      { id: 's2', chapter: 'Глава I. Натуральные числа', name: '§2. Сложение и вычитание', icon: '➕', page: 44, topicIds: ['m2t8','m2t9','m2t10','m2t11'] },
+      { id: 's3', chapter: 'Глава I. Натуральные числа', name: '§3. Умножение и деление', icon: '✖️', page: 79, topicIds: ['m3t12','m3t13','m3t14','m3t15','m3t16','m3t17','m3t18','m3t19'] },
+      { id: 's4', chapter: 'Глава I. Натуральные числа', name: '§4. Площади и объёмы', icon: '📐', page: 132, topicIds: ['m4t20','m4t21','m4t22','m4t23','m4t24'] },
+      { id: 's5', chapter: 'Глава II. Дробные числа', name: '§5. Обыкновенные дроби', icon: '½', page: 6, topicIds: ['m5t25','m5t26','m5t27','m5t28','m5t29','m5t30','m5t31','m5t32','m5t33','m5t34','m5t35','m5t36','m5t37','m5t38','m5t39','m5t40'] },
+      { id: 's6', chapter: 'Глава II. Дробные числа', name: '§6. Десятичные дроби', icon: '🔟', page: 92, topicIds: ['m6t41','m6t42','m6t43','m6t44','m6t45','m6t46','m6t47','m6t48'] },
+      { id: 's7', chapter: 'Глава II. Дробные числа', name: '§7. Инструменты для вычислений', icon: '📏', page: 145, topicIds: ['m7t49','m7t50','m7t51'] },
+    ],
     topics: [
       // §1 НАТУРАЛЬНЫЕ ЧИСЛА И НУЛЬ. ШКАЛЫ (стр. 7–43)
       { id: 'm1t1', name: '1. Числовая информация в таблицах', sub: '§1 · стр.7 · таблица, строка, столбец, ячейка', xp: 8,
@@ -761,6 +783,51 @@ const CURRICULUM = {
       { id: 'm2t11', name: '11. Уравнение', sub: '§2 · стр.69 · корень уравнения, решение', xp: 12,
         keywords: ['уравнение','корень','решение','проверка'],
         exercises: ['2.87','2.88','2.89','2.90','2.91','2.92','2.93','2.94','2.95','2.96','2.97','2.98','2.99','2.100'] },
+      // §3 УМНОЖЕНИЕ И ДЕЛЕНИЕ (стр. 79–131) — задания будут добавлены
+      { id: 'm3t12', name: '12. Действие умножения. Свойства', sub: '§3 · стр.79', xp: 10, keywords: ['множитель','произведение','переместительное умножения'], exercises: [] },
+      { id: 'm3t13', name: '13. Действие деления', sub: '§3 · стр.86', xp: 10, keywords: ['делимое','делитель','частное'], exercises: [] },
+      { id: 'm3t14', name: '14. Деление с остатком', sub: '§3 · стр.94', xp: 10, keywords: ['остаток','неполное частное'], exercises: [] },
+      { id: 'm3t15', name: '15. Упрощение выражений', sub: '§3 · стр.98', xp: 10, keywords: ['упрощение','раскрытие скобок'], exercises: [] },
+      { id: 'm3t16', name: '16. Порядок действий', sub: '§3 · стр.107', xp: 10, keywords: ['порядок действий','скобки'], exercises: [] },
+      { id: 'm3t17', name: '17. Степень с натуральным показателем', sub: '§3 · стр.113', xp: 12, keywords: ['степень','основание','показатель'], exercises: [] },
+      { id: 'm3t18', name: '18. Делители и кратные', sub: '§3 · стр.118', xp: 12, keywords: ['делитель','кратное','НОД','НОК'], exercises: [] },
+      { id: 'm3t19', name: '19. Свойства и признаки делимости', sub: '§3 · стр.123', xp: 12, keywords: ['признак делимости','чётное','нечётное'], exercises: [] },
+      // §4 ПЛОЩАДИ И ОБЪЁМЫ (стр. 132–156)
+      { id: 'm4t20', name: '20. Формулы', sub: '§4 · стр.132', xp: 10, keywords: ['формула','переменная'], exercises: [] },
+      { id: 'm4t21', name: '21. Площадь. Формула площади прямоугольника', sub: '§4 · стр.136', xp: 10, keywords: ['площадь','прямоугольник'], exercises: [] },
+      { id: 'm4t22', name: '22. Единицы измерения площадей', sub: '§4 · стр.141', xp: 10, keywords: ['мм²','см²','дм²','м²','км²'], exercises: [] },
+      { id: 'm4t23', name: '23. Прямоугольный параллелепипед', sub: '§4 · стр.146', xp: 10, keywords: ['параллелепипед','ребро','грань'], exercises: [] },
+      { id: 'm4t24', name: '24. Объёмы. Объём прямоугольного параллелепипеда', sub: '§4 · стр.150', xp: 10, keywords: ['объём','см³','дм³','м³'], exercises: [] },
+      // §5 ОБЫКНОВЕННЫЕ ДРОБИ (кн.2, стр. 6–90)
+      { id: 'm5t25', name: '25. Окружность, круг, шар, цилиндр', sub: '§5 · стр.6', xp: 10, keywords: ['окружность','круг','радиус','диаметр'], exercises: [] },
+      { id: 'm5t26', name: '26. Доли и дроби', sub: '§5 · стр.12', xp: 10, keywords: ['доля','дробь','числитель','знаменатель'], exercises: [] },
+      { id: 'm5t27', name: '27. Сравнение дробей', sub: '§5 · стр.21', xp: 10, keywords: ['сравнение дробей'], exercises: [] },
+      { id: 'm5t28', name: '28. Правильные и неправильные дроби', sub: '§5 · стр.25', xp: 10, keywords: ['правильная дробь','неправильная дробь'], exercises: [] },
+      { id: 'm5t29', name: '29. Сложение и вычитание дробей с одинаковыми знаменателями', sub: '§5 · стр.30', xp: 12, keywords: ['сложение дробей','одинаковый знаменатель'], exercises: [] },
+      { id: 'm5t30', name: '30. Деление натуральных чисел и дроби', sub: '§5 · стр.37', xp: 12, keywords: ['деление и дробь'], exercises: [] },
+      { id: 'm5t31', name: '31. Смешанные числа', sub: '§5 · стр.42', xp: 12, keywords: ['смешанное число','целая часть','дробная часть'], exercises: [] },
+      { id: 'm5t32', name: '32. Сложение и вычитание смешанных чисел', sub: '§5 · стр.48', xp: 12, keywords: ['сложение смешанных'], exercises: [] },
+      { id: 'm5t33', name: '33. Основное свойство дроби', sub: '§5 · стр.54', xp: 12, keywords: ['основное свойство дроби'], exercises: [] },
+      { id: 'm5t34', name: '34. Сокращение дробей', sub: '§5 · стр.57', xp: 12, keywords: ['сокращение дроби','НОД'], exercises: [] },
+      { id: 'm5t35', name: '35. Приведение дробей к общему знаменателю', sub: '§5 · стр.61', xp: 12, keywords: ['общий знаменатель','НОК'], exercises: [] },
+      { id: 'm5t36', name: '36. Сравнение, сложение и вычитание дробей с разными знаменателями', sub: '§5 · стр.65', xp: 14, keywords: ['разные знаменатели'], exercises: [] },
+      { id: 'm5t37', name: '37. Умножение дробей', sub: '§5 · стр.74', xp: 14, keywords: ['умножение дробей'], exercises: [] },
+      { id: 'm5t38', name: '38. Нахождение части целого', sub: '§5 · стр.79', xp: 14, keywords: ['часть целого','процент'], exercises: [] },
+      { id: 'm5t39', name: '39. Деление дробей', sub: '§5 · стр.82', xp: 14, keywords: ['деление дробей','перевёрнутая'], exercises: [] },
+      { id: 'm5t40', name: '40. Нахождение целого по его части', sub: '§5 · стр.87', xp: 14, keywords: ['целое по части'], exercises: [] },
+      // §6 ДЕСЯТИЧНЫЕ ДРОБИ (кн.2, стр. 92–143)
+      { id: 'm6t41', name: '41. Десятичная запись дробей', sub: '§6 · стр.92', xp: 12, keywords: ['десятичная дробь','запятая'], exercises: [] },
+      { id: 'm6t42', name: '42. Сравнение десятичных дробей', sub: '§6 · стр.97', xp: 12, keywords: ['сравнение десятичных'], exercises: [] },
+      { id: 'm6t43', name: '43. Сложение и вычитание десятичных дробей', sub: '§6 · стр.103', xp: 12, keywords: ['сложение десятичных'], exercises: [] },
+      { id: 'm6t44', name: '44. Округление чисел. Прикидка', sub: '§6 · стр.111', xp: 12, keywords: ['округление','прикидка'], exercises: [] },
+      { id: 'm6t45', name: '45. Умножение десятичной дроби на натуральное число', sub: '§6 · стр.118', xp: 14, keywords: ['умножение десятичной'], exercises: [] },
+      { id: 'm6t46', name: '46. Деление десятичной дроби на натуральное число', sub: '§6 · стр.123', xp: 14, keywords: ['деление десятичной'], exercises: [] },
+      { id: 'm6t47', name: '47. Умножение на десятичную дробь', sub: '§6 · стр.129', xp: 14, keywords: ['умножение на десятичную'], exercises: [] },
+      { id: 'm6t48', name: '48. Деление на десятичную дробь', sub: '§6 · стр.136', xp: 14, keywords: ['деление на десятичную'], exercises: [] },
+      // §7 ИНСТРУМЕНТЫ (кн.2, стр. 145–159)
+      { id: 'm7t49', name: '49. Калькулятор', sub: '§7 · стр.145', xp: 8, keywords: ['калькулятор'], exercises: [] },
+      { id: 'm7t50', name: '50. Виды углов. Чертёжный треугольник', sub: '§7 · стр.148', xp: 8, keywords: ['угол','транспортир','чертёжный треугольник'], exercises: [] },
+      { id: 'm7t51', name: '51. Измерение углов. Транспортир', sub: '§7 · стр.153', xp: 8, keywords: ['транспортир','измерение углов'], exercises: [] },
     ],
     examples: ['Задача: из 120 яблок взяли 25%. Сколько осталось?','Реши уравнение: 3x + 7 = 22','Найди НОД(24, 36)','Переведи 2⅗ в неправильную дробь'],
     cheatsheet: [
@@ -1746,15 +1813,59 @@ function openZone(zone) {
   document.getElementById('zh-icon').textContent = cur.icon;
   document.getElementById('zh-title').textContent = cur.name;
 
+  // Группируем параграфы по главам
+  const sections = cur.sections || [];
+  const chapters = [];
+  const chapterMap = {};
+  sections.forEach(sec => {
+    if (!chapterMap[sec.chapter]) {
+      chapterMap[sec.chapter] = [];
+      chapters.push(sec.chapter);
+    }
+    chapterMap[sec.chapter].push(sec);
+  });
+
+  const list = document.getElementById('section-list');
+  list.innerHTML = chapters.map(ch => `
+    <div style="margin-bottom:6px">
+      <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase;padding:10px 0 6px">${ch}</div>
+      ${chapterMap[ch].map(sec => {
+        const doneCount = (sec.topicIds || []).filter(id => ST.doneTopics[id]).length;
+        const total = (sec.topicIds || []).length;
+        const pct = total ? Math.round(doneCount / total * 100) : 0;
+        return `<div class="topic-item" onclick="openSection('${sec.id}')" style="margin-bottom:6px">
+          <span style="font-size:22px;flex-shrink:0">${sec.icon}</span>
+          <div class="t-info">
+            <div class="t-name" style="font-size:13px">${sec.name}</div>
+            <div class="t-sub">стр. ${sec.page} · ${total} тем${total===1?'а':total<5?'ы':''}${doneCount>0?' · '+doneCount+'/'+total+' пройдено':''}</div>
+            <div class="prog-bar mt1" style="height:3px"><div class="prog-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+          </div>
+          <div style="font-size:18px;color:var(--text3)">›</div>
+        </div>`;
+      }).join('')}
+    </div>`).join('');
+
+  show('screen-zone');
+}
+
+function openSection(sectionId) {
+  const cur = CURRICULUM[ST.zone];
+  const sec = (cur.sections || []).find(s => s.id === sectionId);
+  if (!sec) return;
+  ST.currentSection = sectionId;
+
+  document.getElementById('sec-icon').textContent = sec.icon;
+  document.getElementById('sec-title').textContent = sec.name;
+
   // Квест повторения
   const questEl = document.getElementById('zone-quest');
-  const repeatTopic = getDailyRepeatTopic(zone);
-  if (repeatTopic) {
+  const repeatTopic = getDailyRepeatTopic(ST.zone);
+  if (repeatTopic && (sec.topicIds || []).includes(repeatTopic.id)) {
     questEl.innerHTML = `
-      <div class="daily-quest" onclick="openTaskInputForTopic('${repeatTopic.id}')" style="margin-bottom:16px">
+      <div class="daily-quest" onclick="openTaskInputForTopic('${repeatTopic.id}')" style="margin-bottom:12px">
         <div class="dq-icon">🔁</div>
         <div class="dq-text">
-          <div class="label">⚡ Квест дня — повторение</div>
+          <div class="label">⚡ Квест дня</div>
           <div class="title">${repeatTopic.name}</div>
         </div>
         <div class="dq-xp">+${repeatTopic.xp} XP</div>
@@ -1763,14 +1874,15 @@ function openZone(zone) {
     questEl.innerHTML = '';
   }
 
+  const topics = (sec.topicIds || []).map(id => cur.topics.find(t => t.id === id)).filter(Boolean);
   const list = document.getElementById('topic-list');
-  list.innerHTML = cur.topics.map((t, i) => {
+  list.innerHTML = topics.map(t => {
     const done = ST.doneTopics[t.id];
     return `<div class="topic-item${done ? ' done' : ''}" onclick="openTaskInputForTopic('${t.id}')">
-      <span class="t-num">${String(i + 1).padStart(2, '0')}</span>
+      <span class="t-num" style="font-size:8px">${t.id.replace(/[a-z]/g,'')}</span>
       <div class="t-info">
         <div class="t-name">${t.name}</div>
-        <div class="t-sub">${t.sub}</div>
+        <div class="t-sub" style="font-size:10px">${t.keywords ? t.keywords.slice(0,4).join(', ') : ''}</div>
       </div>
       <div>
         <div class="t-status">${done ? '✅' : '○'}</div>
@@ -1778,7 +1890,8 @@ function openZone(zone) {
       </div>
     </div>`;
   }).join('');
-  show('screen-zone');
+
+  show('screen-section');
 }
 function openTaskInput() {
   ST.topicId = null;
@@ -1815,10 +1928,6 @@ function renderTaskInput() {
   } else {
     ta.placeholder = `Напиши условие задачи или свой вопрос...`;
   }
-  // Quick tags
-  document.getElementById('quick-tags').innerHTML = cur.examples.map(e =>
-    `<div class="tag" onclick="setExample(this)">${e.length > 45 ? e.slice(0, 45) + '…' : e}</div>`
-  ).join('');
   // Mini topic list
   const ml = document.getElementById('mini-topic-list');
   ml.innerHTML = cur.topics.slice(0, 6).map(t =>
