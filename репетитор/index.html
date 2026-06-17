@@ -544,7 +544,6 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
     <div class="topic-list" id="topic-list"></div>
     <div class="mt3" style="display:flex;flex-direction:column;gap:10px">
       <button class="btn-main" style="font-size:9px" onclick="openTaskInput()">📝 ЗАДАТЬ СВОЙ ВОПРОС / ДОМАШКУ</button>
-      <button class="btn-sec" style="font-size:9px" onclick="openPhotoCheck()">📸 СДЕЛАЛА САМА — ПРОВЕРИТЬ</button>
     </div>
   </div>
 </div>
@@ -570,10 +569,6 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
     <div class="task-title">Введи задание</div>
     <div class="task-subtitle">Напиши условие задачи или вопрос — Умник разберёт его вместе с тобой шаг за шагом. Готовый ответ он не даст — поможет дойти до него самому.</div>
     <textarea id="task-input" class="input" rows="5" placeholder="Например: из условия задачи №5 стр. 47..."></textarea>
-    <div class="quick-examples mt2">
-      <span class="quick-label">Быстрые примеры:</span>
-      <div class="tags" id="quick-tags"></div>
-    </div>
     <div class="or-divider">или выбери тему</div>
     <div class="topic-selector" id="mini-topic-list"></div>
     <button class="btn-main mt3" onclick="startChat()">▶ РАЗОБРАТЬ С УМНИКОМ</button>
@@ -594,12 +589,14 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
       <button class="icon-btn" onclick="openTest()" title="Тест по теме">✏️</button>
     </div>
   </div>
-  <div id="task-badge" class="task-badge" style="display:none">
+  <div id="task-badge" class="task-badge" style="display:none;cursor:pointer" onclick="toggleTaskBadge()">
     <div class="task-badge-icon">📝</div>
     <div class="task-badge-text">
       <strong id="tb-subject"></strong>
-      <span id="tb-text"></span>
-      <a class="task-badge-change" onclick="goToTask()">← изменить задание</a>
+      <span id="tb-text" style="display:block;margin-top:3px"></span>
+      <span id="tb-full" style="display:none;white-space:pre-wrap;margin-top:6px;color:var(--text)"></span>
+      <a class="task-badge-change" id="tb-toggle">▼ показать полностью</a>
+      <a class="task-badge-change" onclick="event.stopPropagation();goToTask()">← изменить задание</a>
     </div>
   </div>
   <div id="chat-msgs" class="chat-msgs"></div>
@@ -1184,16 +1181,9 @@ function renderExercisePicker(topic) {
         `<button class="ex-btn" data-num="${n}" onclick="pickExercise('${n}')">№${n}</button>`
       ).join('')}
     </div>
-    <div class="ex-or">или напиши сам</div>
-    <textarea id="task-input" class="input" rows="4" placeholder="Вставь условие задачи или свой вопрос..."></textarea>
-    <div class="quick-examples mt2">
-      <span class="quick-label">Быстрые примеры:</span>
-      <div class="tags" id="quick-tags"></div>
-    </div>
+    <div class="ex-or">или напиши своё</div>
+    <textarea id="task-input" class="input" rows="3" placeholder="Свой вопрос или задание не из учебника..."></textarea>
     <button class="btn-main mt3" onclick="startChat()">▶ РАЗОБРАТЬ С УМНИКОМ</button>`;
-  document.getElementById('quick-tags').innerHTML = cur.examples.map(e =>
-    `<div class="tag" onclick="setExample(this)">${e.length > 45 ? e.slice(0, 45) + '…' : e}</div>`
-  ).join('');
 }
 
 // ============================================================
@@ -1521,12 +1511,12 @@ function pickExercise(num) {
     card.innerHTML = `<div style="font-size:10px;font-family:var(--pixel);color:var(--accent);margin-bottom:8px;">№${num}</div>${taskText.replace(/</g,'&lt;').replace(/>/g,'&gt;')}`;
     const exGrid = document.querySelector('.ex-grid');
     exGrid.insertAdjacentElement('afterend', card);
-    document.getElementById('task-input').value = `Задание №${num}:\n${taskText}`;
+    // textarea хранит только номер — текст задания уже виден в карточке
+    document.getElementById('task-input').value = '';
+    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   } else {
     document.getElementById('task-input').value = `Задание №${num} (${topicName})`;
   }
-
-  document.getElementById('task-input').focus();
   document.querySelectorAll('.ex-btn').forEach(b => {
     const active = b.dataset.num === String(num);
     b.style.borderColor = active ? 'var(--accent)' : '';
@@ -1851,17 +1841,27 @@ function selectTopic(id) {
 //  CHAT
 // ============================================================
 function startChat() {
-  const task = document.getElementById('task-input').value.trim();
+  // Берём текст: сначала из карточки задания, потом из textarea
+  const card = document.getElementById('task-preview-card');
+  const cardText = card ? card.innerText.replace(/^№[\d.]+\n/, '').trim() : '';
+  const textareaText = document.getElementById('task-input').value.trim();
+  const task = cardText || textareaText;
   if (!task) { document.getElementById('task-input').focus(); return; }
   ST.task = task;
+  // Запоминаем номер задания из карточки для показа в чате
+  const cardNum = card ? (card.querySelector('[style*="pixel"]')?.textContent || '') : '';
   ST.msgs = [];
   ST.hints = 0;
   ST.stageIdx = 0;
   ST.loading = false;
+  ST.bonusShown = false;
   const cur = CURRICULUM[ST.zone];
   const topicName = ST.topicId ? cur.topics.find(t => t.id === ST.topicId)?.name || '' : '';
-  document.getElementById('tb-subject').textContent = cur.name + (topicName ? ': ' + topicName : '') + ' — ';
-  document.getElementById('tb-text').textContent = task.length > 80 ? task.slice(0, 80) + '…' : task;
+  document.getElementById('tb-subject').textContent = (cardNum ? cardNum + ' · ' : '') + cur.name + (topicName ? ': ' + topicName : '');
+  document.getElementById('tb-text').textContent = task.length > 120 ? task.slice(0, 120) + '…' : task;
+  document.getElementById('tb-full').textContent = task;
+  document.getElementById('tb-full').style.display = 'none';
+  document.getElementById('tb-toggle').textContent = '▼ показать полностью';
   document.getElementById('task-badge').style.display = '';
   document.getElementById('chat-msgs').innerHTML = '';
   document.getElementById('chat-input').value = '';
@@ -1882,6 +1882,15 @@ function startChat() {
 }
 function goToTask() {
   show('screen-task');
+}
+function toggleTaskBadge() {
+  const full = document.getElementById('tb-full');
+  const short = document.getElementById('tb-text');
+  const toggle = document.getElementById('tb-toggle');
+  const open = full.style.display !== 'none';
+  full.style.display = open ? 'none' : 'block';
+  short.style.display = open ? 'block' : 'none';
+  toggle.textContent = open ? '▼ показать полностью' : '▲ свернуть';
 }
 
 function updateSendBtn() {
@@ -2043,7 +2052,10 @@ async function processResponse(text) {
     }
 
     const userMsgCount = ST.msgs.filter(m => m.role === 'user').length;
-    if (userMsgCount >= 3) {
+    // Бонус предлагаем когда Умник подтвердил правильность (ответ не начинается с ошибки)
+    const botConfirmed = reply && !reply.startsWith('❌') && !reply.includes('не совсем') && !reply.includes('попробуй ещё');
+    if (userMsgCount >= 2 && botConfirmed && !ST.bonusShown) {
+      ST.bonusShown = true;
       if (ST.topicId) ST.doneTopics[ST.topicId] = true;
       saveState();
       showPraise();
