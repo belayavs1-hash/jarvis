@@ -2617,25 +2617,23 @@ async function processResponse(text) {
 
   if (reply) addBotMsg(reply);
 
-  // Геймификация: если ответ позитивный — начисляем XP
+  // Геймификация: XP за позитивный ответ
   if (isPositive && reply && !reply.startsWith('❌')) {
     const topicXp = ST.topicId ? (CURRICULUM[ST.zone].topics.find(t => t.id === ST.topicId)?.xp || 10) : 10;
     addXp(Math.round(topicXp * 0.5));
-
-    // Этап 2: если ученик уже несколько раз ответил успешно — предложить усложнение
-    const positiveCount = ST.msgs.filter(m => m.role === 'user').length;
-    if (isPositive && positiveCount === 3 && !ST.doneTopics[ST.topicId]) {
-      // Плавный переход к этапу 2 — Умник сам усложняет
-      setTimeout(async () => {
-        showTyping();
-        const stage2prompt = `Ученик уверенно отвечает — пора усложнить! Предложи похожее задание немного сложнее или проверь знание соседнего правила. Скажи об этом бодро, как вызов: "А теперь уровень сложнее!" Один короткий вопрос.`;
-        const stage2 = await askClaude(stage2prompt);
-        removeTyping();
-        if (stage2) addBotMsg(stage2);
-      }, 800);
-    }
-
     saveState();
+  }
+
+  // Авто-триггер: Умник сам говорит что всё решено — показать закрепление
+  if (reply && !ST.bonusShown) {
+    const finishPhrases = ['справился со всеми', 'прошёл все задания', 'прошла все задания', 'решил все', 'решила все', 'таблица заполнена полностью', 'задание выполнено', 'все подзадания'];
+    const botSaysFinish = finishPhrases.some(p => reply.toLowerCase().includes(p));
+    if (botSaysFinish) {
+      ST.bonusShown = true;
+      if (ST.topicId) ST.doneTopics[ST.topicId] = true;
+      saveState();
+      setTimeout(() => showPraise(), 800);
+    }
   }
 }
 
@@ -2696,25 +2694,25 @@ function showPraise() {
   scrollDown();
   setTimeout(() => {
     const next = document.createElement('div');
-    next.style.cssText = 'margin:12px 0;padding:12px;background:var(--card);border-radius:12px;border:1px solid var(--border)';
+    next.style.cssText = 'margin:12px 0;padding:14px;background:#12172a;border-radius:14px;border:1.5px solid #2a3560';
     const topicDoneBtn = isFirstTime
-      ? `<button onclick="showTopicDone()" style="width:100%;margin-bottom:10px;padding:14px;background:linear-gradient(135deg,#1a4020,#0d2010);border:2px solid #40c060;border-radius:12px;color:#60e080;font-family:var(--pixel);font-size:10px;font-weight:800;cursor:pointer;letter-spacing:1px">🎯 ЗАКРЕПЛЕНИЕ МАТЕРИАЛА →</button>`
+      ? `<button onclick="showTopicDone()" style="width:100%;margin-bottom:12px;padding:14px;background:linear-gradient(135deg,#1a4020,#0d2810);border:2px solid #40c060;border-radius:12px;color:#7eff9a;font-family:var(--pixel);font-size:10px;font-weight:800;cursor:pointer;letter-spacing:1px;text-shadow:0 0 8px #40c060">🎯 ЗАКРЕПЛЕНИЕ МАТЕРИАЛА →</button>`
       : '';
     next.innerHTML = `
-      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);margin-bottom:10px;letter-spacing:1px">ЧТО ДАЛЬШЕ?</div>
+      <div style="font-family:var(--pixel);font-size:9px;color:#4a5580;margin-bottom:12px;letter-spacing:2px">ЧТО ДАЛЬШЕ?</div>
       ${topicDoneBtn}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <button class="icon-btn" onclick="goToNextExercise()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
-          <span>📚</span><span>Следующее задание</span>
+        <button class="icon-btn" onclick="goToNextExercise()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px;background:#1c2240;border:1.5px solid #3040708">
+          <span>📚</span><span style="color:#b0c0e8">Следующее задание</span>
         </button>
-        <button class="icon-btn" onclick="openCheatSheet()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
-          <span>📋</span><span>Шпаргалка</span>
+        <button class="icon-btn" onclick="showMyCheat()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px;background:#1c2240;border:1.5px solid #304070">
+          <span>🧠</span><span style="color:#b0c0e8">База знаний</span>
         </button>
-        <button class="icon-btn" onclick="startBonus()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
-          <span>⚡</span><span>Бонус-игра</span>
+        <button class="icon-btn" onclick="startBonus()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px;background:#1c2240;border:1.5px solid #304070">
+          <span>⚡</span><span style="color:#b0c0e8">Бонус-игра</span>
         </button>
-        <button class="icon-btn" onclick="show('screen-section')" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
-          <span>🗂️</span><span>Сменить тему</span>
+        <button class="icon-btn" onclick="goHome()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px;background:#1c2240;border:1.5px solid #304070">
+          <span>🏠</span><span style="color:#b0c0e8">На главную</span>
         </button>
       </div>`;
     document.getElementById('chat-msgs').appendChild(next);
