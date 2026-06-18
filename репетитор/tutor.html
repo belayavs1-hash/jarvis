@@ -719,9 +719,6 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
       <div class="hdot" id="hd5"></div>
       <span id="voice-status" style="margin-left:auto;font-size:11px;color:var(--text3);display:none">🎤 слушаю...</span>
     </div>
-    <div style="padding:0 0 6px 0">
-      <button id="done-chat-btn" onclick="triggerDone()" style="width:100%;padding:10px;background:linear-gradient(135deg,#1a4020,#0d2810);border:1.5px solid #40c060;border-radius:10px;color:#7eff9a;font-family:var(--pixel);font-size:9px;font-weight:800;cursor:pointer;letter-spacing:1px;display:none">✅ Я РЕШИЛА — ЧТО ДАЛЬШЕ?</button>
-    </div>
     <div class="chat-row">
       <textarea id="chat-input" class="input" rows="1" placeholder="Напиши ответ или вопрос..." onkeydown="chatKey(event)"></textarea>
       <button class="send-btn" id="mic-btn" onclick="toggleVoice()" style="display:none;background:var(--bg3);font-size:16px" title="Голосовой ввод">🎤</button>
@@ -743,7 +740,7 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 <!-- ======= MY CHEATSHEETS ======= -->
 <div id="screen-mycheat" class="screen">
   <div class="zone-header">
-    <button class="back-btn" onclick="goHome()">←</button>
+    <button class="back-btn" id="mycheat-back-btn" onclick="backFromMyCheat()">←</button>
     <span style="font-size:20px">🧠</span>
     <span style="font-size:14px;font-weight:900;margin-left:8px">База знаний</span>
   </div>
@@ -2677,6 +2674,10 @@ function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
+function currentScreen() {
+  const active = document.querySelector('.screen.active');
+  return active ? active.id : null;
+}
 function goHome() { renderHome(); show('screen-home'); }
 
 // ============================================================
@@ -3121,10 +3122,14 @@ async function processResponse(text) {
 
   if (reply) addBotMsg(reply);
 
-  // Показываем кнопку «Я решила» после первого ответа бота
-  if (!ST.bonusShown) {
-    const doneBtn = document.getElementById('done-chat-btn');
-    if (doneBtn) doneBtn.style.display = 'block';
+  // Показываем кнопку «Я решила» после первого ответа бота (как сообщение в чате)
+  if (!ST.bonusShown && !document.getElementById('done-chat-btn')) {
+    const btn = document.createElement('div');
+    btn.id = 'done-chat-btn';
+    btn.style.cssText = 'margin:8px 0 4px;';
+    btn.innerHTML = `<button onclick="triggerDone()" style="width:100%;padding:12px;background:linear-gradient(135deg,#1a4020,#0d2810);border:1.5px solid #40c060;border-radius:12px;color:#7eff9a;font-family:var(--pixel);font-size:9px;font-weight:800;cursor:pointer;letter-spacing:1px;text-shadow:0 0 8px #40c06060">✅ Я РЕШИЛА — ЧТО ДАЛЬШЕ?</button>`;
+    document.getElementById('chat-msgs').appendChild(btn);
+    scrollDown();
   }
 
   // XP только если Умник явно подтвердил верный ответ
@@ -3199,7 +3204,7 @@ function escHtml(s) {
 }
 function showPraise() {
   const doneBtn = document.getElementById('done-chat-btn');
-  if (doneBtn) doneBtn.style.display = 'none';
+  if (doneBtn) doneBtn.remove();
   const isFirstTime = ST.topicId && !ST._topicWasDoneBeforeSession;
   addXp(5);
   const el = document.createElement('div');
@@ -4287,7 +4292,10 @@ function saveMyCheat(zone, topicName, items) {
   localStorage.setItem('myCheatsheets', JSON.stringify(saved));
 }
 
+function backFromMyCheat() { show(ST.prevScreen || 'screen-home'); }
+
 function showMyCheat() {
+  ST.prevScreen = currentScreen() || ST.prevScreen || 'screen-chat';
   const saved = JSON.parse(localStorage.getItem('myCheatsheets') || '[]');
   const body = document.getElementById('mycheat-body');
   if (!saved.length) {
