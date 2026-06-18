@@ -776,8 +776,8 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
     </label>
     <img id="photo-preview" class="photo-preview" alt="Твоё решение">
     <div id="photo-topic-sel" style="margin-bottom:16px;display:none">
-      <div style="font-size:11px;color:var(--text3);margin-bottom:8px;font-family:var(--pixel);letter-spacing:1px">ПО КАКОЙ ТЕМЕ?</div>
-      <div id="photo-topic-list" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px;font-family:var(--pixel);letter-spacing:1px">НОМЕР ЗАДАНИЯ (необязательно)</div>
+      <input id="photo-ex-num" class="input" type="text" placeholder="Например: 1.7 или 45" style="font-size:14px;margin:0">
     </div>
     <button class="btn-main" id="photo-send-btn" style="display:none" onclick="sendPhotoToCheck()">
       🔍 ОТПРАВИТЬ НА ПРОВЕРКУ
@@ -1055,6 +1055,14 @@ const CURRICULUM = {
         { k: 'Тупой', v: '90° < α < 180°' },
         { k: 'Развёрнутый', v: 'α = 180°' },
         { k: 'Транспортир', v: 'Совмести центр с вершиной угла' },
+      ]},
+      { title: '🚗 Движение (скорость, расстояние, время)', rows: [
+        { k: 'Расстояние', v: 'S = v × t' },
+        { k: 'Скорость', v: 'v = S ÷ t' },
+        { k: 'Время', v: 't = S ÷ v' },
+        { k: 'Пример', v: 'v=70 км/ч, t=3 ч → S=210 км' },
+        { k: 'Навстречу', v: 'v сближения = v₁ + v₂' },
+        { k: 'В одну сторону', v: 'v удаления = |v₁ − v₂|' },
       ]},
     ],
     tests: [
@@ -2636,7 +2644,7 @@ async function processResponse(text) {
     const praiseWords = ['правильно', 'верно', 'молодец', 'отлично', 'правильн', 'отлично', '✅', '⭐', '🌟', '👍', 'браво', 'умница', 'супер', 'точно'];
     const botConfirmed = reply && praiseWords.some(w => reply.toLowerCase().includes(w));
     const noError = reply && !reply.startsWith('❌') && !reply.includes('не совсем') && !reply.includes('попробуй ещё') && !reply.includes('ошибка') && !reply.includes('неверно');
-    if (userMsgCount >= 3 && botConfirmed && noError && !ST.bonusShown) {
+    if (userMsgCount >= 2 && botConfirmed && noError && !ST.bonusShown) {
       ST.bonusShown = true;
       if (ST.topicId) ST.doneTopics[ST.topicId] = true;
       saveState();
@@ -2699,16 +2707,7 @@ function showPraise() {
   el.innerHTML = `<div class="praise-icon">⭐</div><div class="praise-text">Отлично! Сам разобрался — это настоящий прогресс!</div>`;
   document.getElementById('chat-msgs').appendChild(el);
   scrollDown();
-  setTimeout(() => {
-    const bonus = document.createElement('div');
-    bonus.className = 'praise-msg';
-    bonus.style.cssText = 'background:linear-gradient(135deg,#1a1040,#0d0820);border-color:#6040c0;cursor:pointer';
-    bonus.innerHTML = `<div class="praise-icon">⚡</div><div class="praise-text" style="color:#b090ff">Бонус-раунд разблокирован! Нажми чтобы сыграть →</div>`;
-    bonus.onclick = startBonus;
-    document.getElementById('chat-msgs').appendChild(bonus);
-    scrollDown();
-  }, 1800);
-  // Кнопки «Что дальше?» — появляются через 3 секунды
+  // Кнопки «Что дальше?» — появляются сразу после похвалы
   setTimeout(() => {
     const next = document.createElement('div');
     next.style.cssText = 'margin:12px 0;padding:12px;background:var(--card);border-radius:12px;border:1px solid var(--border)';
@@ -2719,11 +2718,11 @@ function showPraise() {
         <button class="icon-btn" onclick="goToNextExercise()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
           <span>📚</span><span>Следующее задание</span>
         </button>
-        <button class="icon-btn" onclick="openTest()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
-          <span>✏️</span><span>Тест по теме</span>
-        </button>
         <button class="icon-btn" onclick="openCheatSheet()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
           <span>📋</span><span>Шпаргалка</span>
+        </button>
+        <button class="icon-btn" onclick="startBonus()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
+          <span>⚡</span><span>Бонус-игра</span>
         </button>
         <button class="icon-btn" onclick="show('screen-section')" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
           <span>🗂️</span><span>Сменить тему</span>
@@ -2731,7 +2730,7 @@ function showPraise() {
       </div>`;
     document.getElementById('chat-msgs').appendChild(next);
     scrollDown();
-  }, 3500);
+  }, 1000);
 }
 
 function showTopicDone() {
@@ -3974,25 +3973,12 @@ function openPhotoCheck() {
   document.getElementById('photo-preview').style.display = 'none';
   document.getElementById('photo-send-btn').style.display = 'none';
   document.getElementById('photo-result').innerHTML = '';
-  // показываем список тем текущей зоны
-  const cur = CURRICULUM[ST.zone];
-  const topList = document.getElementById('photo-topic-list');
-  topList.innerHTML = cur.topics.map(t =>
-    `<button class="ex-btn" data-tid="${t.id}" style="min-width:auto;height:auto;padding:6px 12px;font-size:11px;font-family:var(--body)"
-      onclick="selectPhotoTopic('${t.id}',this)">${t.name}</button>`
-  ).join('');
+  const numInput = document.getElementById('photo-ex-num');
+  if (numInput) numInput.value = ST.task ? ST.task.split(/\s/)[0] : '';
   document.getElementById('photo-topic-sel').style.display = 'block';
   show('screen-photo');
 }
 
-function selectPhotoTopic(id, el) {
-  ST.topicId = id;
-  document.querySelectorAll('#photo-topic-list .ex-btn').forEach(b => {
-    b.style.borderColor = ''; b.style.color = '';
-  });
-  el.style.borderColor = 'var(--accent)';
-  el.style.color = 'var(--accent)';
-}
 
 function onPhotoSelected(event) {
   const file = event.target.files[0];
@@ -4013,9 +3999,8 @@ async function sendPhotoToCheck() {
   const btn = document.getElementById('photo-send-btn');
   btn.disabled = true;
   btn.textContent = '⏳ Умник смотрит...';
-  const cur = CURRICULUM[ST.zone];
-  const topic = cur.topics.find(t => t.id === ST.topicId);
-  const topicName = topic ? topic.name : 'по теме';
+  const exNum = (document.getElementById('photo-ex-num') || {}).value || '';
+  const taskLabel = exNum ? `задание №${exNum}` : (ST.task ? ST.task.slice(0,40) : 'задачу');
   const resultEl = document.getElementById('photo-result');
   resultEl.innerHTML = '';
 
@@ -4029,16 +4014,16 @@ async function sendPhotoToCheck() {
         Чтобы я проверил — напиши ответ который у тебя получился, и я скажу верно ли.
       </div>
       <textarea id="photo-ans-input" class="input mt2" rows="3" placeholder="Напиши свой ответ..."></textarea>
-      <button class="btn-main mt2" onclick="checkPhotoAnswer('${topicName}')">Проверить ответ</button>
+      <button class="btn-main mt2" onclick="checkPhotoAnswer('${taskLabel}')">Проверить ответ</button>
     </div>`;
   btn.disabled = false;
   btn.style.display = 'none';
 }
 
-async function checkPhotoAnswer(topicName) {
+async function checkPhotoAnswer(taskLabel) {
   const ans = document.getElementById('photo-ans-input').value.trim();
   if (!ans) return;
-  ST.task = `Ученик решил задачу по теме "${topicName}" самостоятельно и получил ответ: ${ans}. Проверь правильность и похвали если верно, или мягко укажи на ошибку.`;
+  ST.task = `Ученик решил ${taskLabel} самостоятельно и получил ответ: ${ans}. Проверь правильность и похвали если верно, или мягко укажи на ошибку.`;
   ST.msgs = [];
   ST.zone = ST.zone || 'math';
   const reply = await askClaude('Проверь мой ответ: ' + ans);
