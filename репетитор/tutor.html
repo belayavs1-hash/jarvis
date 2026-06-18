@@ -267,6 +267,50 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
 .mycheat-q { color:var(--text3); flex:0 0 45%; }
 .mycheat-a { color:var(--text); font-weight:700; }
 
+/* ===== MIND MAP (ментальная карта) ===== */
+#screen-mindmap { max-width: 480px; margin: 0 auto; width: 100%; }
+.mm-body { flex:1; padding:16px; overflow-y:auto; display:flex; flex-direction:column; }
+.mm-header-bar { display:flex; align-items:center; gap:12px; padding:14px 16px; border-bottom:1px solid var(--border); }
+.mm-topic { font-family:var(--pixel); font-size:10px; color:var(--accent); letter-spacing:1px; text-align:center; margin-bottom:6px; }
+.mm-title { font-size:15px; font-weight:900; text-align:center; margin-bottom:20px; }
+.mm-progress { display:flex; gap:6px; justify-content:center; margin-bottom:20px; }
+.mm-dot { width:10px; height:10px; border-radius:50%; background:var(--bg3); border:2px solid var(--border); transition:.2s; }
+.mm-dot.active { background:var(--accent); border-color:var(--accent); }
+.mm-dot.done { background:var(--green); border-color:var(--green); }
+.mm-instruction { font-size:12px; color:var(--text3); text-align:center; margin-bottom:16px; }
+/* Соотнеси */
+.mm-match { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+.mm-col { display:flex; flex-direction:column; gap:8px; }
+.mm-chip { background:var(--card); border:2px solid var(--border); border-radius:12px; padding:10px 12px; font-size:13px; cursor:pointer; transition:all .15s; text-align:center; user-select:none; }
+.mm-chip:hover { border-color:var(--accent); }
+.mm-chip.selected { border-color:var(--accent); background:#2a2510; color:var(--accent); }
+.mm-chip.matched { border-color:var(--green); background:#0f2510; color:var(--green); cursor:default; }
+.mm-chip.wrong { border-color:var(--red); background:#250f0f; color:var(--red); }
+.mm-line { display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:13px; }
+.mm-line .mm-left { flex:1; background:var(--card); border:1.5px solid var(--border); border-radius:10px; padding:8px 10px; }
+.mm-line .mm-right { flex:1; background:var(--card); border:1.5px solid var(--border); border-radius:10px; padding:8px 10px; color:var(--text2); }
+.mm-line .mm-arrow { color:var(--text3); font-size:16px; }
+/* Найди лишнее */
+.mm-grid4 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.mm-g4item { background:var(--card); border:2px solid var(--border); border-radius:14px; padding:14px 10px; font-size:13px; cursor:pointer; transition:all .15s; text-align:center; }
+.mm-g4item:hover:not(:disabled) { border-color:var(--accent); transform:translateY(-2px); }
+.mm-g4item.correct { border-color:var(--green); background:#0f2510; color:var(--green); }
+.mm-g4item.wrong { border-color:var(--red); background:#250f0f; color:var(--red); }
+/* Выбери правильное */
+.mm-stmt { display:flex; align-items:center; gap:10px; background:var(--card); border:2px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:8px; cursor:pointer; transition:all .15s; font-size:13px; }
+.mm-stmt:hover { border-color:var(--accent); }
+.mm-stmt.sel-true { border-color:var(--accent); background:#2a2510; }
+.mm-stmt.confirmed-right { border-color:var(--green); background:#0f2510; }
+.mm-stmt.confirmed-wrong { border-color:var(--red); background:#250f0f; }
+.mm-check { width:20px; height:20px; border-radius:6px; border:2px solid var(--border); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; }
+.mm-result { text-align:center; padding:24px 16px; }
+.mm-result-icon { font-size:56px; margin-bottom:12px; }
+.mm-result-title { font-family:var(--pixel); font-size:14px; color:var(--accent); margin-bottom:8px; }
+.mm-result-score { font-family:var(--pixel); font-size:28px; color:var(--accent2); margin-bottom:16px; }
+.mm-node { background:linear-gradient(135deg,var(--card),var(--bg3)); border:1.5px solid var(--border); border-radius:16px; padding:12px 14px; margin-bottom:8px; font-size:13px; }
+.mm-node-key { font-weight:900; color:var(--accent); margin-bottom:4px; font-size:12px; }
+.mm-node-val { color:var(--text); line-height:1.5; }
+
 /* ===== KNOW (Хочу всё знать) ===== */
 #screen-know { max-width: 480px; margin: 0 auto; width: 100%; }
 .know-body { flex:1; padding:16px; overflow-y:auto; }
@@ -718,6 +762,17 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
     <div style="margin-left:auto;font-family:var(--pixel);font-size:9px;color:var(--accent)">+XP за скорость!</div>
   </div>
   <div class="bonus-body" id="bonus-body"></div>
+</div>
+
+<!-- ======= MIND MAP ===== -->
+<div id="screen-mindmap" class="screen">
+  <div class="mm-header-bar">
+    <button class="back-btn" onclick="exitMindMap()">←</button>
+    <span style="font-size:20px">🗺️</span>
+    <span style="font-size:14px;font-weight:900;margin-left:8px">Ментальная карта</span>
+    <div style="margin-left:auto;font-family:var(--pixel);font-size:9px;color:var(--accent2)">+XP за карту!</div>
+  </div>
+  <div class="mm-body" id="mm-body"></div>
 </div>
 
 <!-- ======= PARENT ======= -->
@@ -2389,9 +2444,11 @@ async function processResponse(text) {
     }
 
     const userMsgCount = ST.msgs.filter(m => m.role === 'user').length;
-    // Бонус предлагаем когда Умник подтвердил правильность (ответ не начинается с ошибки)
-    const botConfirmed = reply && !reply.startsWith('❌') && !reply.includes('не совсем') && !reply.includes('попробуй ещё');
-    if (userMsgCount >= 2 && botConfirmed && !ST.bonusShown) {
+    // Бонус только когда Умник явно похвалил — ищем ключевые слова подтверждения
+    const praiseWords = ['правильно', 'верно', 'молодец', 'отлично', 'правильн', 'отлично', '✅', '⭐', '🌟', '👍', 'браво', 'умница', 'супер', 'точно'];
+    const botConfirmed = reply && praiseWords.some(w => reply.toLowerCase().includes(w));
+    const noError = reply && !reply.startsWith('❌') && !reply.includes('не совсем') && !reply.includes('попробуй ещё') && !reply.includes('ошибка') && !reply.includes('неверно');
+    if (userMsgCount >= 3 && botConfirmed && noError && !ST.bonusShown) {
       ST.bonusShown = true;
       if (ST.topicId) ST.doneTopics[ST.topicId] = true;
       saveState();
@@ -2900,7 +2957,7 @@ function renderBonusResult() {
       <div class="bonus-progress" style="margin-top:16px">
         ${BG.results.map(r => `<div class="bp-dot ${r ? 'done-ok' : 'done-no'}"></div>`).join('')}
       </div>
-      <button class="btn-main" style="margin-top:20px" onclick="exitBonusToCheat()">📒 СОСТАВИТЬ ШПАРГАЛКУ</button>
+      <button class="btn-main" style="margin-top:20px" onclick="exitBonusToMap()">🗺️ МЕНТАЛЬНАЯ КАРТА</button>
       <button class="btn-main" style="margin-top:10px;background:var(--bg3);color:var(--text)" onclick="exitBonus()">← Вернуться к уроку</button>
       <div style="margin-top:10px">
         <button class="btn-main" style="background:var(--bg3);color:var(--text);font-size:9px" onclick="startBonus()">⚡ ЕЩЁ РАЗ</button>
@@ -2914,6 +2971,259 @@ function exitBonusToCheat() {
   show('screen-chat');
   setTimeout(() => startCheatSession(), 300);
 }
+
+function exitBonusToMap() {
+  startMindMap();
+}
+
+// ============================================================
+//  MIND MAP — ментальная карта темы
+// ============================================================
+var MM = { mode: null, step: 0, total: 3, score: 0, topicId: null, rule: null, steps: [] };
+
+function startMindMap() {
+  const rule = RULES[ST.topicId];
+  if (!rule || !rule.quiz || rule.quiz.length < 2) {
+    // нет данных — fallback на старую шпаргалку
+    show('screen-chat');
+    setTimeout(() => startCheatSession(), 300);
+    return;
+  }
+  MM = { step: 0, total: 3, score: 0, topicId: ST.topicId, rule, steps: [] };
+  // Генерируем 3 шага: случайно выбираем типы без повторов
+  const types = ['match', 'odd', 'select'];
+  MM.steps = shuffle([...types]);
+  show('screen-mindmap');
+  renderMMStep();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function renderMMStep() {
+  if (MM.step >= MM.total) { renderMMResult(); return; }
+  const type = MM.steps[MM.step];
+  if (type === 'match') renderMMMatch();
+  else if (type === 'odd') renderMMOdd();
+  else renderMMSelect();
+}
+
+// --- ШАГ: СООТНЕСИ ---
+function renderMMMatch() {
+  const rule = MM.rule;
+  // берём quiz вопросы как пары термин-ответ
+  const pairs = rule.quiz.slice(0, 4).map(q => ({ left: q.q.replace('?','').substring(0,30), right: q.opts[q.ans] }));
+  const shuffledRight = shuffle([...pairs.map(p => p.right)]);
+  MM.matchPairs = pairs;
+  MM.matchRight = shuffledRight;
+  MM.matchSel = { left: null, right: null };
+  MM.matchDone = [];
+
+  document.getElementById('mm-body').innerHTML = `
+    <div class="mm-topic">${MM.rule.title}</div>
+    <div class="mm-progress">${progressDots()}</div>
+    <div class="mm-instruction">🔗 Соотнеси понятие с правильным ответом</div>
+    <div class="mm-match" id="mm-match-area">
+      <div class="mm-col" id="mm-left">
+        ${pairs.map((p,i) => `<div class="mm-chip" id="ml-${i}" onclick="mmSelectLeft(${i})">${p.left.length > 28 ? p.left.substring(0,28)+'…' : p.left}</div>`).join('')}
+      </div>
+      <div class="mm-col" id="mm-right">
+        ${shuffledRight.map((r,i) => `<div class="mm-chip" id="mr-${i}" onclick="mmSelectRight(${i})">${r}</div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function mmSelectLeft(i) {
+  if (MM.matchDone.includes('l'+i)) return;
+  document.querySelectorAll('[id^="ml-"]').forEach(el => { if (!MM.matchDone.includes('l'+parseInt(el.id.split('-')[1]))) el.classList.remove('selected'); });
+  document.getElementById('ml-'+i).classList.add('selected');
+  MM.matchSel.left = i;
+  if (MM.matchSel.right !== null) mmCheckMatch();
+}
+
+function mmSelectRight(i) {
+  if (MM.matchDone.includes('r'+i)) return;
+  document.querySelectorAll('[id^="mr-"]').forEach(el => { if (!MM.matchDone.includes('r'+parseInt(el.id.split('-')[1]))) el.classList.remove('selected'); });
+  document.getElementById('mr-'+i).classList.add('selected');
+  MM.matchSel.right = i;
+  if (MM.matchSel.left !== null) mmCheckMatch();
+}
+
+function mmCheckMatch() {
+  const li = MM.matchSel.left, ri = MM.matchSel.right;
+  const leftEl = document.getElementById('ml-'+li);
+  const rightEl = document.getElementById('mr-'+ri);
+  const correct = MM.matchPairs[li].right === MM.matchRight[ri];
+  if (correct) {
+    leftEl.classList.remove('selected'); leftEl.classList.add('matched');
+    rightEl.classList.remove('selected'); rightEl.classList.add('matched');
+    MM.matchDone.push('l'+li, 'r'+ri);
+    MM.score++;
+    if (MM.matchDone.length === MM.matchPairs.length * 2) {
+      setTimeout(() => { MM.step++; renderMMStep(); }, 600);
+    }
+  } else {
+    leftEl.classList.add('wrong'); rightEl.classList.add('wrong');
+    setTimeout(() => {
+      leftEl.classList.remove('wrong','selected');
+      rightEl.classList.remove('wrong','selected');
+    }, 700);
+  }
+  MM.matchSel = { left: null, right: null };
+}
+
+// --- ШАГ: НАЙДИ ЛИШНЕЕ ---
+function renderMMOdd() {
+  const rule = MM.rule;
+  const kws = rule.keywords;
+  // правильные слова из темы + 1 чужое
+  const themed = shuffle([...kws]).slice(0, 3);
+  const allKws = Object.values(RULES).flatMap(r => r.keywords || []);
+  const outsiders = allKws.filter(k => !kws.includes(k));
+  const odd = outsiders[Math.floor(Math.random() * outsiders.length)] || 'стихотворение';
+  const items = shuffle([...themed, odd]);
+  MM.oddAnswer = items.indexOf(odd);
+
+  document.getElementById('mm-body').innerHTML = `
+    <div class="mm-topic">${MM.rule.title}</div>
+    <div class="mm-progress">${progressDots()}</div>
+    <div class="mm-instruction">🔍 Найди лишнее — слово, которое НЕ относится к теме</div>
+    <div class="mm-grid4" id="mm-odd-area">
+      ${items.map((item,i) => `<div class="mm-g4item" id="modd-${i}" onclick="mmAnswerOdd(${i})">${item}</div>`).join('')}
+    </div>
+  `;
+}
+
+function mmAnswerOdd(i) {
+  document.querySelectorAll('.mm-g4item').forEach(el => el.onclick = null);
+  const correct = i === MM.oddAnswer;
+  document.getElementById('modd-'+i).classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) document.getElementById('modd-'+MM.oddAnswer).classList.add('correct');
+  if (correct) MM.score++;
+  setTimeout(() => { MM.step++; renderMMStep(); }, 900);
+}
+
+// --- ШАГ: ВЫБЕРИ ПРАВИЛЬНОЕ ---
+function renderMMSelect() {
+  const rule = MM.rule;
+  // берём 1 правильный вопрос из quiz + составляем 3 утверждения (2 верных, 1 нет) из rule.rule
+  const quiz = rule.quiz;
+  const q = quiz[Math.floor(Math.random() * quiz.length)];
+  // Составляем 4 утверждения: 1 правильный ответ + 3 неправильных варианта из того же вопроса
+  const stmts = q.opts.map((opt, i) => ({ text: opt, correct: i === q.ans }));
+  shuffle(stmts);
+  MM.selectStmts = stmts;
+  MM.selectChosen = new Set();
+
+  document.getElementById('mm-body').innerHTML = `
+    <div class="mm-topic">${MM.rule.title}</div>
+    <div class="mm-progress">${progressDots()}</div>
+    <div class="mm-instruction">✅ Выбери правильный ответ: <b>${q.q}</b></div>
+    <div id="mm-select-area">
+      ${stmts.map((s,i) => `
+        <div class="mm-stmt" id="mstmt-${i}" onclick="mmToggleStmt(${i})">
+          <div class="mm-check" id="mchk-${i}"></div>
+          <div>${s.text}</div>
+        </div>`).join('')}
+    </div>
+    <button class="btn-main" style="margin-top:16px" onclick="mmCheckSelect()">Проверить</button>
+  `;
+}
+
+function mmToggleStmt(i) {
+  const el = document.getElementById('mstmt-'+i);
+  const chk = document.getElementById('mchk-'+i);
+  if (MM.selectChosen.has(i)) {
+    MM.selectChosen.delete(i);
+    el.classList.remove('sel-true');
+    chk.textContent = '';
+  } else {
+    // только один выбор (это вопрос с одним правильным)
+    MM.selectChosen.forEach(prev => {
+      document.getElementById('mstmt-'+prev).classList.remove('sel-true');
+      document.getElementById('mchk-'+prev).textContent = '';
+    });
+    MM.selectChosen.clear();
+    MM.selectChosen.add(i);
+    el.classList.add('sel-true');
+    chk.textContent = '✓';
+  }
+}
+
+function mmCheckSelect() {
+  if (MM.selectChosen.size === 0) return;
+  let allRight = true;
+  MM.selectStmts.forEach((s, i) => {
+    const chosen = MM.selectChosen.has(i);
+    const el = document.getElementById('mstmt-'+i);
+    const chk = document.getElementById('mchk-'+i);
+    el.onclick = null;
+    if (s.correct) {
+      el.classList.add('confirmed-right');
+      chk.textContent = '✓';
+      if (!chosen) allRight = false;
+    } else if (chosen) {
+      el.classList.add('confirmed-wrong');
+      chk.textContent = '✗';
+      allRight = false;
+    }
+  });
+  if (allRight) MM.score++;
+  document.querySelector('[onclick="mmCheckSelect()"]').disabled = true;
+  setTimeout(() => { MM.step++; renderMMStep(); }, 900);
+}
+
+function progressDots() {
+  return Array.from({length: MM.total}, (_,i) =>
+    `<div class="mm-dot ${i < MM.step ? 'done' : i === MM.step ? 'active' : ''}"></div>`
+  ).join('');
+}
+
+// --- РЕЗУЛЬТАТ ---
+function renderMMResult() {
+  const pct = Math.round(MM.score / MM.total * 100);
+  let icon, title;
+  if (pct === 100) { icon = '🏆'; title = 'КАРТА СОСТАВЛЕНА!'; addXp(20); }
+  else if (pct >= 67) { icon = '⭐'; title = 'ОТЛИЧНО!'; addXp(12); }
+  else { icon = '💪'; title = 'ТРЕНИРУЙСЯ!'; addXp(5); }
+
+  const rule = MM.rule;
+  const nodes = rule.rule.split('\n').filter(l => l.trim() && l.includes(':') || l.startsWith('•')).slice(0,5);
+
+  document.getElementById('mm-body').innerHTML = `
+    <div class="mm-result">
+      <div class="mm-result-icon">${icon}</div>
+      <div class="mm-result-title">${title}</div>
+      <div class="mm-result-score">${MM.score}/${MM.total}</div>
+      <div class="mm-progress" style="margin-bottom:20px">${Array.from({length:MM.total},(_,i)=>`<div class="mm-dot ${i < MM.score ? 'done' : 'active'}"></div>`).join('')}</div>
+      <div style="text-align:left;width:100%;margin-bottom:20px">
+        <div style="font-family:var(--pixel);font-size:9px;color:var(--accent);margin-bottom:10px;letter-spacing:1px">📌 ТВОЯ КАРТА: ${rule.title}</div>
+        ${rule.keywords.slice(0,6).map(k => `<div class="mm-node"><div class="mm-node-key">🔑 ${k}</div></div>`).join('')}
+        <div class="mm-node"><div class="mm-node-key">💡 Пример</div><div class="mm-node-val">${rule.example}</div></div>
+      </div>
+      <button class="btn-main" onclick="saveMindMapAndExit()">💾 СОХРАНИТЬ И ВЫЙТИ</button>
+      <button class="btn-main" style="margin-top:10px;background:var(--bg3);color:var(--text)" onclick="exitMindMap()">← К уроку</button>
+    </div>`;
+}
+
+function saveMindMapAndExit() {
+  const rule = MM.rule;
+  const topic = CURRICULUM[ST.zone].topics.find(t => t.id === ST.topicId);
+  const items = rule.keywords.slice(0,6).map(k => ({ q: '🔑 Ключевое слово', a: k }));
+  items.push({ q: '💡 Пример', a: rule.example });
+  saveMyCheat(ST.zone, topic ? topic.name : rule.title, items);
+  addXp(5);
+  show('screen-chat');
+  setTimeout(() => appendMsg('bot', '🗺️ Ментальная карта сохранена в «Мои шпаргалки»! Отлично поработал 🌟'), 200);
+}
+
+function exitMindMap() { show('screen-chat'); }
 
 // ============================================================
 //  INIT — удалён дубль RULES (перенесён выше)
@@ -3225,6 +3535,19 @@ const KNOW_FACTS = {
       fact:'Разные народы считали по-разному:\n\n🇪🇬 Египтяне умножали только на 2. Любое умножение — цепочка удвоений. 13×7 = 7+14+28+42 = 91\n\n🇷🇺 Русские купцы использовали счёты — деревянные рамки с костяшками. До 1990-х их использовали в магазинах!\n\n🇯🇵 Японцы считают на соробане (японские счёты) — чемпионы мира по ментальной арифметике считают быстрее калькулятора!\n\n🏛️ Римляне использовали цифры I, V, X, L, C, D, M — умножать ими почти невозможно. Поэтому арабские цифры (наши) победили.' },
     { emoji:'🌀', title:'Число π — бесконечная тайна', tag:'Факт',
       fact:'π = 3,14159265358979…\n\nОно не заканчивается никогда и не повторяется. Математики вычислили уже 100 триллионов знаков после запятой!\n\nИнтересные факты:\n• Архимед 2 200 лет назад вычислил π между 3 10/71 и 3 1/7\n• 14 марта (3.14) — Международный день числа Пи 🥧\n• В числе π встречаются все возможные последовательности цифр. Где-то там спрятан твой день рождения!' },
+    // --- Рубрика "Хочу всё знать" из учебника Виленкин 5 класс ---
+    { emoji:'🏛️', title:'Как люди учились считать', tag:'Хочу всё знать',
+      fact:'Первобытные люди считали на пальцах — поэтому мы и сейчас считаем десятками!\n\nПотом придумали зарубки на костях и палках. Найдена кость волка с 55 зарубками — ей 30 000 лет!\n\nДревние египтяне 5 000 лет назад уже умели складывать и вычитать большие числа. Их цифры выглядели как рисунки:\n🌿 — 1\n∩ — 10\n🌀 — 100\n🌸 — 1 000\n\nКитайцы и индийцы независимо друг от друга изобрели позиционную систему счисления — ту самую, которой пользуемся мы сейчас.' },
+    { emoji:'📖', title:'История натуральных чисел', tag:'Хочу всё знать',
+      fact:'Натуральные числа — самые древние в математике. Слово «натуральный» означает «природный», «естественный».\n\nЛюди придумали их, когда начали считать предметы: один олень, два оленя, три оленя…\n\nГреческий математик Евклид написал книгу «Начала» (~300 г. до н.э.), где строго определил натуральные числа. Эту книгу читали 2 000 лет!\n\nИнтересный факт: бесконечность натуральных чисел доказал Евклид — он показал, что простых чисел бесконечно много.' },
+    { emoji:'⚖️', title:'Как возникли единицы измерения', tag:'Хочу всё знать',
+      fact:'Тысячи лет назад каждая страна имела свои меры. Торговцы постоянно путались!\n\nВ 1875 году 17 стран подписали Метрическую конвенцию в Париже и договорились:\n📏 Метр = одна десятимиллионная часть расстояния от полюса до экватора\n⚖️ Килограмм = масса 1 дм³ воды\n\nСейчас метрическую систему используют почти все страны мира. Исключения: США, Мьянма, Либерия — они всё ещё в дюймах и фунтах!\n\nВ России метрическая система введена в 1918 году декретом Ленина.' },
+    { emoji:'🔢', title:'Числа в разных системах счисления', tag:'Хочу всё знать',
+      fact:'Мы считаем десятками — это десятичная система. Но так было не всегда!\n\n🕐 Вавилоняне — система с основанием 60 (шестидесятеричная). До сих пор: 60 секунд, 60 минут!\n🐚 Майя — система с основанием 20 (двадцатеричная)\n💻 Компьютеры — двоичная система: только 0 и 1\n\nИнтересно: французы до сих пор говорят «quatre-vingts» (четыре раза по двадцать) вместо «восемьдесят» — след от двадцатеричной системы!\n\nДаже в нашей жизни есть следы: дюжина = 12, гросс = 144 (12×12).' },
+    { emoji:'📐', title:'Геометрия древнего Египта', tag:'Хочу всё знать',
+      fact:'Слово «геометрия» по-гречески означает «землемерие».\n\nКаждый год Нил разливался и смывал границы полей. Египтяне должны были заново их восстанавливать — так родилась геометрия!\n\nЕгипетские верёвочники использовали верёвку с 12 равными отрезками. Они складывали её треугольником 3-4-5 — получался прямой угол. Так строили пирамиды!\n\nТеорему Пифагора знали в Египте за 1 000 лет до Пифагора. Но именно Пифагор первым её доказал.' },
+    { emoji:'🌍', title:'Математика в разных культурах', tag:'Хочу всё знать',
+      fact:'Математику развивали сразу несколько цивилизаций независимо друг от друга:\n\n🇮🇳 Индия: придумали ноль, отрицательные числа, десятичные дроби\n🇸🇦 Арабы: слово «алгебра» — арабское (аль-джабр), принесли индийские цифры в Европу\n🇨🇳 Китай: теорема Пифагора, отрицательные числа, десятичные дроби — всё это знали независимо от Европы\n🇬🇷 Греция: доказательства, аксиомы, логика в математике\n\nНаши «арабские» цифры (1,2,3…) на самом деле придумали в Индии — арабы их лишь передали Европе.' },
   ],
   russian: [
     { emoji:'📜', title:'Откуда взялась буква Ё?', tag:'История',
