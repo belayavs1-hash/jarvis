@@ -427,6 +427,33 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
 .flex-center { display: flex; align-items: center; justify-content: center; }
 .pixel { font-family: var(--pixel); }
 .scroll-snap { scroll-snap-type: y mandatory; }
+
+/* === DESKTOP ADAPTATION === */
+@media (min-width: 600px) {
+  body { background: #07080f; }
+  #screen-home, #screen-zone, #screen-section, #screen-task, #screen-chat,
+  #screen-cheat, #screen-mycheat, #screen-mindmap, #screen-know, #screen-test,
+  #screen-ach, #screen-bonus, #screen-parent, #screen-rule {
+    max-width: 560px;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+  .chat-msgs { font-size: 15px; }
+  .msg { max-width: 78%; }
+  .zone-name { font-size: 16px !important; }
+  .task-title { font-size: 18px; }
+  .btn-main { font-size: 13px; padding: 14px; }
+  .chat-header { padding: 12px 16px; }
+  .chat-input-area { padding: 10px 16px 16px; }
+  #chat-input { font-size: 15px; }
+}
+@media (min-width: 900px) {
+  #screen-home, #screen-zone, #screen-section, #screen-task, #screen-chat,
+  #screen-cheat, #screen-mycheat, #screen-mindmap, #screen-know, #screen-test,
+  #screen-ach, #screen-bonus, #screen-parent, #screen-rule {
+    max-width: 620px;
+  }
+}
 </style>
 </head>
 <body>
@@ -513,7 +540,6 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
             <div class="zone-info">
               <div class="zone-name" style="color:var(--math-color)">Математическая Шахта</div>
               <div class="zone-desc">Числа, дроби, проценты, уравнения</div>
-              <div class="zone-tag" style="color:var(--math-color);border-color:#f59e0b44">Виленкин 5кл</div>
               <div class="prog-bar mt1"><div class="prog-fill" id="prog-math" style="width:0%;background:var(--math-color)"></div></div>
             </div>
             <div class="zone-arrow" style="color:var(--math-color)">›</div>
@@ -528,7 +554,6 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
             <div class="zone-info">
               <div class="zone-name" style="color:var(--russian-color)">Башня Русского</div>
               <div class="zone-desc">Орфография, пунктуация, сочинения</div>
-              <div class="zone-tag" style="color:var(--russian-color);border-color:#7ec8e344">Ладыженская 5кл</div>
               <div class="prog-bar mt1"><div class="prog-fill" id="prog-russian" style="width:0%;background:var(--russian-color)"></div></div>
             </div>
             <div class="zone-arrow" style="color:var(--russian-color)">›</div>
@@ -543,7 +568,6 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
             <div class="zone-info">
               <div class="zone-name" style="color:var(--english-color)">Английская Деревня</div>
               <div class="zone-desc">Слова, грамматика, чтение, перевод</div>
-              <div class="zone-tag" style="color:var(--english-color);border-color:#90ee9044">Ваулина 5кл</div>
               <div class="prog-bar mt1"><div class="prog-fill" id="prog-english" style="width:0%;background:var(--english-color)"></div></div>
             </div>
             <div class="zone-arrow" style="color:var(--english-color)">›</div>
@@ -558,7 +582,6 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
             <div class="zone-info">
               <div class="zone-name" style="color:var(--speech-color)">Мастерская Речи</div>
               <div class="zone-desc">Сочинения, изложения, описание</div>
-              <div class="zone-tag" style="color:var(--speech-color);border-color:#dda0dd44">Развитие речи</div>
               <div class="prog-bar mt1"><div class="prog-fill" id="prog-speech" style="width:0%;background:var(--speech-color)"></div></div>
             </div>
             <div class="zone-arrow" style="color:var(--speech-color)">›</div>
@@ -627,7 +650,10 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
     <textarea id="task-input" class="input" rows="5" placeholder="Например: из условия задачи №5 стр. 47..."></textarea>
     <div class="or-divider">или выбери тему</div>
     <div class="topic-selector" id="mini-topic-list"></div>
-    <button class="btn-main mt3" onclick="startChat()">▶ РАЗОБРАТЬ С УМНИКОМ</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+      <button class="btn-main" onclick="startChat(false)" style="font-size:12px;padding:12px 8px">▶ РАЗОБРАТЬ<br><span style="font-size:10px;opacity:.8">помогу дойти</span></button>
+      <button class="btn-main" onclick="startChat(true)" style="background:var(--bg3);color:var(--accent2);border:2px solid var(--accent2);font-size:12px;padding:12px 8px">✅ ПРОВЕРИТЬ<br><span style="font-size:10px;opacity:.8">сделал сам</span></button>
+    </div>
   </div>
 </div>
 
@@ -2047,6 +2073,15 @@ function doLogin() {
 }
 function doLogout() {
   LS.del('user');
+  ST.user = null;
+  ST.zone = null;
+  ST.task = '';
+  ST.msgs = [];
+  ST.hints = 0;
+  ST.loading = false;
+  ST.bonusShown = false;
+  ST.checkOnly = false;
+  CHEAT_SESSION.active = false;
   show('screen-login');
 }
 
@@ -2232,7 +2267,7 @@ function selectTopic(id) {
 // ============================================================
 //  CHAT
 // ============================================================
-function startChat() {
+function startChat(checkOnly = false) {
   // Берём текст: сначала из карточки задания, потом из textarea
   const card = document.getElementById('task-preview-card');
   const cardText = card ? card.innerText.replace(/^№[\d.]+\n/, '').trim() : '';
@@ -2240,6 +2275,7 @@ function startChat() {
   const task = cardText || textareaText;
   if (!task) { document.getElementById('task-input').focus(); return; }
   ST.task = task;
+  ST.checkOnly = !!checkOnly;
   // Запоминаем номер задания из карточки для показа в чате
   const cardNum = card ? (card.querySelector('[style*="pixel"]')?.textContent || '') : '';
   ST.msgs = [];
@@ -2247,6 +2283,7 @@ function startChat() {
   ST.stageIdx = 0;
   ST.loading = false;
   ST.bonusShown = false;
+  CHEAT_SESSION.active = false;
   const cur = CURRICULUM[ST.zone];
   const topicName = ST.topicId ? cur.topics.find(t => t.id === ST.topicId)?.name || '' : '';
   document.getElementById('tb-subject').textContent = (cardNum ? cardNum + ' · ' : '') + cur.name + (topicName ? ': ' + topicName : '');
@@ -2264,8 +2301,9 @@ function startChat() {
   document.getElementById('chat-input').addEventListener('input', updateSendBtn);
   setTimeout(async () => {
     showTyping();
-    // Первое приветствие — просим Claude открыть диалог с учеником
-    const openingPrompt = `Начни диалог: поздоровайся с учеником и задай первый наводящий вопрос по заданию. Не давай ответ, только помоги начать думать.`;
+    const openingPrompt = ST.checkOnly
+      ? `Ученик говорит, что уже решил это задание сам. Поздоровайся и попроси написать его ответ — ты проверишь.`
+      : `Начни диалог: поздоровайся с учеником и задай первый наводящий вопрос по заданию. Не давай ответ, только помоги начать думать.`;
     const opener = await askClaude(openingPrompt);
     removeTyping();
     if (opener) addBotMsg(opener);
@@ -2359,16 +2397,23 @@ const SYSTEM_PROMPTS = {
 Падежи → цепочка: кто?→И.п. / кого?→Р.п. / кому?→Д.п. ...
 Склонение → мини-табличка когда нужно показать все формы слова`,
 
-  english: `Ты Умник — весёлый репетитор по английскому для школьников 5 класса.
+  english: `Ты Умник — весёлый репетитор по английскому для школьников 5 класса. Общаешься как старший друг.
 Задание: {TASK}
 Имя ученика: {NAME}
 
 Как работаешь:
 - Объясняешь по-русски, практикуете по-английски
-- Сначала ОДНА реакция, потом ОДИН вопрос
-- Если верно — хвали ярко
-- Эмодзи 1-2, максимум 2-3 предложения
-- НЕ задавай несколько вопросов подряд`,
+- Сначала ОДНА реакция на ответ ученика, потом ОДИН вопрос или подсказка
+- Если ученик верно — скажи "Верно! ✅" и похвали ярко
+- Если ошибка — дай одну подсказку, не давай сразу ответ
+- После 2 неудачных попыток — объясни правило кратко и покажи пример
+- Эмодзи 1-2, максимум 2-3 предложения. НЕ задавай несколько вопросов подряд
+
+НАГЛЯДНОСТЬ — используй где реально помогает:
+Время → Present Simple: I/You/We/They → go | He/She/It → go+s
+Перевод → показывай: "кот" = cat 🐱
+Транскрипция → [kæt] при необходимости
+Лексика → "Новое слово: beautiful [ˈbjuːtɪfl] = красивый ✨"`,
 
   speech: `Ты Умник — весёлый репетитор по русскому языку и развитию речи для школьников 5 класса.
 Задание: {TASK}
@@ -2383,9 +2428,12 @@ const SYSTEM_PROMPTS = {
 };
 
 async function askClaude(userText) {
-  const systemPrompt = (SYSTEM_PROMPTS[ST.zone] || SYSTEM_PROMPTS.math)
+  let systemPrompt = (SYSTEM_PROMPTS[ST.zone] || SYSTEM_PROMPTS.math)
     .replace('{TASK}', ST.task)
     .replace('{NAME}', ST.user?.name || 'ученик');
+  if (ST.checkOnly) {
+    systemPrompt += `\n\nРЕЖИМ ПРОВЕРКИ: Ученик уже решил задание сам. Попроси его написать ответ, потом проверь его. Если верно — хвали ярко и объясни почему правильно. Если ошибка — мягко укажи и дай один шанс исправить. НЕ веди пошаговый диалог — просто проверяй ответы.`;
+  }
 
   ST.msgs.push({ role: 'user', content: userText });
 
@@ -2731,9 +2779,10 @@ function initVoice() {
 function toggleVoice() {
   if (isListening) { stopListening(); return; }
   if (!recognition && !initVoice()) {
-    alert('Голосовой ввод не поддерживается в этом браузере. Используй Chrome.');
+    appendMsg('bot', '🎤 Голосовой ввод не поддерживается в этом браузере. Используй Chrome на Android или компьютере.');
     return;
   }
+  recognition.lang = ST.zone === 'english' ? 'en-US' : 'ru-RU';
   isListening = true;
   recognition.start();
   document.getElementById('mic-btn').style.background = '#ef5350';
