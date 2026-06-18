@@ -3965,7 +3965,7 @@ function openPhotoCheck() {
   document.getElementById('photo-send-btn').style.display = 'none';
   document.getElementById('photo-result').innerHTML = '';
   const numInput = document.getElementById('photo-ex-num');
-  if (numInput) numInput.value = ST.task ? ST.task.split(/\s/)[0] : '';
+  if (numInput) numInput.value = '';
   document.getElementById('photo-topic-sel').style.display = 'block';
   show('screen-photo');
 }
@@ -3990,38 +3990,46 @@ async function sendPhotoToCheck() {
   const btn = document.getElementById('photo-send-btn');
   btn.disabled = true;
   btn.textContent = '⏳ Умник смотрит...';
-  const exNum = (document.getElementById('photo-ex-num') || {}).value || '';
-  const taskLabel = exNum ? `задание №${exNum}` : (ST.task ? ST.task.slice(0,40) : 'задачу');
+  const exNum = ((document.getElementById('photo-ex-num') || {}).value || '').trim();
   const resultEl = document.getElementById('photo-result');
   resultEl.innerHTML = '';
 
-  // Polza.ai не поддерживает vision — отправляем описание-заглушку
-  // и просим ученика описать что написала
+  const taskHint = exNum ? `№${exNum}` : '';
   resultEl.innerHTML = `
     <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px">
       <div style="font-size:11px;color:var(--accent);font-family:var(--pixel);margin-bottom:10px">🧙 УМНИК ГОВОРИТ:</div>
-      <div style="font-size:14px;line-height:1.7">
-        Отлично что решила сама! 📸<br><br>
-        Чтобы я проверил — напиши ответ который у тебя получился, и я скажу верно ли.
+      <div style="font-size:14px;line-height:1.7;margin-bottom:12px">
+        Молодец, что решила сама! 📸 Напиши задание и свой ответ — я проверю.
       </div>
-      <textarea id="photo-ans-input" class="input mt2" rows="3" placeholder="Напиши свой ответ..."></textarea>
-      <button class="btn-main mt2" onclick="checkPhotoAnswer('${taskLabel}')">Проверить ответ</button>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:4px;font-weight:700">УСЛОВИЕ ЗАДАЧИ ${taskHint}</div>
+      <textarea id="photo-task-input" class="input" rows="2" placeholder="Например: 5×4+5=? или Уравнение: x+7=12" style="margin-bottom:10px"></textarea>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:4px;font-weight:700">МОЙ ОТВЕТ</div>
+      <textarea id="photo-ans-input" class="input" rows="2" placeholder="Например: 25 или x=5"></textarea>
+      <button class="btn-main mt2" onclick="checkPhotoAnswer()">✅ Проверить</button>
     </div>`;
   btn.disabled = false;
   btn.style.display = 'none';
 }
 
-async function checkPhotoAnswer(taskLabel) {
-  const ans = document.getElementById('photo-ans-input').value.trim();
-  if (!ans) return;
-  ST.task = `Ученик решил ${taskLabel} самостоятельно и получил ответ: ${ans}. Проверь правильность и похвали если верно, или мягко укажи на ошибку.`;
-  ST.msgs = [];
+async function checkPhotoAnswer() {
+  const taskText = (document.getElementById('photo-task-input')?.value || '').trim();
+  const ans = (document.getElementById('photo-ans-input')?.value || '').trim();
+  if (!ans) { document.getElementById('photo-ans-input').focus(); return; }
+
+  const checkBtn = document.querySelector('#photo-result .btn-main');
+  if (checkBtn) { checkBtn.disabled = true; checkBtn.textContent = '⏳ Проверяю...'; }
+
   ST.zone = ST.zone || 'math';
-  const reply = await askClaude('Проверь мой ответ: ' + ans);
+  ST.msgs = [];
+  // Системный промпт с задачей чтобы Умник знал условие
+  const condition = taskText || 'задачу (условие не указано)';
+  ST.task = `Ученик 5 класса решил самостоятельно: ${condition}. Его ответ: ${ans}. Реши задачу сам, сравни ответы и скажи: верно ли. Если верно — похвали конкретно. Если ошибка — мягко укажи где и дай один шаг подсказки. Не переспрашивай условие — оно уже есть.`;
+  const reply = await askClaude(`Задача: ${condition}\nМой ответ: ${ans}`);
+
   document.getElementById('photo-result').innerHTML += `
-    <div style="background:var(--card);border:1px solid #2a5a2a;border-radius:16px;padding:16px;margin-top:12px">
+    <div style="background:var(--card);border:1.5px solid ${reply && reply.includes('Верно') || reply && reply.includes('верно') || reply && reply.includes('правильно') ? '#2a5a2a' : '#5a2a2a'};border-radius:16px;padding:16px;margin-top:12px">
       <div style="font-size:11px;color:#4caf50;font-family:var(--pixel);margin-bottom:8px">✅ ПРОВЕРКА:</div>
-      <div style="font-size:14px;line-height:1.7">${reply}</div>
+      <div style="font-size:14px;line-height:1.7">${escHtml(reply)}</div>
     </div>`;
 }
 
