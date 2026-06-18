@@ -39,7 +39,27 @@ export default async function handler(req) {
     messages.push({ role: 'system', content: body.system });
   }
   for (const msg of body.messages || []) {
+    // content может быть строкой или массивом (vision)
     messages.push({ role: msg.role, content: msg.content });
+  }
+
+  // Если есть imageBase64 — добавляем vision-сообщение
+  if (body.imageBase64) {
+    const mediaType = body.imageBase64.startsWith('data:image/png') ? 'image/png' : 'image/jpeg';
+    const base64Data = body.imageBase64.split(',')[1] || body.imageBase64;
+    messages.push({
+      role: 'user',
+      content: [
+        {
+          type: 'image_url',
+          image_url: { url: `data:${mediaType};base64,${base64Data}` },
+        },
+        {
+          type: 'text',
+          text: body.imagePrompt || 'Что написано в этом задании? Прочитай точно.',
+        },
+      ],
+    });
   }
 
   const openaiBody = {

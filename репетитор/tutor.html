@@ -3987,49 +3987,73 @@ function onPhotoSelected(event) {
 }
 
 async function sendPhotoToCheck() {
+  if (!photoBase64) return;
   const btn = document.getElementById('photo-send-btn');
   btn.disabled = true;
-  btn.textContent = '⏳ Умник смотрит...';
-  const exNum = ((document.getElementById('photo-ex-num') || {}).value || '').trim();
+  btn.textContent = '⏳ Умник читает фото...';
   const resultEl = document.getElementById('photo-result');
-  resultEl.innerHTML = '';
+  resultEl.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text2);font-size:13px">🧙 Умник смотрит на твоё решение...</div>`;
 
-  const taskHint = exNum ? `№${exNum}` : '';
-  resultEl.innerHTML = `
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px">
-      <div style="font-size:11px;color:var(--accent);font-family:var(--pixel);margin-bottom:10px">🧙 УМНИК ГОВОРИТ:</div>
-      <div style="font-size:14px;line-height:1.7;margin-bottom:12px">
-        Молодец, что решила сама! 📸 Напиши задание и свой ответ — я проверю.
-      </div>
-      <div style="font-size:11px;color:var(--text2);margin-bottom:4px;font-weight:700">УСЛОВИЕ ЗАДАЧИ ${taskHint}</div>
-      <textarea id="photo-task-input" class="input" rows="2" placeholder="Например: 5×4+5=? или Уравнение: x+7=12" style="margin-bottom:10px"></textarea>
-      <div style="font-size:11px;color:var(--text2);margin-bottom:4px;font-weight:700">МОЙ ОТВЕТ</div>
-      <textarea id="photo-ans-input" class="input" rows="2" placeholder="Например: 25 или x=5"></textarea>
-      <button class="btn-main mt2" onclick="checkPhotoAnswer()">✅ Проверить</button>
-    </div>`;
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5',
+        max_tokens: 600,
+        system: `Ты Умник — репетитор по математике для ученика 5 класса. Тебе прислали фото с решением задачи.\n\nТвоя задача:\n1. Прочитай что написано на фото точно\n2. Реши задачу/уравнение сам\n3. Сравни с ответом ученика\n4. Если верно — похвали конкретно (напиши что именно правильно)\n5. Если ошибка — мягко скажи где и дай один шаг подсказки\n\nОтвечай коротко (3-5 предложений). Обращайся на «ты».`,
+        messages: [],
+        imageBase64: photoBase64,
+        imagePrompt: 'Посмотри на это решение математической задачи. Прочитай условие и ответ ученика, потом проверь правильно ли решено.',
+      }),
+    });
+    const data = await resp.json();
+    const reply = data.content?.[0]?.text || '❌ Не удалось прочитать фото. Попробуй написать задачу текстом.';
+
+    const isCorrect = ['верно', 'правильно', 'молодец', 'отлично', '✅', 'правильн'].some(w => reply.toLowerCase().includes(w));
+    resultEl.innerHTML = `
+      <div style="background:var(--card);border:2px solid ${isCorrect ? '#2a6a3a' : '#5a3a2a'};border-radius:16px;padding:16px">
+        <div style="font-size:11px;color:${isCorrect ? '#5ae080' : '#f59e0b'};font-family:var(--pixel);margin-bottom:10px">${isCorrect ? '✅ ВЕРНО!' : '🔍 ПРОВЕРКА'}</div>
+        <div style="font-size:14px;line-height:1.8">${escHtml(reply)}</div>
+        ${isCorrect ? '<div style="margin-top:12px"><button class="btn-main" onclick="goHome()">🏠 На главную</button></div>' : `
+        <div style="margin-top:14px">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:6px;font-weight:700">НАПИШИ ИСПРАВЛЕННЫЙ ОТВЕТ</div>
+          <textarea id="photo-ans-input" class="input" rows="2" placeholder="Твой новый ответ..."></textarea>
+          <button class="btn-main mt2" onclick="checkPhotoRetry()">↩ Проверить снова</button>
+        </div>`}
+      </div>`;
+  } catch(e) {
+    resultEl.innerHTML = `<div style="color:var(--text2);padding:16px">❌ Ошибка соединения. Попробуй снова.</div>`;
+  }
   btn.disabled = false;
   btn.style.display = 'none';
 }
 
-async function checkPhotoAnswer() {
-  const taskText = (document.getElementById('photo-task-input')?.value || '').trim();
+async function checkPhotoRetry() {
   const ans = (document.getElementById('photo-ans-input')?.value || '').trim();
-  if (!ans) { document.getElementById('photo-ans-input').focus(); return; }
+  if (!ans) return;
+  const retryBtn = document.querySelector('#photo-result .btn-main:last-child');
+  if (retryBtn) { retryBtn.disabled = true; retryBtn.textContent = '⏳ Проверяю...'; }
 
-  const checkBtn = document.querySelector('#photo-result .btn-main');
-  if (checkBtn) { checkBtn.disabled = true; checkBtn.textContent = '⏳ Проверяю...'; }
-
-  ST.zone = ST.zone || 'math';
-  ST.msgs = [];
-  // Системный промпт с задачей чтобы Умник знал условие
-  const condition = taskText || 'задачу (условие не указано)';
-  ST.task = `Ученик 5 класса решил самостоятельно: ${condition}. Его ответ: ${ans}. Реши задачу сам, сравни ответы и скажи: верно ли. Если верно — похвали конкретно. Если ошибка — мягко укажи где и дай один шаг подсказки. Не переспрашивай условие — оно уже есть.`;
-  const reply = await askClaude(`Задача: ${condition}\nМой ответ: ${ans}`);
-
+  const resp = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5',
+      max_tokens: 400,
+      system: `Ты Умник — репетитор. Ученик исправил ответ. Фото задачи уже было проверено. Теперь ученик пишет новый ответ. Реши задачу с фото ещё раз и проверь новый ответ ученика. Если верно — поздравь ярко. Если снова ошибка — объясни решение по шагам.`,
+      messages: [],
+      imageBase64: photoBase64,
+      imagePrompt: `Ученик исправил ответ: ${ans}. Верно ли теперь?`,
+    }),
+  });
+  const data = await resp.json();
+  const reply = data.content?.[0]?.text || '❌ Ошибка';
+  const isCorrect = ['верно', 'правильно', 'молодец', '✅'].some(w => reply.toLowerCase().includes(w));
   document.getElementById('photo-result').innerHTML += `
-    <div style="background:var(--card);border:1.5px solid ${reply && reply.includes('Верно') || reply && reply.includes('верно') || reply && reply.includes('правильно') ? '#2a5a2a' : '#5a2a2a'};border-radius:16px;padding:16px;margin-top:12px">
-      <div style="font-size:11px;color:#4caf50;font-family:var(--pixel);margin-bottom:8px">✅ ПРОВЕРКА:</div>
-      <div style="font-size:14px;line-height:1.7">${escHtml(reply)}</div>
+    <div style="background:var(--card);border:2px solid ${isCorrect ? '#2a6a3a' : '#5a3a2a'};border-radius:16px;padding:16px;margin-top:12px">
+      <div style="font-size:11px;color:${isCorrect ? '#5ae080' : '#f59e0b'};font-family:var(--pixel);margin-bottom:8px">${isCorrect ? '✅ ТЕПЕРЬ ВЕРНО!' : '🔍 ПРОВЕРКА'}</div>
+      <div style="font-size:14px;line-height:1.8">${escHtml(reply)}</div>
     </div>`;
 }
 
