@@ -646,13 +646,44 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
   </div>
   <div class="task-body" id="task-body">
     <div class="task-title">Введи задание</div>
-    <div class="task-subtitle">Напиши условие задачи или вопрос — Умник разберёт его вместе с тобой шаг за шагом. Готовый ответ он не даст — поможет дойти до него самому.</div>
-    <textarea id="task-input" class="input" rows="5" placeholder="Например: из условия задачи №5 стр. 47..."></textarea>
-    <div class="or-divider">или выбери тему</div>
+    <div class="task-subtitle">Напиши условие или выбери номер из учебника</div>
+
+    <!-- Фото: отправить фото задания -->
+    <div style="margin-bottom:10px">
+      <label id="photo-label" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border:1.5px dashed var(--border);border-radius:12px;cursor:pointer;transition:border-color .2s" onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='var(--border)'">
+        <span style="font-size:24px">📷</span>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:var(--text)">Сделала сама — проверь фото</div>
+          <div style="font-size:11px;color:var(--text3)">Сфотографируй решение или страницу учебника</div>
+        </div>
+        <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none" onchange="onPhotoSelected(event)">
+      </label>
+    </div>
+
+    <!-- Голос: надиктовать задание -->
+    <div style="margin-bottom:10px">
+      <button id="task-mic-btn" onclick="toggleTaskVoice()" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border:1.5px solid var(--border);border-radius:12px;width:100%;cursor:pointer;transition:all .2s;font-family:var(--body)">
+        <span id="task-mic-icon" style="font-size:24px">🎤</span>
+        <div style="text-align:left">
+          <div id="task-mic-label" style="font-size:13px;font-weight:800;color:var(--text)">Надиктовать задание</div>
+          <div id="task-mic-sub" style="font-size:11px;color:var(--text3)">Нажми и продиктуй условие задачи</div>
+        </div>
+      </button>
+    </div>
+
+    <!-- Текстовый ввод -->
+    <div class="or-divider" style="margin:8px 0">или напиши текстом</div>
+    <div style="position:relative">
+      <textarea id="task-input" class="input" rows="3" placeholder="Напиши условие задачи..." style="padding-right:44px" oninput="updateTaskStartBtn()"></textarea>
+    </div>
+
+    <div class="or-divider" style="margin:8px 0">или выбери тему и номер</div>
     <div class="topic-selector" id="mini-topic-list"></div>
+
+    <!-- Кнопки старта -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
-      <button class="btn-main" onclick="startChat(false)" style="font-size:12px;padding:12px 8px">▶ РАЗОБРАТЬ<br><span style="font-size:10px;opacity:.8">помогу дойти</span></button>
-      <button class="btn-main" onclick="startChat(true)" style="background:var(--bg3);color:var(--accent2);border:2px solid var(--accent2);font-size:12px;padding:12px 8px">✅ ПРОВЕРИТЬ<br><span style="font-size:10px;opacity:.8">сделал сам</span></button>
+      <button class="btn-main" id="task-start-btn" onclick="startChat(false)" style="font-size:12px;padding:12px 8px">▶ РАЗОБРАТЬ<br><span style="font-size:10px;opacity:.8">помогу дойти</span></button>
+      <button class="btn-main" id="task-check-btn" onclick="startChat(true)" style="background:var(--bg3);color:var(--accent2);border:2px solid var(--accent2);font-size:12px;padding:12px 8px">✅ ПРОВЕРИТЬ<br><span style="font-size:10px;opacity:.8">сделал сам</span></button>
     </div>
   </div>
 </div>
@@ -952,42 +983,82 @@ const CURRICULUM = {
     ],
     examples: ['Задача: из 120 яблок взяли 25%. Сколько осталось?','Реши уравнение: 3x + 7 = 22','Найди НОД(24, 36)','Переведи 2⅗ в неправильную дробь'],
     cheatsheet: [
-      { title: '🔢 Порядок действий', rows: [
-        { k: 'Сначала', v: 'Скобки' },
-        { k: 'Затем', v: 'Умножение / Деление' },
-        { k: 'В конце', v: 'Сложение / Вычитание' },
+      { title: '🔢 Действия и их результаты', rows: [
+        { k: 'Сложение', v: 'слагаемое + слагаемое = сумма' },
+        { k: 'Вычитание', v: 'уменьшаемое − вычитаемое = разность' },
+        { k: 'Умножение', v: 'множитель × множитель = произведение' },
+        { k: 'Деление', v: 'делимое ÷ делитель = частное' },
+      ]},
+      { title: '🔄 Порядок действий', rows: [
+        { k: '1. Скобки', v: '(2 + 3) × 4 = 5 × 4 = 20' },
+        { k: '2. Степени', v: '2³ = 8' },
+        { k: '3. × и ÷', v: 'слева направо' },
+        { k: '4. + и −', v: 'слева направо' },
+      ]},
+      { title: '⚖️ Уравнения', rows: [
+        { k: 'x + a = b', v: 'x = b − a' },
+        { k: 'x − a = b', v: 'x = b + a' },
+        { k: 'x × a = b', v: 'x = b ÷ a' },
+        { k: 'x ÷ a = b', v: 'x = b × a' },
       ]},
       { title: '📐 Признаки делимости', rows: [
-        { k: 'На 2', v: 'Чётное (0,2,4,6,8)' },
+        { k: 'На 2', v: 'Последняя цифра чётная (0,2,4,6,8)' },
         { k: 'На 3', v: 'Сумма цифр делится на 3' },
         { k: 'На 5', v: 'Оканчивается на 0 или 5' },
-        { k: 'На 10', v: 'Оканчивается на 0' },
         { k: 'На 9', v: 'Сумма цифр делится на 9' },
+        { k: 'На 10', v: 'Оканчивается на 0' },
+      ]},
+      { title: '📏 Геометрия — площади и объёмы', rows: [
+        { k: 'P прямоугольника', v: '2 × (a + b)' },
+        { k: 'S прямоугольника', v: 'a × b' },
+        { k: 'S квадрата', v: 'a²' },
+        { k: 'S треугольника', v: '½ × a × h' },
+        { k: 'V параллелепипеда', v: 'a × b × c' },
+        { k: 'V куба', v: 'a³' },
       ]},
       { title: '🍕 Дроби', rows: [
-        { k: 'Сложение/вычит.', v: 'Привести к общему знам.' },
-        { k: 'Умножение', v: 'Числ. × числ. / Знам. × знам.' },
-        { k: 'Деление', v: 'Умножить на перевёрнутую' },
-        { k: 'Осн. свойство', v: 'a/b = (a×n)/(b×n)' },
+        { k: 'Осн. свойство', v: 'a/b = (a×n) / (b×n)' },
+        { k: 'Сокращение', v: 'a/b → делим на НОД' },
+        { k: '+ / −', v: 'Привести к общему знаменателю (НОК)' },
+        { k: 'Умножение', v: '(a/b) × (c/d) = (a×c)/(b×d)' },
+        { k: 'Деление', v: '(a/b) ÷ (c/d) = (a/b) × (d/c)' },
+        { k: 'Смешанное', v: '2⅗ = (2×5+3)/5 = 13/5' },
       ]},
-      { title: '% Проценты', rows: [
+      { title: '% Проценты и части целого', rows: [
         { k: 'p% от числа', v: 'Число × p ÷ 100' },
-        { k: 'Число по %', v: 'Часть ÷ p × 100' },
+        { k: 'Целое по части', v: 'Часть ÷ (дробь или p/100)' },
         { k: 'Сколько %', v: 'Часть ÷ Целое × 100' },
       ]},
-      { title: '📏 Формулы геометрии', rows: [
-        { k: 'Перим. прямоугольника', v: '2×(a + b)' },
-        { k: 'S прямоугольника', v: 'a × b' },
-        { k: 'S треугольника', v: '(a × h) ÷ 2' },
-        { k: 'V параллелепипеда', v: 'a × b × c' },
+      { title: '🔟 Десятичные дроби', rows: [
+        { k: 'Сложение / вычит.', v: 'Выравниваем запятые в столбик' },
+        { k: '× на 10, 100, …', v: 'Запятую вправо на 1, 2, … знака' },
+        { k: '÷ на 10, 100, …', v: 'Запятую влево на 1, 2, … знака' },
+        { k: 'Округление', v: 'Смотрим следующую цифру: <5 вниз, ≥5 вверх' },
+      ]},
+      { title: '📐 Углы', rows: [
+        { k: 'Острый', v: '0° < α < 90°' },
+        { k: 'Прямой', v: 'α = 90°' },
+        { k: 'Тупой', v: '90° < α < 180°' },
+        { k: 'Развёрнутый', v: 'α = 180°' },
+        { k: 'Транспортир', v: 'Совмести центр с вершиной угла' },
       ]},
     ],
     tests: [
-      { q: 'Сколько будет 25% от числа 200?', opts: ['50','25','75','100'], ans: 0, exp: '25% — это ¼. 200 ÷ 4 = 50' },
-      { q: 'Чему равна дробь ½ + ⅓?', opts: ['5/6','2/6','1/6','3/5'], ans: 0, exp: 'Общий знаменатель 6: 3/6 + 2/6 = 5/6' },
-      { q: 'На какой признак: число оканчивается на 0 или 5?', opts: ['На 5','На 2','На 10','На 3'], ans: 0, exp: 'Признак делимости на 5: оканчивается на 0 или 5' },
+      { q: 'Какое число натуральное?', opts: ['0','1','−3','0,5'], ans: 1, exp: 'Натуральные числа — числа для счёта: 1, 2, 3… Нуль и отрицательные не натуральные' },
+      { q: 'Как называется результат сложения?', opts: ['Сумма','Разность','Произведение','Частное'], ans: 0, exp: 'Слагаемое + Слагаемое = Сумма' },
       { q: 'Реши уравнение: x + 15 = 40', opts: ['25','55','15','40'], ans: 0, exp: 'x = 40 − 15 = 25' },
-      { q: 'Площадь прямоугольника 4×7 см равна?', opts: ['28 см²','22 см²','11 см²','14 см²'], ans: 0, exp: 'S = 4 × 7 = 28 см²' },
+      { q: 'Порядок действий: 2 + 3 × 4 = ?', opts: ['14','20','24','10'], ans: 0, exp: 'Сначала умножение: 3×4=12, потом сложение: 2+12=14' },
+      { q: 'Чему равно 2³?', opts: ['8','6','9','16'], ans: 0, exp: '2³ = 2×2×2 = 8' },
+      { q: 'Признак делимости на 3:', opts: ['Сумма цифр делится на 3','Последняя цифра 0 или 6','Число чётное','Заканчивается на 3'], ans: 0, exp: '123: 1+2+3=6, делится на 3 → 123÷3=41 ✓' },
+      { q: 'НОД(12, 18) = ?', opts: ['6','3','12','36'], ans: 0, exp: 'Делители 12: 1,2,3,4,6,12. Делители 18: 1,2,3,6,9,18. НОД = 6' },
+      { q: 'Площадь прямоугольника 4×7 см = ?', opts: ['28 см²','22 см²','11 см²','14 см²'], ans: 0, exp: 'S = a × b = 4 × 7 = 28 см²' },
+      { q: 'Объём параллелепипеда 3×4×5 = ?', opts: ['60 см³','47 см³','35 см³','12 см³'], ans: 0, exp: 'V = a × b × c = 3×4×5 = 60 см³' },
+      { q: 'Дробь 3/5 — это:', opts: ['Правильная','Неправильная','Смешанная','Целая'], ans: 0, exp: 'Правильная дробь: числитель меньше знаменателя (3 < 5)' },
+      { q: '¾ + ¾ = ?', opts: ['6/4 = 1½','3/8','2/3','1/4'], ans: 0, exp: 'Знаменатели одинаковые: (3+3)/4 = 6/4 = 1 и 2/4 = 1½' },
+      { q: 'Сократи дробь 6/9:', opts: ['2/3','3/4','1/3','6/9'], ans: 0, exp: 'НОД(6,9)=3. 6÷3=2, 9÷3=3. Ответ: 2/3' },
+      { q: '½ × ⅔ = ?', opts: ['1/3','2/5','1/4','2/3'], ans: 0, exp: 'Числитель: 1×2=2. Знаменатель: 2×3=6. Дробь: 2/6 = 1/3' },
+      { q: '25% от числа 200 = ?', opts: ['50','25','75','100'], ans: 0, exp: '25% = ¼. 200 ÷ 4 = 50' },
+      { q: 'Округли 3,746 до десятых:', opts: ['3,7','3,8','4,0','3,74'], ans: 0, exp: 'Смотрим на сотые: цифра 4 < 5, поэтому округляем вниз → 3,7' },
     ],
   },
   russian: {
@@ -1941,6 +2012,14 @@ function pickExercise(num) {
   });
 }
 
+function selectExercise(num) {
+  // Открыть задание в screen-task (для goToNextExercise)
+  const el = document.querySelector(`.ex-btn[data-num="${num}"]`);
+  if (el) { el.click(); return; }
+  // Если кнопки ещё не отрисованы — просто подставляем номер
+  pickExercise(num);
+}
+
 // ============================================================
 //  DIALOGUE ENGINE (Socratic method)
 // ============================================================
@@ -2058,10 +2137,13 @@ let ST = {
   hints: 0,
   xp: 0,
   doneTopics: {},    // {topicId: true}
+  doneExercises: [], // ['1.1','1.2',...] пройденные задачи
   progress: [],      // session logs
   stageIdx: 0,
   loading: false,
   prevScreen: 'screen-zone',
+  checkOnly: false,
+  nextExToLoad: null,
 };
 
 function loadState() {
@@ -2599,7 +2681,6 @@ function showPraise() {
   el.innerHTML = `<div class="praise-icon">⭐</div><div class="praise-text">Отлично! Сам разобрался — это настоящий прогресс!</div>`;
   document.getElementById('chat-msgs').appendChild(el);
   scrollDown();
-  // Этап 2: через 2 секунды предлагаем бонус-раунд (ребёнок видит это как игру, а не учёбу)
   setTimeout(() => {
     const bonus = document.createElement('div');
     bonus.className = 'praise-msg';
@@ -2609,6 +2690,50 @@ function showPraise() {
     document.getElementById('chat-msgs').appendChild(bonus);
     scrollDown();
   }, 1800);
+  // Кнопки «Что дальше?» — появляются через 3 секунды
+  setTimeout(() => {
+    const next = document.createElement('div');
+    next.style.cssText = 'margin:12px 0;padding:12px;background:var(--card);border-radius:12px;border:1px solid var(--border)';
+    next.innerHTML = `
+      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);margin-bottom:10px;letter-spacing:1px">ЧТО ДАЛЬШЕ?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button class="icon-btn" onclick="goToNextExercise()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
+          <span>📚</span><span>Следующее задание</span>
+        </button>
+        <button class="icon-btn" onclick="openTest()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
+          <span>✏️</span><span>Тест по теме</span>
+        </button>
+        <button class="icon-btn" onclick="openCheatSheet()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
+          <span>📋</span><span>Шпаргалка</span>
+        </button>
+        <button class="icon-btn" onclick="show('screen-section')" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
+          <span>🗂️</span><span>Сменить тему</span>
+        </button>
+      </div>`;
+    document.getElementById('chat-msgs').appendChild(next);
+    scrollDown();
+  }, 3500);
+}
+
+function goToNextExercise() {
+  if (!ST.topicId) { goToTask(); return; }
+  const cur = CURRICULUM[ST.zone];
+  const topic = cur.topics.find(t => t.id === ST.topicId);
+  if (!topic || !topic.exercises || !topic.exercises.length) { goToTask(); return; }
+  const doneSet = new Set(ST.doneExercises || []);
+  const nextEx = topic.exercises.find(e => !doneSet.has(e));
+  if (!nextEx) {
+    // Все задания пройдены — предлагаем тест
+    appendMsg('bot', '🎉 Ты прошёл все задания этой темы! Попробуй тест по теме →');
+    setTimeout(() => openTest(), 1000);
+    return;
+  }
+  // Открываем следующее задание той же темы
+  ST.nextExToLoad = nextEx;
+  goToTask();
+  setTimeout(() => {
+    selectExercise(nextEx);
+  }, 300);
 }
 function addXp(amount) {
   ST.xp += amount;
@@ -2836,6 +2961,61 @@ function stopListening() {
   if (btn) { btn.style.background = 'var(--bg3)'; btn.textContent = '🎤'; }
   const vs = document.getElementById('voice-status');
   if (vs) vs.style.display = 'none';
+}
+
+// Голос прямо в экране задания (task-mic-btn)
+let taskListening = false;
+let taskRecognition = null;
+function toggleTaskVoice() {
+  if (taskListening) { stopTaskListening(); return; }
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    const lbl = document.getElementById('task-mic-sub');
+    if (lbl) lbl.textContent = 'Голосовой ввод не поддерживается — используй Chrome';
+    return;
+  }
+  if (!taskRecognition) {
+    taskRecognition = new SpeechRecognition();
+    taskRecognition.interimResults = false;
+    taskRecognition.maxAlternatives = 1;
+    taskRecognition.onresult = (e) => {
+      const text = e.results[0][0].transcript;
+      const inp = document.getElementById('task-input');
+      inp.value = (inp.value ? inp.value + ' ' : '') + text;
+      updateTaskStartBtn();
+      stopTaskListening();
+    };
+    taskRecognition.onerror = () => stopTaskListening();
+    taskRecognition.onend = () => stopTaskListening();
+  }
+  taskRecognition.lang = ST.zone === 'english' ? 'en-US' : 'ru-RU';
+  taskListening = true;
+  taskRecognition.start();
+  const btn = document.getElementById('task-mic-btn');
+  if (btn) { btn.style.background = '#3a0a0a'; btn.style.borderColor = '#ef5350'; }
+  const icon = document.getElementById('task-mic-icon');
+  if (icon) icon.textContent = '⏹';
+  const lbl = document.getElementById('task-mic-label');
+  if (lbl) lbl.textContent = '🎤 Слушаю...';
+  const sub = document.getElementById('task-mic-sub');
+  if (sub) sub.textContent = 'Говори условие задачи';
+}
+function stopTaskListening() {
+  taskListening = false;
+  if (taskRecognition) try { taskRecognition.stop(); } catch(e) {}
+  const btn = document.getElementById('task-mic-btn');
+  if (btn) { btn.style.background = 'var(--card)'; btn.style.borderColor = 'var(--border)'; }
+  const icon = document.getElementById('task-mic-icon');
+  if (icon) icon.textContent = '🎤';
+  const lbl = document.getElementById('task-mic-label');
+  if (lbl) lbl.textContent = 'Надиктовать задание';
+  const sub = document.getElementById('task-mic-sub');
+  if (sub) sub.textContent = 'Нажми и продиктуй условие задачи';
+}
+function updateTaskStartBtn() {
+  const hasTask = document.getElementById('task-input')?.value.trim() ||
+                  document.getElementById('task-preview-card');
+  // кнопки всегда активны — валидация внутри startChat()
 }
 
 function applyInputMode() {
