@@ -590,11 +590,11 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 0;border-top:1px solid var(--border)">
-      <button class="icon-btn text-xs text-dimmer" onclick="showMyCheat()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:8px">📒 Мои шпаргалки</button>
+    <div id="home-bottom-btns" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 0;border-top:1px solid var(--border)">
       <button class="icon-btn text-xs text-dimmer" onclick="showKnow()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:8px">🔭 Хочу всё знать</button>
       <button class="icon-btn text-xs text-dimmer" onclick="showParent()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:8px">👨‍👩‍👧 Кабинет родителя</button>
       <button class="icon-btn text-xs text-dimmer" onclick="showAch()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:8px">🏆 Достижения</button>
+      <button id="btn-mycheat" class="icon-btn text-xs text-dimmer" onclick="showMyCheat()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:8px;display:none">📒 Мои шпаргалки</button>
     </div>
   </div>
 </div>
@@ -656,7 +656,7 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
           <div style="font-size:13px;font-weight:800;color:var(--text)">Сделала сама — проверь фото</div>
           <div style="font-size:11px;color:var(--text3)">Сфотографируй решение или страницу учебника</div>
         </div>
-        <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none" onchange="onPhotoSelected(event)">
+        <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none" onchange="openPhotoCheck();onPhotoSelected(event)">
       </label>
     </div>
 
@@ -2224,6 +2224,10 @@ function renderHome() {
     const el = document.getElementById('prog-' + z);
     if (el) el.style.width = pct + '%';
   });
+  // Показываем кнопку «Мои шпаргалки» только если есть сохранённые
+  const hasSaved = JSON.parse(localStorage.getItem('myCheatsheets') || '[]').length > 0;
+  const btn = document.getElementById('btn-mycheat');
+  if (btn) btn.style.display = hasSaved ? '' : 'none';
 }
 
 function getDailyRepeatTopic(zone) {
@@ -2766,9 +2770,23 @@ function backFromCheat() { show(ST.prevScreen || 'screen-chat'); }
 let testState = { questions: [], idx: 0, score: 0, answered: false };
 function openTest() {
   if (!ST.zone) return;
-  const tests = CURRICULUM[ST.zone].tests;
-  testState = { questions: [...tests], idx: 0, score: 0, answered: false };
-  document.getElementById('test-header-title').textContent = 'Тест: ' + CURRICULUM[ST.zone].name;
+  const cur = CURRICULUM[ST.zone];
+  const doneTids = Object.keys(ST.doneTopics || {}).filter(tid => tid.startsWith(ST.zone[0]));
+  const sourceTids = doneTids.length
+    ? doneTids
+    : ST.topicId ? [ST.topicId] : [cur.topics[0]?.id].filter(Boolean);
+  let questions = [];
+  sourceTids.forEach(tid => {
+    const rule = RULES[tid];
+    if (rule && rule.quiz) questions = questions.concat(rule.quiz.map(q => ({...q, _topic: rule.title})));
+  });
+  if (!questions.length) questions = [...cur.tests];
+  questions = shuffle(questions).slice(0, 10);
+  const titleParts = sourceTids.length === 1
+    ? cur.topics.find(t => t.id === sourceTids[0])?.name || cur.name
+    : `${cur.name} (${sourceTids.length} тем)`;
+  testState = { questions, idx: 0, score: 0, answered: false };
+  document.getElementById('test-header-title').textContent = 'Тест: ' + titleParts;
   renderQuestion();
   ST.prevScreen = 'screen-chat';
   show('screen-test');
