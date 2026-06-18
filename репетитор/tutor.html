@@ -719,6 +719,9 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
       <div class="hdot" id="hd5"></div>
       <span id="voice-status" style="margin-left:auto;font-size:11px;color:var(--text3);display:none">🎤 слушаю...</span>
     </div>
+    <div style="padding:0 0 6px 0">
+      <button id="done-chat-btn" onclick="triggerDone()" style="width:100%;padding:10px;background:linear-gradient(135deg,#1a4020,#0d2810);border:1.5px solid #40c060;border-radius:10px;color:#7eff9a;font-family:var(--pixel);font-size:9px;font-weight:800;cursor:pointer;letter-spacing:1px;display:none">✅ Я РЕШИЛА — ЧТО ДАЛЬШЕ?</button>
+    </div>
     <div class="chat-row">
       <textarea id="chat-input" class="input" rows="1" placeholder="Напиши ответ или вопрос..." onkeydown="chatKey(event)"></textarea>
       <button class="send-btn" id="mic-btn" onclick="toggleVoice()" style="display:none;background:var(--bg3);font-size:16px" title="Голосовой ввод">🎤</button>
@@ -1231,6 +1234,7 @@ var RULES = {
       { q: 'Как называются горизонтальные полосы таблицы?', opts: ['Столбцы','Строки','Ячейки','Заголовки'], ans: 1 },
       { q: 'Ячейка — это...', opts: ['Вся таблица','Горизонтальная полоса','Клетка на пересечении строки и столбца','Вертикальная полоса'], ans: 2 },
       { q: 'Таблица 5 строк × 3 столбца содержит ячеек:', opts: ['8','15','53','35'], ans: 1 },
+      { q: 'Таблица 4 строки × 6 столбцов — сколько ячеек?', opts: ['10','46','24','12'], ans: 2 },
     ]
   },
   'm1t2': { title: '2. Цифры и числа',
@@ -1252,7 +1256,7 @@ var RULES = {
       { q: 'Что такое отрезок?', opts: ['Бесконечная линия','Часть прямой с двумя концами','Замкнутая фигура','Угол'], ans: 1 },
       { q: 'Периметр — это...', opts: ['Площадь фигуры','Длина одной стороны','Сумма длин всех сторон','Количество углов'], ans: 2 },
       { q: 'Ломаная из 4 звеньев по 3 см. Длина?', opts: ['7 см','12 см','34 см','43 см'], ans: 1 },
-      { q: 'Как называются точки соединения звеньев ломаной?', opts: ['Концы','Стороны','Вершины','Углы'], ans: 2 },
+      { q: 'Периметр квадрата со стороной 7 см:', opts: ['14 см','21 см','28 см','49 см'], ans: 2 },
     ]
   },
   'm1t4': { title: '4. Плоскость, прямая, луч, угол',
@@ -1304,7 +1308,7 @@ var RULES = {
       { q: 'Как называется результат сложения?', opts: ['Разность','Произведение','Сумма','Частное'], ans: 2 },
       { q: 'Верно ли: 47 + 53 = 53 + 47?', opts: ['Нет','Только для чётных','Да','Только для однозначных'], ans: 2 },
       { q: '(24 + 76) + 35 = ?', opts: ['100','135','125','140'], ans: 1 },
-      { q: '999 + 0 = ?', opts: ['0','1 000','999','9 990'], ans: 2 },
+      { q: '(38 + 62) + 47 = ?', opts: ['137','147','148','150'], ans: 1 },
     ]
   },
   'm2t9': { title: '9. Действие вычитания. Свойства',
@@ -1314,8 +1318,8 @@ var RULES = {
     quiz: [
       { q: 'Как называется результат вычитания?', opts: ['Сумма','Произведение','Разность','Частное'], ans: 2 },
       { q: '75 − 75 = ?', opts: ['1','75','0','150'], ans: 2 },
-      { q: 'Проверка вычитания: 800 − 356 = 444. Что проверяем?', opts: ['800 − 444','444 + 356','356 − 444','444 − 356'], ans: 1 },
       { q: '600 − 243 = ?', opts: ['357','367','343','457'], ans: 0 },
+      { q: '1 000 − 378 = ?', opts: ['628','622','632','722'], ans: 1 },
     ]
   },
   'm2t10': { title: '10. Числовые и буквенные выражения',
@@ -1325,7 +1329,8 @@ var RULES = {
     quiz: [
       { q: 'Что такое переменная?', opts: ['Результат вычисления','Знак действия','Буква, вместо которой подставляют число','Число'], ans: 2 },
       { q: 'Значение выражения 2x + 3 при x = 5:', opts: ['10','13','16','23'], ans: 1 },
-      { q: 'Является ли «8» числовым выражением?', opts: ['Нет','Да','Только если чётное','Нет, это просто цифра'], ans: 1 },
+      { q: 'Значение выражения 3a − 7 при a = 10:', opts: ['16','23','30','37'], ans: 1 },
+      { q: '5n + 2 при n = 4:', opts: ['20','21','22','25'], ans: 2 },
     ]
   },
   'm2t11': { title: '11. Уравнение',
@@ -1336,7 +1341,7 @@ var RULES = {
       { q: 'Что такое корень уравнения?', opts: ['Знак равенства','Значение переменной, при котором уравнение верно','Буква в уравнении','Результат сложения'], ans: 1 },
       { q: 'Реши: x + 23 = 50', opts: ['x = 73','x = 27','x = 23','x = 50'], ans: 1 },
       { q: 'Реши: 5 · x = 35', opts: ['x = 30','x = 40','x = 7','x = 175'], ans: 2 },
-      { q: 'Проверка для x = 8 в уравнении x + 12 = 20:', opts: ['8 − 12 = 20','8 + 12 = 20','12 − 8 = 20','8 · 12 = 20'], ans: 1 },
+      { q: 'Реши: x − 18 = 47', opts: ['x = 29','x = 65','x = 66','x = 55'], ans: 1 },
     ]
   },
 };
@@ -2463,6 +2468,14 @@ function updateSendBtn() {
 function chatKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
 }
+function triggerDone() {
+  if (ST.bonusShown) return;
+  ST.bonusShown = true;
+  if (ST.topicId) ST.doneTopics[ST.topicId] = true;
+  saveState();
+  showPraise();
+}
+
 function sendMsg() {
   const el = document.getElementById('chat-input');
   const text = el.value.trim();
@@ -2471,17 +2484,10 @@ function sendMsg() {
   updateSendBtn();
   addUserMsg(text);
   if (handleCheatAnswer(text)) return;
-  // Триггер «дальше» — показать блок закрепления
+  // Текстовый триггер «дальше» тоже работает
   const lower = text.toLowerCase().trim();
   const isDone = ['дальше','готово','всё','все','решила','решил','сделала','сделал','выполнено','закончила','закончил','ответ готов'].some(w => lower === w || lower.startsWith(w + ' ') || lower.endsWith(' ' + w));
-  if (isDone && !ST.bonusShown) {
-    ST.bonusShown = true;
-    if (ST.topicId) ST.doneTopics[ST.topicId] = true;
-    ST._topicWasDoneBeforeSession = ST._topicWasDoneBeforeSession || false;
-    saveState();
-    showPraise();
-    return;
-  }
+  if (isDone && !ST.bonusShown) { triggerDone(); return; }
   processResponse(text);
 }
 
@@ -2503,8 +2509,8 @@ const SYSTEM_PROMPTS = {
 Как работаешь:
 - ОДНА реакция + ОДИН вопрос. Максимум 2 предложения. Точка.
 - Если ученик верно — скажи «Верно! ✅» и назови следующий шаг.
-- Если неверно — скажи где ошибка и дай ОДНУ подсказку.
-- После 2 неудачных попыток — покажи решение, не мучай.
+- Если неверно — НЕ показывай правильный ответ сразу. Задай ОДИН уточняющий вопрос: «Почему ты так думаешь?» или «Проверь этот шаг ещё раз — что происходит в первую очередь?» Цель: помочь ребёнку самому найти ошибку.
+- Только после 2+ неудачных попыток — объясни коротко и покажи правильный шаг.
 - НЕ задавай несколько вопросов. НЕ пиши длинно.
 
 НАГЛЯДНОСТЬ (только где реально помогает):
@@ -2528,7 +2534,7 @@ const SYSTEM_PROMPTS = {
 - Сначала ОДНА реакция на ответ ученика
 - Потом ОДИН вопрос или подсказка
 - Если ученик верно — похвали и двигайся дальше
-- Если застрял 2 раза — объясни правило коротко
+- Если ошибка — НЕ давай ответ сразу. Спроси: «Почему ты так решила?» или «Посмотри на правило ещё раз — что идёт первым?» После 2 неудачных — объясни.
 - Эмодзи 1-2 штуки, максимум 2-3 предложения
 - НЕ задавай несколько вопросов подряд
 
@@ -2617,10 +2623,19 @@ async function processResponse(text) {
 
   if (reply) addBotMsg(reply);
 
-  // Геймификация: XP за позитивный ответ
-  if (isPositive && reply && !reply.startsWith('❌')) {
+  // Показываем кнопку «Я решила» после первого ответа бота
+  if (!ST.bonusShown) {
+    const doneBtn = document.getElementById('done-chat-btn');
+    if (doneBtn) doneBtn.style.display = 'block';
+  }
+
+  // XP только если Умник явно подтвердил верный ответ
+  const praiseWords = ['верно', 'правильно', 'молодец', 'отлично', '✅', 'браво', 'умница', 'супер', 'точно', 'правильн'];
+  const botConfirmed = reply && praiseWords.some(w => reply.toLowerCase().includes(w));
+  const noError = reply && !reply.startsWith('❌') && !reply.includes('не совсем') && !reply.includes('попробуй') && !reply.includes('ошибка') && !reply.includes('неверно') && !reply.includes('не правильно');
+  if (botConfirmed && noError && reply && !reply.startsWith('❌')) {
     const topicXp = ST.topicId ? (CURRICULUM[ST.zone].topics.find(t => t.id === ST.topicId)?.xp || 10) : 10;
-    addXp(Math.round(topicXp * 0.5));
+    addXp(Math.round(topicXp * 0.3));
     saveState();
   }
 
@@ -2685,6 +2700,8 @@ function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
 }
 function showPraise() {
+  const doneBtn = document.getElementById('done-chat-btn');
+  if (doneBtn) doneBtn.style.display = 'none';
   const isFirstTime = ST.topicId && !ST._topicWasDoneBeforeSession;
   addXp(5);
   const el = document.createElement('div');
@@ -3117,37 +3134,41 @@ let BG = {
 };
 
 function genBonusQuestions(zone) {
+  // Если есть квиз по текущей теме — используем его (перемешиваем варианты)
+  const topicQuiz = ST.topicId && typeof RULES !== 'undefined' && RULES[ST.topicId]?.quiz;
+  if (topicQuiz && topicQuiz.length >= 3) {
+    return shuffle([...topicQuiz]).slice(0, BONUS_TOTAL).map(q => {
+      const correctText = q.opts[q.ans];
+      const shuffledOpts = shuffle([...q.opts]);
+      return { text: q.q, ans: correctText, opts: shuffledOpts };
+    });
+  }
+
+  // Фоллбэк — случайные арифметические вопросы
   const q = [];
-  // Всегда математические — разный тип в зависимости от зоны/темы
-  const ops = ['+', '-', '×', '÷'];
   for (let i = 0; i < BONUS_TOTAL; i++) {
     const diff = Math.floor(i / 2); // 0,0,1,1,2,2 — нарастает
     let a, b, ans, text;
     if (diff === 0) {
-      // Простое сложение/вычитание до 50
       a = rnd(5, 30); b = rnd(2, 20);
       const add = Math.random() > 0.4;
-      ans = add ? a + b : a - b < 0 ? a + b : a - b;
-      text = add ? `${a} + ${b}` : (a - b >= 0 ? `${a} − ${b}` : `${a} + ${b}`);
-      if (a - b < 0) ans = a + b;
+      ans = add ? a + b : (a >= b ? a - b : a + b);
+      text = add ? `${a} + ${b}` : (a >= b ? `${a} − ${b}` : `${a} + ${b}`);
     } else if (diff === 1) {
-      // Умножение небольших чисел
       a = rnd(2, 9); b = rnd(2, 9);
       ans = a * b;
       text = `${a} × ${b}`;
     } else {
-      // Деление с целым результатом
       b = rnd(2, 9); ans = rnd(2, 9); a = b * ans;
       text = `${a} ÷ ${b}`;
     }
-    // Генерируем 3 неправильных варианта
     const wrongs = new Set();
     while (wrongs.size < 3) {
       const w = ans + rnd(-5, 5) * (diff + 1);
       if (w !== ans && w > 0) wrongs.add(w);
     }
-    const opts = shuffle([ans, ...[...wrongs].slice(0, 3)]);
-    q.push({ text, ans, opts });
+    const opts = shuffle([String(ans), ...[...wrongs].slice(0, 3).map(String)]);
+    q.push({ text, ans: String(ans), opts });
   }
   return q;
 }
