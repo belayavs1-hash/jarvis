@@ -173,7 +173,9 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 .task-body { flex: 1; padding: 16px; overflow-y: auto; }
 .task-title { font-size: 16px; font-weight: 900; margin-bottom: 4px; }
 .task-subtitle { font-size: 13px; color: var(--text2); margin-bottom: 16px; line-height: 1.5; }
-textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 14px; }
+textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14px; }
+.task-photo-block { display: flex; align-items: center; gap: 14px; padding: 18px 16px; background: linear-gradient(135deg,#1a2040,#0d1520); border: 2px dashed var(--border); border-radius: 14px; cursor: pointer; transition: border-color .2s; width: 100%; box-sizing: border-box; }
+.task-wizard-block { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
 .quick-examples { margin-top: 12px; }
 .quick-label { font-size: 11px; color: var(--text3); font-weight: 700; margin-bottom: 8px; display: block; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -242,6 +244,8 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
 /* XP popup */
 .xp-popup { position: fixed; top: 60px; right: 20px; background: var(--accent); color: #1a1400; font-family: var(--pixel); font-size: 10px; padding: 8px 16px; border-radius: 8px; animation: floatUp 2s forwards; pointer-events: none; z-index: 999; }
 @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-40px); } }
+@keyframes donePop { 0% { transform: scale(0) rotate(-20deg); opacity: 0; } 70% { transform: scale(1.2) rotate(5deg); } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+#screen-done { max-width: 480px; margin: 0 auto; width: 100%; }
 
 /* ===== CHEATSHEET ===== */
 #screen-cheat { max-width: 480px; margin: 0 auto; width: 100%; }
@@ -608,9 +612,6 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
   </div>
   <div class="zone-body">
     <div id="section-list"></div>
-    <div class="mt3" style="display:flex;flex-direction:column;gap:10px">
-      <button class="btn-main" style="font-size:9px" onclick="openTaskInput()">📝 ЗАДАТЬ СВОЙ ВОПРОС / ДОМАШКУ</button>
-    </div>
   </div>
 </div>
 
@@ -645,45 +646,42 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
     <span id="task-zone-title" style="font-size:14px;font-weight:900"></span>
   </div>
   <div class="task-body" id="task-body">
-    <div class="task-title">Введи задание</div>
-    <div class="task-subtitle">Напиши условие или выбери номер из учебника</div>
+    <!-- Блок 1: Сделала сама — фото -->
+    <label id="photo-label" class="task-photo-block" onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='var(--border)'">
+      <span style="font-size:36px">📷</span>
+      <div>
+        <div style="font-size:15px;font-weight:900;color:var(--text)">Сделала сама</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:3px">Сфотографируй решение — Умник проверит</div>
+      </div>
+      <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none" onchange="openPhotoCheck();onPhotoSelected(event)">
+    </label>
 
-    <!-- Фото: отправить фото задания -->
-    <div style="margin-bottom:10px">
-      <label id="photo-label" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border:1.5px dashed var(--border);border-radius:12px;cursor:pointer;transition:border-color .2s" onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='var(--border)'">
-        <span style="font-size:24px">📷</span>
-        <div>
-          <div style="font-size:13px;font-weight:800;color:var(--text)">Сделала сама — проверь фото</div>
-          <div style="font-size:11px;color:var(--text3)">Сфотографируй решение или страницу учебника</div>
-        </div>
-        <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none" onchange="openPhotoCheck();onPhotoSelected(event)">
-      </label>
-    </div>
+    <!-- Разделитель -->
+    <div class="or-divider" style="margin:14px 0">или разбери с Умником</div>
 
-    <!-- Голос: надиктовать задание -->
-    <div style="margin-bottom:10px">
-      <button id="task-mic-btn" onclick="toggleTaskVoice()" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border:1.5px solid var(--border);border-radius:12px;width:100%;cursor:pointer;transition:all .2s;font-family:var(--body)">
-        <span id="task-mic-icon" style="font-size:24px">🎤</span>
+    <!-- Блок 2: Разобрать с Умником — голос + текст + номер -->
+    <div class="task-wizard-block">
+      <!-- Голос -->
+      <button id="task-mic-btn" onclick="toggleTaskVoice()" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;width:100%;cursor:pointer;transition:all .2s;font-family:var(--body);margin-bottom:10px">
+        <span id="task-mic-icon" style="font-size:22px">🎤</span>
         <div style="text-align:left">
           <div id="task-mic-label" style="font-size:13px;font-weight:800;color:var(--text)">Надиктовать задание</div>
-          <div id="task-mic-sub" style="font-size:11px;color:var(--text3)">Нажми и продиктуй условие задачи</div>
+          <div id="task-mic-sub" style="font-size:11px;color:var(--text3)">Нажми и скажи условие задачи</div>
         </div>
       </button>
-    </div>
 
-    <!-- Текстовый ввод -->
-    <div class="or-divider" style="margin:8px 0">или напиши текстом</div>
-    <div style="position:relative">
-      <textarea id="task-input" class="input" rows="3" placeholder="Напиши условие задачи..." style="padding-right:44px" oninput="updateTaskStartBtn()"></textarea>
-    </div>
+      <!-- Текст -->
+      <textarea id="task-input" class="input" rows="2" placeholder="Или напиши условие задачи..." style="margin-bottom:10px" oninput="updateTaskStartBtn()"></textarea>
 
-    <div class="or-divider" style="margin:8px 0">или выбери тему и номер</div>
-    <div class="topic-selector" id="mini-topic-list"></div>
+      <!-- Номер из учебника -->
+      <div style="font-size:11px;color:var(--text3);margin-bottom:6px;letter-spacing:.5px">ИЛИ ВЫБЕРИ НОМЕР ИЗ УЧЕБНИКА</div>
+      <div class="topic-selector" id="mini-topic-list"></div>
 
-    <!-- Кнопки старта -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
-      <button class="btn-main" id="task-start-btn" onclick="startChat(false)" style="font-size:12px;padding:12px 8px">▶ РАЗОБРАТЬ<br><span style="font-size:10px;opacity:.8">помогу дойти</span></button>
-      <button class="btn-main" id="task-check-btn" onclick="startChat(true)" style="background:var(--bg3);color:var(--accent2);border:2px solid var(--accent2);font-size:12px;padding:12px 8px">✅ ПРОВЕРИТЬ<br><span style="font-size:10px;opacity:.8">сделал сам</span></button>
+      <!-- Кнопки старта -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+        <button class="btn-main" id="task-start-btn" onclick="startChat(false)" style="font-size:12px;padding:12px 8px">▶ РАЗОБРАТЬ<br><span style="font-size:10px;opacity:.8">помогу дойти</span></button>
+        <button class="btn-main" id="task-check-btn" onclick="startChat(true)" style="background:var(--bg3);color:var(--accent2);border:2px solid var(--accent2);font-size:12px;padding:12px 8px">✅ ПРОВЕРИТЬ<br><span style="font-size:10px;opacity:.8">сделал сам</span></button>
+      </div>
     </div>
   </div>
 </div>
@@ -807,6 +805,22 @@ textarea.input { resize: none; min-height: 120px; line-height: 1.6; font-size: 1
   </div>
   <div class="ach-body">
     <div class="ach-grid" id="ach-grid"></div>
+  </div>
+</div>
+
+<!-- ======= TOPIC DONE ======= -->
+<div id="screen-done" class="screen">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:32px 24px;text-align:center">
+    <div id="done-icon" style="font-size:72px;margin-bottom:16px;animation:donePop .6s cubic-bezier(.34,1.56,.64,1)">✅</div>
+    <div style="font-family:var(--pixel);font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:10px">ТЕМА ПРОЙДЕНА!</div>
+    <div id="done-topic-name" style="font-size:20px;font-weight:900;margin-bottom:8px;line-height:1.3"></div>
+    <div id="done-xp-badge" style="font-family:var(--pixel);font-size:13px;background:linear-gradient(135deg,#f5c842,#f0a020);color:#000;padding:8px 20px;border-radius:999px;margin:12px 0;display:inline-block"></div>
+    <div id="done-stars" style="font-size:28px;margin-bottom:20px;letter-spacing:4px"></div>
+    <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:280px">
+      <button class="btn-main" id="done-next-btn" onclick="goToNextTopic()" style="font-size:14px;padding:14px">Следующая тема →</button>
+      <button class="btn-sec" onclick="openTest()" style="width:100%">✏️ Тест по теме</button>
+      <button class="btn-sec" onclick="show('screen-section')" style="width:100%">🗂️ Выбрать тему</button>
+    </div>
   </div>
 </div>
 
@@ -2700,6 +2714,7 @@ function showPraise() {
     next.style.cssText = 'margin:12px 0;padding:12px;background:var(--card);border-radius:12px;border:1px solid var(--border)';
     next.innerHTML = `
       <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);margin-bottom:10px;letter-spacing:1px">ЧТО ДАЛЬШЕ?</div>
+      <button onclick="showTopicDone()" style="width:100%;margin-bottom:10px;padding:14px;background:linear-gradient(135deg,#1a4020,#0d2010);border:2px solid #40c060;border-radius:12px;color:#60e080;font-family:var(--pixel);font-size:10px;font-weight:800;cursor:pointer;letter-spacing:1px">✅ ТЕМА ПРОЙДЕНА →</button>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         <button class="icon-btn" onclick="goToNextExercise()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
           <span>📚</span><span>Следующее задание</span>
@@ -2717,6 +2732,48 @@ function showPraise() {
     document.getElementById('chat-msgs').appendChild(next);
     scrollDown();
   }, 3500);
+}
+
+function showTopicDone() {
+  const cur = CURRICULUM[ST.zone];
+  const topic = cur && cur.topics.find(t => t.id === ST.topicId);
+  const topicName = topic ? topic.name : 'Тема';
+  const xpEarned = 10;
+  addXp(xpEarned);
+  document.getElementById('done-topic-name').textContent = topicName;
+  document.getElementById('done-xp-badge').textContent = '+' + xpEarned + ' XP заработано!';
+  document.getElementById('done-stars').textContent = '⭐⭐⭐';
+  // reset animation
+  const icon = document.getElementById('done-icon');
+  icon.style.animation = 'none';
+  void icon.offsetWidth;
+  icon.style.animation = 'donePop .6s cubic-bezier(.34,1.56,.64,1)';
+  // find next topic
+  const topics = cur ? cur.topics : [];
+  const curIdx = topics.findIndex(t => t.id === ST.topicId);
+  const nextTopic = topics[curIdx + 1];
+  const nextBtn = document.getElementById('done-next-btn');
+  if (nextTopic) {
+    nextBtn.textContent = 'Следующая тема →';
+    nextBtn.onclick = () => goToNextTopic();
+  } else {
+    nextBtn.textContent = '🏠 На главную';
+    nextBtn.onclick = () => goHome();
+  }
+  show('screen-done');
+}
+
+function goToNextTopic() {
+  const cur = CURRICULUM[ST.zone];
+  if (!cur) { goHome(); return; }
+  const topics = cur.topics;
+  const curIdx = topics.findIndex(t => t.id === ST.topicId);
+  const nextTopic = topics[curIdx + 1];
+  if (nextTopic) {
+    openRule(nextTopic.id);
+  } else {
+    show('screen-section');
+  }
 }
 
 function goToNextExercise() {
