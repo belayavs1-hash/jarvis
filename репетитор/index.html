@@ -698,6 +698,7 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
     <div class="chat-hright">
       <button class="icon-btn" onclick="openCheatSheet()" title="Шпаргалка">📋</button>
       <button class="icon-btn" onclick="openTest()" title="Тест по теме">✏️</button>
+      <button class="icon-btn" onclick="goHome()" title="На главную">🏠</button>
     </div>
   </div>
   <div id="task-badge" class="task-badge" style="display:none;cursor:pointer" onclick="toggleTaskBadge()">
@@ -712,9 +713,6 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
   </div>
   <div id="chat-msgs" class="chat-msgs"></div>
   <div id="chat-input-area" class="chat-input-area">
-    <div id="done-btn-area" style="display:none;margin-bottom:8px;">
-      <button onclick="triggerDone()" style="width:100%;padding:12px;background:linear-gradient(135deg,#1a4020,#0d2810);border:1.5px solid #40c060;border-radius:12px;color:#7eff9a;font-family:var(--pixel);font-size:9px;font-weight:800;cursor:pointer;letter-spacing:1px;text-shadow:0 0 8px #40c06060">✅ Я РЕШИЛА — ЧТО ДАЛЬШЕ?</button>
-    </div>
     <div class="hint-row">
       <span>Подсказок:</span>
       <div class="hdot" id="hd1"></div><div class="hdot" id="hd2"></div>
@@ -1953,7 +1951,10 @@ function renderExercisePicker(topic) {
     </div>
     <div class="ex-or">или напиши своё</div>
     <textarea id="task-input" class="input" rows="3" placeholder="Свой вопрос или задание не из учебника..."></textarea>
-    <button class="btn-main mt3" onclick="startChat()">▶ РАЗОБРАТЬ С УМНИКОМ</button>`;
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+      <button class="btn-main" onclick="startChat(false)" style="font-size:12px;padding:12px 8px">▶ РАЗОБРАТЬ<br><span style="font-size:10px;opacity:.8">помогу дойти</span></button>
+      <button class="btn-main" onclick="startChat(true)" style="background:var(--bg3);color:var(--accent2);border:2px solid var(--accent2);font-size:12px;padding:12px 8px">✅ ПРОВЕРИТЬ<br><span style="font-size:10px;opacity:.8">сделал сам</span></button>
+    </div>`;
 }
 
 // ============================================================
@@ -6548,7 +6549,6 @@ function startChat(checkOnly = false) {
   document.getElementById('chat-msgs').innerHTML = '';
   document.getElementById('chat-input').value = '';
   document.getElementById('send-btn').disabled = true;
-  document.getElementById('done-btn-area').style.display = 'none';
   updateHints();
   applyInputMode();
   show('screen-chat');
@@ -6616,16 +6616,17 @@ const SYSTEM_PROMPTS = {
 Задание: {TASK}
 Имя ученика: {NAME}
 
-КРИТИЧЕСКИ ВАЖНО — МАТЕМАТИКА:
-- Ты ОБЯЗАН вычислять правильно. Перед ответом проверь себя.
-- 120 − 30 = 90. 25% от 120 = 30. 120 − 30 = 90. Итого осталось 90 яблок.
-- Никогда не путай шаги: сначала найди процент, потом вычти.
-- Если ученик говорит 90 — это ВЕРНО для задачи «из 120 взяли 25%».
+КРИТИЧЕСКИ ВАЖНО — НЕ ОШИБАЙСЯ:
+- Перед каждым ответом СНАЧАЛА реши задачу сам в уме, потом отвечай.
+- Если не уверен в вычислении — НЕ УГАДЫВАЙ. Признай что нужно пересчитать.
+- НИКОГДА не называй неверный ответ ученика верным. Лучше промолчать, чем соврать.
+- НИКОГДА не меняй условие задачи. Работай ТОЛЬКО с тем что написано в задании.
+- Если ученик задаёт вопрос не по теме — мягко верни к заданию: «Давай сначала решим это задание, потом поговорим о другом.»
 
 Как работаешь:
 - ОДНА реакция + ОДИН вопрос. Максимум 2 предложения. Точка.
 - Если ученик верно — скажи «Верно! ✅» и назови следующий шаг.
-- Если неверно — НЕ показывай правильный ответ сразу. Задай ОДИН уточняющий вопрос: «Почему ты так думаешь?» или «Проверь этот шаг ещё раз — что происходит в первую очередь?» Цель: помочь ребёнку самому найти ошибку.
+- Если неверно — НЕ показывай правильный ответ сразу. Задай ОДИН уточняющий вопрос: «Почему ты так думаешь?» или «Проверь этот шаг ещё раз.» Цель: помочь ребёнку самому найти ошибку.
 - Только после 2+ неудачных попыток — объясни коротко и покажи правильный шаг.
 - НЕ задавай несколько вопросов. НЕ пиши длинно.
 
@@ -6739,9 +6740,14 @@ async function processResponse(text) {
 
   if (reply) addBotMsg(reply);
 
-  // Показываем кнопку «Я решила» после первого ответа бота (внизу над полем ввода)
-  if (!ST.bonusShown) {
-    document.getElementById('done-btn-area').style.display = 'block';
+  // Показываем кнопку «Я решила» после первого ответа бота (в конце чата)
+  if (!ST.bonusShown && !document.getElementById('done-chat-btn')) {
+    const btn = document.createElement('div');
+    btn.id = 'done-chat-btn';
+    btn.style.cssText = 'margin:12px 0 4px;';
+    btn.innerHTML = `<button onclick="triggerDone()" style="width:100%;padding:14px;background:linear-gradient(135deg,#1a4020,#0d2810);border:1.5px solid #40c060;border-radius:12px;color:#7eff9a;font-family:var(--pixel);font-size:9px;font-weight:800;cursor:pointer;letter-spacing:1px;text-shadow:0 0 8px #40c06060">✅ Я РЕШИЛА — ЧТО ДАЛЬШЕ?</button>`;
+    document.getElementById('chat-msgs').appendChild(btn);
+    scrollDown();
   }
 
   // XP только если Умник явно подтвердил верный ответ
@@ -6815,7 +6821,8 @@ function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
 }
 function showPraise() {
-  document.getElementById('done-btn-area').style.display = 'none';
+  const doneBtn = document.getElementById('done-chat-btn');
+  if (doneBtn) doneBtn.remove();
   const isFirstTime = ST.topicId && !ST._topicWasDoneBeforeSession;
   addXp(5);
   const el = document.createElement('div');
