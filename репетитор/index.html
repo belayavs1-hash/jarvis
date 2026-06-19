@@ -594,11 +594,15 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
       </div>
     </div>
 
-    <div id="home-bottom-btns" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 0;border-top:1px solid var(--border)">
-      <button class="icon-btn text-xs text-dimmer" onclick="showKnow()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:8px">🔭 Хочу всё знать</button>
-      <button class="icon-btn text-xs text-dimmer" onclick="showParent()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:8px">👨‍👩‍👧 Кабинет родителя</button>
-      <button class="icon-btn text-xs text-dimmer" onclick="showAch()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:8px">🏆 Достижения</button>
-      <button id="btn-mycheat" class="icon-btn text-xs text-dimmer" onclick="showMyCheat()" style="font-family:var(--body);font-size:12px;font-weight:700;padding:8px;display:none">🧠 База знаний</button>
+    <div id="home-bottom-btns" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 0;border-top:1px solid var(--border)">
+      <button class="icon-btn text-xs text-dimmer" onclick="showKnow()" style="font-family:var(--body);font-size:15px;font-weight:700;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;line-height:1.3">
+        <span style="font-size:26px">🔭</span>Хочу всё знать</button>
+      <button class="icon-btn text-xs text-dimmer" onclick="showParent()" style="font-family:var(--body);font-size:15px;font-weight:700;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;line-height:1.3">
+        <span style="font-size:26px">👨‍👩‍👧</span>Кабинет родителя</button>
+      <button class="icon-btn text-xs text-dimmer" onclick="showAch()" style="font-family:var(--body);font-size:15px;font-weight:700;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;line-height:1.3">
+        <span style="font-size:26px">🏆</span>Достижения</button>
+      <button id="btn-mycheat" class="icon-btn text-xs text-dimmer" onclick="showMyCheat()" style="font-family:var(--body);font-size:15px;font-weight:700;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;line-height:1.3;display:none">
+        <span style="font-size:26px">🧠</span>База знаний</button>
     </div>
   </div>
 </div>
@@ -712,6 +716,9 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
     </div>
   </div>
   <div id="chat-msgs" class="chat-msgs"></div>
+  <div id="done-btn-area" style="display:none;padding:8px 14px 0;">
+    <button onclick="triggerDone()" style="width:100%;padding:14px;background:linear-gradient(135deg,#1a4020,#0d2810);border:1.5px solid #40c060;border-radius:12px;color:#7eff9a;font-family:var(--pixel);font-size:9px;font-weight:800;cursor:pointer;letter-spacing:1px;text-shadow:0 0 8px #40c06060">✅ Я РЕШИЛА — ЧТО ДАЛЬШЕ?</button>
+  </div>
   <div id="chat-input-area" class="chat-input-area">
     <div class="hint-row">
       <span>Подсказок:</span>
@@ -721,6 +728,9 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
       <span id="voice-status" style="margin-left:auto;font-size:11px;color:var(--text3);display:none">🎤 слушаю...</span>
     </div>
     <div class="chat-row">
+      <label class="send-btn" style="background:var(--bg3);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center" title="Прикрепить фото решения">
+        📷<input type="file" accept="image/*" capture="environment" style="display:none" onchange="openPhotoCheck();onPhotoSelected(event)">
+      </label>
       <textarea id="chat-input" class="input" rows="1" placeholder="Напиши ответ или вопрос..." onkeydown="chatKey(event)"></textarea>
       <button class="send-btn" id="mic-btn" onclick="toggleVoice()" style="display:none;background:var(--bg3);font-size:16px" title="Голосовой ввод">🎤</button>
       <button class="send-btn" id="send-btn" onclick="sendMsg()" disabled>↑</button>
@@ -1919,7 +1929,6 @@ function renderRuleResult() {
     <div style="font-family:var(--pixel);font-size:12px;color:var(--accent);margin-bottom:8px">${score}/${total} верно</div>
     <div style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:20px">${msg}</div>
     <button class="btn-main" onclick="goToTaskFromRule()">📝 Выбрать задание из учебника →</button>
-    <button class="btn-sec" style="margin-top:10px;width:100%" onclick="openPhotoCheck()">📸 Сделала сама — проверить</button>
     ${pct < 100 ? `<button class="btn-sec" style="margin-top:10px;width:100%" onclick="renderRuleScreen('rule')">← Повторить правило</button>` : ''}
   </div>`;
 }
@@ -6549,6 +6558,7 @@ function startChat(checkOnly = false) {
   document.getElementById('chat-msgs').innerHTML = '';
   document.getElementById('chat-input').value = '';
   document.getElementById('send-btn').disabled = true;
+  document.getElementById('done-btn-area').style.display = 'none';
   updateHints();
   applyInputMode();
   show('screen-chat');
@@ -6740,14 +6750,9 @@ async function processResponse(text) {
 
   if (reply) addBotMsg(reply);
 
-  // Показываем кнопку «Я решила» после первого ответа бота (в конце чата)
-  if (!ST.bonusShown && !document.getElementById('done-chat-btn')) {
-    const btn = document.createElement('div');
-    btn.id = 'done-chat-btn';
-    btn.style.cssText = 'margin:12px 0 4px;';
-    btn.innerHTML = `<button onclick="triggerDone()" style="width:100%;padding:14px;background:linear-gradient(135deg,#1a4020,#0d2810);border:1.5px solid #40c060;border-radius:12px;color:#7eff9a;font-family:var(--pixel);font-size:9px;font-weight:800;cursor:pointer;letter-spacing:1px;text-shadow:0 0 8px #40c06060">✅ Я РЕШИЛА — ЧТО ДАЛЬШЕ?</button>`;
-    document.getElementById('chat-msgs').appendChild(btn);
-    scrollDown();
+  // Показываем кнопку «Я решила» после первого ответа бота (фиксированно над полем ввода)
+  if (!ST.bonusShown) {
+    document.getElementById('done-btn-area').style.display = 'block';
   }
 
   // XP только если Умник явно подтвердил верный ответ
@@ -6821,8 +6826,7 @@ function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
 }
 function showPraise() {
-  const doneBtn = document.getElementById('done-chat-btn');
-  if (doneBtn) doneBtn.remove();
+  document.getElementById('done-btn-area').style.display = 'none';
   const isFirstTime = ST.topicId && !ST._topicWasDoneBeforeSession;
   addXp(5);
   const el = document.createElement('div');
