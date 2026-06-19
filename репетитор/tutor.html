@@ -712,6 +712,9 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
   </div>
   <div id="chat-msgs" class="chat-msgs"></div>
   <div id="chat-input-area" class="chat-input-area">
+    <div id="done-btn-area" style="display:none;margin-bottom:8px;">
+      <button onclick="triggerDone()" style="width:100%;padding:12px;background:linear-gradient(135deg,#1a4020,#0d2810);border:1.5px solid #40c060;border-radius:12px;color:#7eff9a;font-family:var(--pixel);font-size:9px;font-weight:800;cursor:pointer;letter-spacing:1px;text-shadow:0 0 8px #40c06060">✅ Я РЕШИЛА — ЧТО ДАЛЬШЕ?</button>
+    </div>
     <div class="hint-row">
       <span>Подсказок:</span>
       <div class="hdot" id="hd1"></div><div class="hdot" id="hd2"></div>
@@ -6545,6 +6548,7 @@ function startChat(checkOnly = false) {
   document.getElementById('chat-msgs').innerHTML = '';
   document.getElementById('chat-input').value = '';
   document.getElementById('send-btn').disabled = true;
+  document.getElementById('done-btn-area').style.display = 'none';
   updateHints();
   applyInputMode();
   show('screen-chat');
@@ -6735,14 +6739,9 @@ async function processResponse(text) {
 
   if (reply) addBotMsg(reply);
 
-  // Показываем кнопку «Я решила» после первого ответа бота (как сообщение в чате)
-  if (!ST.bonusShown && !document.getElementById('done-chat-btn')) {
-    const btn = document.createElement('div');
-    btn.id = 'done-chat-btn';
-    btn.style.cssText = 'margin:8px 0 4px;';
-    btn.innerHTML = `<button onclick="triggerDone()" style="width:100%;padding:12px;background:linear-gradient(135deg,#1a4020,#0d2810);border:1.5px solid #40c060;border-radius:12px;color:#7eff9a;font-family:var(--pixel);font-size:9px;font-weight:800;cursor:pointer;letter-spacing:1px;text-shadow:0 0 8px #40c06060">✅ Я РЕШИЛА — ЧТО ДАЛЬШЕ?</button>`;
-    document.getElementById('chat-msgs').appendChild(btn);
-    scrollDown();
+  // Показываем кнопку «Я решила» после первого ответа бота (внизу над полем ввода)
+  if (!ST.bonusShown) {
+    document.getElementById('done-btn-area').style.display = 'block';
   }
 
   // XP только если Умник явно подтвердил верный ответ
@@ -6816,8 +6815,7 @@ function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
 }
 function showPraise() {
-  const doneBtn = document.getElementById('done-chat-btn');
-  if (doneBtn) doneBtn.remove();
+  document.getElementById('done-btn-area').style.display = 'none';
   const isFirstTime = ST.topicId && !ST._topicWasDoneBeforeSession;
   addXp(5);
   const el = document.createElement('div');
