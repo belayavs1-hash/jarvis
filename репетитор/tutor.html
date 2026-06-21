@@ -642,6 +642,12 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
       </div>
     </div>
 
+    <div id="continue-banner" style="display:none;margin-bottom:14px;background:#fff;border-radius:18px;border:2px solid var(--accent);padding:14px 16px;box-shadow:0 4px 16px rgba(108,99,255,.15);cursor:pointer" onclick="resumeLastSession()">
+      <div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">▶ Продолжить</div>
+      <div id="continue-task" style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px"></div>
+      <div id="continue-meta" style="font-size:11px;color:var(--text3)"></div>
+    </div>
+
     <div class="section-title">🗺 Выбери зону</div>
     <div class="zone-grid">
       <div class="math" onclick="openZone('math')">
@@ -6886,6 +6892,7 @@ let ST = {
   doneTopics: {},    // {topicId: true}
   doneExercises: [], // ['1.1','1.2',...] пройденные задачи
   progress: [],      // session logs
+  lastSession: null, // {zone, topicId, task, ts, msgCount} — последняя незавершённая сессия
   stageIdx: 0,
   loading: false,
   prevScreen: 'screen-zone',
@@ -6898,12 +6905,27 @@ function loadState() {
   ST.xp = LS.load('xp', 0);
   ST.doneTopics = LS.load('done', {});
   ST.progress = LS.load('progress', []);
+  ST.lastSession = LS.load('lastSession', null);
 }
 function saveState() {
   LS.save('user', ST.user);
   LS.save('xp', ST.xp);
   LS.save('done', ST.doneTopics);
   LS.save('progress', ST.progress);
+  LS.save('lastSession', ST.lastSession);
+}
+function saveLastSession() {
+  if (!ST.zone || !ST.task) return;
+  const isDone = ST.topicId ? !!ST.doneTopics[ST.topicId] : false;
+  if (isDone) { ST.lastSession = null; LS.save('lastSession', null); return; }
+  ST.lastSession = {
+    zone: ST.zone,
+    topicId: ST.topicId || null,
+    task: ST.task,
+    ts: Date.now(),
+    msgCount: ST.msgs.length,
+  };
+  LS.save('lastSession', ST.lastSession);
 }
 
 // ============================================================
@@ -6986,6 +7008,61 @@ function renderHome() {
   const hasSaved = JSON.parse(localStorage.getItem('myCheatsheets') || '[]').length > 0;
   const btn = document.getElementById('btn-mycheat');
   if (btn) btn.style.display = hasSaved ? '' : 'none';
+
+  // Баннер «Продолжить»
+  const banner = document.getElementById('continue-banner');
+  const ls = ST.lastSession;
+  if (banner && ls && ls.topicId && !ST.doneTopics[ls.topicId]) {
+    const cur = CURRICULUM[ls.zone];
+    const topic = cur && cur.topics.find(t => t.id === ls.topicId);
+    const topicName = topic ? topic.name : ls.task;
+    const ago = Math.round((Date.now() - ls.ts) / 60000);
+    const agoStr = ago < 60 ? `${ago} мин назад` : `${Math.round(ago/60)} ч назад`;
+    document.getElementById('continue-task').textContent = topicName;
+    document.getElementById('continue-meta').textContent = `${cur ? cur.name : ls.zone} · ${ls.msgCount} сообщ. · ${agoStr}`;
+    banner.style.display = '';
+  } else if (banner) {
+    banner.style.display = 'none';
+  }
+}
+
+function resumeLastSession() {
+  const ls = ST.lastSession;
+  if (!ls || !ls.zone || !ls.task) return;
+  ST.zone = ls.zone;
+  ST.topicId = ls.topicId || null;
+  ST.task = ls.task;
+  ST.checkOnly = false;
+  ST.msgs = [];
+  ST.hints = 0;
+  ST.stageIdx = 0;
+  ST.loading = false;
+  ST.bonusShown = false;
+  ST._topicWasDoneBeforeSession = false;
+  CHEAT_SESSION.active = false;
+  const cur = CURRICULUM[ST.zone];
+  const topicName = ST.topicId ? cur.topics.find(t => t.id === ST.topicId)?.name || '' : '';
+  document.getElementById('tb-subject').textContent = cur.name + (topicName ? ': ' + topicName : '');
+  const task = ls.task;
+  document.getElementById('tb-text').textContent = task.length > 120 ? task.slice(0, 120) + '…' : task;
+  document.getElementById('tb-full').textContent = task;
+  document.getElementById('tb-full').style.display = 'none';
+  document.getElementById('tb-toggle').textContent = '▼ показать полностью';
+  document.getElementById('task-badge').style.display = '';
+  document.getElementById('chat-msgs').innerHTML = '';
+  document.getElementById('chat-input').value = '';
+  document.getElementById('send-btn').disabled = true;
+  updateHints();
+  applyInputMode();
+  show('screen-chat');
+  saveState();
+  setTimeout(async () => {
+    showTyping();
+    const resumePrompt = `Мы продолжаем занятие. Поздоровайся коротко (1 фраза) и напомни, что мы остановились на задании: «${task.slice(0, 100)}». Задай ОДИН наводящий вопрос по первому шагу.`;
+    const opener = await askClaude(resumePrompt);
+    removeTyping();
+    addBotMsg(opener);
+  }, 400);
 }
 
 function getDailyRepeatTopic(zone) {
@@ -7228,6 +7305,7 @@ function sendMsg() {
   el.value = '';
   updateSendBtn();
   addUserMsg(text);
+  saveLastSession();
   if (handleCheatAnswer(text)) return;
   // Текстовый триггер «дальше» тоже работает
   const lower = text.toLowerCase().trim();
@@ -7411,6 +7489,7 @@ function addBotMsg(text) {
   d.innerHTML = `<div class="m-avatar">🧙</div><div class="m-bubble">${escHtml(text)}</div>`;
   msgs.appendChild(d);
   scrollDown();
+  saveLastSession();
 }
 function addUserMsg(text) {
   const msgs = document.getElementById('chat-msgs');
@@ -7492,6 +7571,8 @@ function showPraise() {
 function manualTopicDone() {
   if (ST.topicId) ST.doneTopics[ST.topicId] = true;
   ST.bonusShown = true;
+  ST.lastSession = null;
+  LS.save('lastSession', null);
   saveState();
   checkAchievements();
   showTopicDone();
@@ -7503,6 +7584,8 @@ function showDoneChatBtn() {
 }
 
 function showTopicDone() {
+  ST.lastSession = null;
+  LS.save('lastSession', null);
   const cur = CURRICULUM[ST.zone];
   const topic = cur && cur.topics.find(t => t.id === ST.topicId);
   const topicName = topic ? topic.name : 'Тема';
