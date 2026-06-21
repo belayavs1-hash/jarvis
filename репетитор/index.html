@@ -948,16 +948,16 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 </div>
 
 <!-- ======= TOPIC DONE ======= -->
-<div id="screen-done" class="screen">
-  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:32px 24px;text-align:center">
-    <div id="done-icon" style="font-size:72px;margin-bottom:16px;animation:donePop .6s cubic-bezier(.34,1.56,.64,1)">✅</div>
-    <div style="font-family:var(--pixel);font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:10px">ТЕМА ПРОЙДЕНА! ЗАКРЕПЛЯЕМ!</div>
-    <div id="done-topic-name" style="font-size:20px;font-weight:900;margin-bottom:8px;line-height:1.3"></div>
-    <div id="done-xp-badge" style="font-family:var(--pixel);font-size:13px;background:linear-gradient(135deg,#f5c842,#f0a020);color:#000;padding:8px 20px;border-radius:999px;margin:12px 0;display:inline-block"></div>
-    <div id="done-stars" style="font-size:28px;margin-bottom:20px;letter-spacing:4px"></div>
-    <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:280px">
-      <button class="btn-main" id="done-next-btn" onclick="goToNextTopic()" style="font-size:14px;padding:14px">Следующая тема →</button>
-      <button class="btn-sec" onclick="show('screen-section')" style="width:100%;padding:13px;font-size:13px;font-weight:800">💾 Сохранить и выйти</button>
+<div id="screen-done" class="screen" style="background:radial-gradient(ellipse at 50% 20%, #1a2d0a 0%, #0d0f1a 70%)">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:40px 24px;text-align:center;max-width:420px;margin:0 auto;width:100%">
+    <div id="done-icon" style="font-size:88px;margin-bottom:8px;filter:drop-shadow(0 0 24px #f5c84260)">⭐</div>
+    <div id="done-stars" style="font-size:32px;margin-bottom:16px;letter-spacing:6px;animation:bob 1s ease-in-out infinite"></div>
+    <div style="font-family:var(--pixel);font-size:13px;color:var(--accent);letter-spacing:2px;margin-bottom:12px;text-shadow:0 0 20px #f5c84260">ТЕМА ПРОЙДЕНА!</div>
+    <div id="done-topic-name" style="font-size:22px;font-weight:900;margin-bottom:16px;line-height:1.3;color:var(--text)"></div>
+    <div id="done-xp-badge" style="font-family:var(--pixel);font-size:14px;background:linear-gradient(135deg,#f5c842,#f0a020);color:#000;padding:10px 28px;border-radius:999px;margin-bottom:28px;display:inline-block;box-shadow:0 4px 20px #f5c84240"></div>
+    <div style="display:flex;flex-direction:column;gap:12px;width:100%;max-width:300px">
+      <button class="btn-main" id="done-next-btn" style="font-size:13px;padding:16px">Следующая тема →</button>
+      <button onclick="goHome()" style="background:transparent;border:1.5px solid var(--border);border-radius:14px;padding:14px;color:var(--text2);font-size:14px;font-weight:800;cursor:pointer">🏠 На главную</button>
     </div>
   </div>
 </div>
@@ -6764,8 +6764,8 @@ function startChat(checkOnly = false) {
   setTimeout(async () => {
     showTyping();
     const openingPrompt = ST.checkOnly
-      ? `Ученик говорит, что уже решил это задание сам. Поздоровайся и попроси написать его ответ — ты проверишь.`
-      : `Начни диалог: поздоровайся с учеником и задай первый наводящий вопрос по заданию. Не давай ответ, только помоги начать думать.`;
+      ? `Ученик решил задание сам. Поздоровайся коротко (1 фраза) и попроси написать ответ. Не задавай лишних вопросов.`
+      : `Поздоровайся (1 фраза) и задай ОДИН наводящий вопрос по ПЕРВОМУ действию в задании. Не упоминай пункты а/б/в/г — работай с заданием целиком. Максимум 2 предложения.`;
     const opener = await askClaude(openingPrompt);
     removeTyping();
     if (opener) addBotMsg(opener);
@@ -6834,10 +6834,12 @@ const SYSTEM_PROMPTS = {
 
 Как работаешь:
 - ОДНА реакция + ОДИН вопрос. Максимум 2 предложения. Точка.
-- Если ученик верно — скажи «Верно! ✅» и назови следующий шаг.
-- Если неверно — НЕ показывай правильный ответ сразу. Задай ОДИН уточняющий вопрос: «Почему ты так думаешь?» или «Проверь этот шаг ещё раз.» Цель: помочь ребёнку самому найти ошибку.
+- Если ученик верно — скажи «Верно! ✅» и назови следующий шаг ИЛИ следующий пункт.
+- Если неверно — НЕ показывай правильный ответ сразу. Задай ОДИН уточняющий вопрос. Цель: помочь ребёнку самому найти ошибку.
 - Только после 2+ неудачных попыток — объясни коротко и покажи правильный шаг.
 - НЕ задавай несколько вопросов. НЕ пиши длинно.
+- Если задание содержит пункты а/б/в/г — веди по ним ПО ПОРЯДКУ. Когда ученик дал ответ (любой) — прими его как ответ на текущий пункт, скажи верно/нет, и переходи к следующему. НЕ переспрашивай «это для какого пункта?» — ты сам знаешь порядок.
+- Когда ВСЕ пункты решены — скажи «Отлично, все примеры решены!» и НИЧЕГО больше не добавляй.
 
 НАГЛЯДНОСТЬ (только где реально помогает):
 Проценты → [██░░░░░░░░] 25% от 120 = 30
@@ -7031,20 +7033,20 @@ function showPraise() {
     const next = document.createElement('div');
     next.style.cssText = 'margin:12px 0;padding:14px;background:#12172a;border-radius:14px;border:1.5px solid #2a3560';
     const topicDoneBtn = isFirstTime
-      ? `<button onclick="showTopicDone()" style="width:100%;margin-bottom:12px;padding:14px;background:linear-gradient(135deg,#1a4020,#0d2810);border:2px solid #40c060;border-radius:12px;color:#7eff9a;font-family:var(--pixel);font-size:10px;font-weight:800;cursor:pointer;letter-spacing:1px;text-shadow:0 0 8px #40c060">🎯 ЗАКРЕПЛЕНИЕ МАТЕРИАЛА →</button>`
+      ? `<button onclick="showTopicDone()" style="width:100%;margin-bottom:12px;padding:16px;background:linear-gradient(135deg,#1a4020,#0d2810);border:2px solid #40c060;border-radius:12px;color:#7eff9a;font-family:var(--pixel);font-size:10px;font-weight:800;cursor:pointer;letter-spacing:1px;text-shadow:0 0 8px #40c060;animation:bob .8s ease-in-out 2">🏆 ТЕМА ПРОЙДЕНА! →</button>`
       : '';
     next.innerHTML = `
       <div style="font-family:var(--pixel);font-size:9px;color:#4a5580;margin-bottom:12px;letter-spacing:2px">ЧТО ДАЛЬШЕ?</div>
       ${topicDoneBtn}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <button class="icon-btn" onclick="goToNextExercise()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px;background:#1c2240;border:1.5px solid #3040708">
-          <span>📚</span><span style="color:#b0c0e8">Следующее задание</span>
+        <button class="icon-btn" onclick="goToNextExercise()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px;background:#1c2240;border:1.5px solid #304070">
+          <span>📚</span><span style="color:#b0c0e8">Ещё задание</span>
         </button>
-        <button class="icon-btn" onclick="showMyCheat()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px;background:#1c2240;border:1.5px solid #304070">
-          <span>🧠</span><span style="color:#b0c0e8">База знаний</span>
+        <button class="icon-btn" onclick="showTrainer()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px;background:#1c2240;border:1.5px solid #304070">
+          <span>⚡</span><span style="color:#b0c0e8">Тренажёры</span>
         </button>
         <button class="icon-btn" onclick="startBonus()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px;background:#1c2240;border:1.5px solid #304070">
-          <span>⚡</span><span style="color:#b0c0e8">Бонус-игра</span>
+          <span>🎮</span><span style="color:#b0c0e8">Бонус-игра</span>
         </button>
         <button class="icon-btn" onclick="goHome()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px;background:#1c2240;border:1.5px solid #304070">
           <span>🏠</span><span style="color:#b0c0e8">На главную</span>
@@ -7052,6 +7054,8 @@ function showPraise() {
       </div>`;
     document.getElementById('chat-msgs').appendChild(next);
     scrollDown();
+    setTimeout(scrollDown, 100);
+    setTimeout(scrollDown, 400);
   }, 1000);
 }
 
@@ -7059,17 +7063,17 @@ function showTopicDone() {
   const cur = CURRICULUM[ST.zone];
   const topic = cur && cur.topics.find(t => t.id === ST.topicId);
   const topicName = topic ? topic.name : 'Тема';
-  const xpEarned = 10;
+  const xpEarned = 15;
   addXp(xpEarned);
+  saveState();
+  checkAchievements();
   document.getElementById('done-topic-name').textContent = topicName;
   document.getElementById('done-xp-badge').textContent = '+' + xpEarned + ' XP заработано!';
   document.getElementById('done-stars').textContent = '⭐⭐⭐';
-  // reset animation
   const icon = document.getElementById('done-icon');
   icon.style.animation = 'none';
   void icon.offsetWidth;
   icon.style.animation = 'donePop .6s cubic-bezier(.34,1.56,.64,1)';
-  // find next topic
   const topics = cur ? cur.topics : [];
   const curIdx = topics.findIndex(t => t.id === ST.topicId);
   const nextTopic = topics[curIdx + 1];
@@ -7082,6 +7086,7 @@ function showTopicDone() {
     nextBtn.onclick = () => goHome();
   }
   show('screen-done');
+  spawnConfetti(50);
 }
 
 function goToNextTopic() {
@@ -8378,8 +8383,8 @@ async function sendPhotoToCheck() {
           <button class="icon-btn" onclick="show('screen-section')" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
             <span>📚</span><span style="color:var(--text2)">Ещё задание</span>
           </button>
-          <button class="icon-btn" onclick="showMyCheat()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
-            <span>🧠</span><span style="color:var(--text2)">База знаний</span>
+          <button class="icon-btn" onclick="showTrainer()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
+            <span>⚡</span><span style="color:var(--text2)">Тренажёры</span>
           </button>
           <button class="icon-btn" onclick="startBonus()" style="font-size:11px;font-weight:800;padding:10px;flex-direction:column;gap:4px">
             <span>⚡</span><span style="color:var(--text2)">Бонус-игра</span>
