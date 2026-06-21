@@ -40,12 +40,15 @@ body { font-family: var(--body); background: radial-gradient(circle at 20% 10%, 
 .screen { display: none; min-height: 100vh; flex-direction: column; }
 .screen.active { display: flex; }
 /* Inner screens get white bg; home stays transparent (shows body bg) */
-#screen-zone, #screen-task, #screen-chat, #screen-cheat, #screen-mycheat,
+#screen-task, #screen-chat, #screen-cheat, #screen-mycheat,
 #screen-mindmap, #screen-know, #screen-test, #screen-ach, #screen-bonus,
 #screen-parent, #screen-rule, #screen-trainer, #screen-trainer-arena,
 #screen-trainer-result, #screen-column-arena, #screen-mental-arena,
 #screen-word-arena, #screen-section {
   background: #eef2ff;
+}
+#screen-zone {
+  background: radial-gradient(circle at 20% 10%, #1a3a8f 0, #101833 35%, #090e20 75%);
 }
 
 /* ===== LOGIN ===== */
@@ -731,12 +734,20 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 
 <!-- ======= ZONE (chapters/sections) ======= -->
 <div id="screen-zone" class="screen">
-  <div class="zone-header">
-    <button class="back-btn" onclick="goHome()">←</button>
-    <span id="zh-icon" class="zone-header-icon"></span>
-    <span id="zh-title" class="zone-header-title"></span>
+  <div id="zone-hero-header" style="padding:20px 18px 0;background:transparent;position:relative">
+    <button class="back-btn" onclick="goHome()" style="margin-bottom:14px;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:8px 14px;border-radius:10px">← Назад</button>
+    <div id="zone-hero-panel" style="background:rgba(20,26,53,.82);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:22px;position:relative;overflow:hidden;backdrop-filter:blur(18px);margin-bottom:20px;box-shadow:0 18px 50px rgba(0,0,0,.28)">
+      <div id="zone-hero-glow" style="position:absolute;right:-60px;top:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(77,171,247,.4),transparent 70%);pointer-events:none"></div>
+      <span id="zh-badge" style="display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border-radius:999px;background:rgba(56,184,107,.14);color:#9df0bd;border:1px solid rgba(56,184,107,.25);font-size:12px;font-weight:700;margin-bottom:14px"></span>
+      <h2 id="zh-title" style="font-size:26px;font-weight:900;color:#fff;margin:0 0 8px;line-height:1.1"></h2>
+      <p id="zh-desc" style="font-size:14px;color:rgba(255,255,255,.7);margin:0;line-height:1.55"></p>
+      <div id="zh-prog-row" style="display:flex;align-items:center;gap:10px;margin-top:14px">
+        <div style="flex:1;height:6px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden"><div id="zh-prog-fill" style="height:100%;border-radius:99px;background:linear-gradient(90deg,#38b86b,#3b82f6);transition:width .5s ease;width:0%"></div></div>
+        <span id="zh-prog-label" style="font-size:12px;font-weight:700;color:rgba(255,255,255,.7);white-space:nowrap"></span>
+      </div>
+    </div>
   </div>
-  <div class="zone-body">
+  <div class="zone-body" style="padding:0 18px 20px">
     <div id="section-list"></div>
   </div>
 </div>
@@ -7106,24 +7117,39 @@ function openZone(zone) {
     chapterMap[sec.chapter].push(sec);
   });
 
+  // Hero-шапка зоны
+  const totalTopics = (cur.topics || []).length;
+  const doneTotal = (cur.topics || []).filter(t => ST.doneTopics[t.id]).length;
+  const pctTotal = totalTopics ? Math.round(doneTotal / totalTopics * 100) : 0;
+  document.getElementById('zh-badge').textContent = `${cur.icon} ${cur.name}`;
+  document.getElementById('zh-desc').textContent = cur.desc || 'Выбери параграф и начни разбираться';
+  document.getElementById('zh-prog-fill').style.width = pctTotal + '%';
+  document.getElementById('zh-prog-label').textContent = `${doneTotal}/${totalTopics} тем`;
+
+  // Окраска glow под зону
+  const zoneGlowColors = { math: 'rgba(255,109,0,.35)', russian: 'rgba(0,176,255,.35)', english: 'rgba(0,200,83,.35)', speech: 'rgba(213,0,249,.35)' };
+  document.getElementById('zone-hero-glow').style.background = `radial-gradient(circle,${zoneGlowColors[ST.zone]||'rgba(77,171,247,.35)'},transparent 70%)`;
+
   const list = document.getElementById('section-list');
   list.innerHTML = chapters.map(ch => `
-    <div style="margin-bottom:6px">
-      <div style="font-size:10px;font-weight:800;color:#2979ff;letter-spacing:1.5px;text-transform:uppercase;padding:12px 0 6px;border-bottom:2px solid #e3eeff;margin-bottom:8px">${ch}</div>
-      ${chapterMap[ch].map(sec => {
+    <div style="margin-bottom:20px">
+      <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase;padding:0 0 10px;margin-bottom:2px">${ch}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      ${chapterMap[ch].map((sec, idx) => {
         const doneCount = (sec.topicIds || []).filter(id => ST.doneTopics[id]).length;
         const total = (sec.topicIds || []).length;
         const pct = total ? Math.round(doneCount / total * 100) : 0;
-        return `<div class="topic-item" onclick="openSection('${sec.id}')" style="margin-bottom:6px">
-          <span style="font-size:22px;flex-shrink:0">${sec.icon}</span>
-          <div class="t-info">
-            <div class="t-name" style="font-size:13px">${sec.name}</div>
-            <div class="t-sub">стр. ${sec.page} · ${total} тем${total===1?'а':total<5?'ы':''}${doneCount>0?' · '+doneCount+'/'+total+' пройдено':''}</div>
-            <div class="prog-bar mt1" style="height:3px"><div class="prog-fill" style="width:${pct}%;background:var(--accent)"></div></div>
-          </div>
-          <div style="font-size:22px;font-weight:700;color:var(--accent)">›</div>
+        const isDone = doneCount === total && total > 0;
+        return `<div onclick="openSection('${sec.id}')" style="padding:16px;border-radius:20px;background:${isDone?'linear-gradient(180deg,#fff,#f1fff5)':'#fff'};border:1.5px solid ${isDone?'#b6ebc9':'#e7e9f1'};cursor:pointer;transition:all .2s;position:relative;box-shadow:0 4px 14px rgba(0,0,0,.1)" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,.15)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(0,0,0,.1)'">
+          <div style="position:absolute;right:12px;top:12px;font-size:11px;font-weight:700;color:#94a3b8">§${sec.page||''}</div>
+          <div style="width:40px;height:40px;border-radius:14px;background:#edf3ff;color:#2563eb;display:grid;place-items:center;font-weight:900;font-size:18px;margin-bottom:10px">${sec.icon}</div>
+          <div style="font-size:13px;font-weight:800;color:#17213c;margin-bottom:6px;line-height:1.3;padding-right:24px">${sec.name}</div>
+          <div style="font-size:11px;color:#64748b;margin-bottom:10px">${total} тем${total===1?'а':total<5?'ы':''}${doneCount>0?' · '+doneCount+'/'+total+' пройдено':''}</div>
+          <div style="height:4px;background:#e8edf5;border-radius:99px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#38b86b,#3b82f6);border-radius:99px"></div></div>
+          <button onclick="event.stopPropagation();openSection('${sec.id}')" style="width:100%;padding:9px;border-radius:12px;background:#1a2744;color:white;font-weight:800;font-size:12px;border:none;cursor:pointer">${isDone?'✅ Повторить':'Открыть'}</button>
         </div>`;
       }).join('')}
+      </div>
     </div>`).join('');
 
   show('screen-zone');
