@@ -34,7 +34,7 @@
   --shadow-md: 0 8px 28px rgba(0,0,0,.22);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--body); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+body { font-family: var(--body); background: radial-gradient(circle at 20% 10%, #1a3a8f 0, #0e1933 40%, #080d1c 100%) fixed; background-attachment: fixed; color: var(--text); min-height: 100vh; overflow-x: hidden; }
 
 /* SCREENS */
 .screen { display: none; min-height: 100vh; flex-direction: column; }
@@ -45,7 +45,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 #screen-parent, #screen-rule, #screen-trainer, #screen-trainer-arena,
 #screen-trainer-result, #screen-column-arena, #screen-mental-arena,
 #screen-word-arena, #screen-section {
-  background: #f0f4ff;
+  background: #eef2ff;
 }
 
 /* ===== LOGIN ===== */
@@ -136,29 +136,29 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 .zone-arrow { font-size: 22px; margin-left: auto; opacity: .85; font-weight: 700; }
 
 /* Math */
-.math .zone-card { border-color: #ff6d0040; background: #1e2f5a; border-left: 5px solid #ff6d00; }
-.math .zone-icon-box { background: rgba(255,109,0,.18); border-color: #ff6d0060; }
+.math .zone-card { border-color: rgba(255,109,0,.4); background: rgba(14,25,51,.72); border-left: 5px solid #ff6d00; backdrop-filter: blur(12px); }
+.math .zone-icon-box { background: rgba(255,109,0,.2); border-color: rgba(255,109,0,.5); }
 .math .zone-name { color: #ffab40; }
 .math .zone-desc { color: rgba(255,255,255,.7); }
 .math .zone-arrow { color: #ffab40; }
 .math .prog-bar { background: rgba(255,255,255,.15); }
 /* Russian */
-.russian .zone-card { border-color: #00b0ff40; background: #1e2f5a; border-left: 5px solid #00b0ff; }
-.russian .zone-icon-box { background: rgba(0,176,255,.18); border-color: #00b0ff60; }
+.russian .zone-card { border-color: rgba(0,176,255,.4); background: rgba(14,25,51,.72); border-left: 5px solid #00b0ff; backdrop-filter: blur(12px); }
+.russian .zone-icon-box { background: rgba(0,176,255,.2); border-color: rgba(0,176,255,.5); }
 .russian .zone-name { color: #64d8ff; }
 .russian .zone-desc { color: rgba(255,255,255,.7); }
 .russian .zone-arrow { color: #64d8ff; }
 .russian .prog-bar { background: rgba(255,255,255,.15); }
 /* English */
-.english .zone-card { border-color: #00c85340; background: #1e2f5a; border-left: 5px solid #00c853; }
-.english .zone-icon-box { background: rgba(0,200,83,.18); border-color: #00c85360; }
+.english .zone-card { border-color: rgba(0,200,83,.4); background: rgba(14,25,51,.72); border-left: 5px solid #00c853; backdrop-filter: blur(12px); }
+.english .zone-icon-box { background: rgba(0,200,83,.2); border-color: rgba(0,200,83,.5); }
 .english .zone-name { color: #69f0ae; }
 .english .zone-desc { color: rgba(255,255,255,.7); }
 .english .zone-arrow { color: #69f0ae; }
 .english .prog-bar { background: rgba(255,255,255,.15); }
 /* Speech */
-.speech .zone-card { border-color: #d500f940; background: #1e2f5a; border-left: 5px solid #d500f9; }
-.speech .zone-icon-box { background: rgba(213,0,249,.18); border-color: #d500f960; }
+.speech .zone-card { border-color: rgba(213,0,249,.4); background: rgba(14,25,51,.72); border-left: 5px solid #d500f9; backdrop-filter: blur(12px); }
+.speech .zone-icon-box { background: rgba(213,0,249,.2); border-color: rgba(213,0,249,.5); }
 .speech .zone-name { color: #ea80fc; }
 .speech .zone-desc { color: rgba(255,255,255,.7); }
 .speech .zone-arrow { color: #ea80fc; }
@@ -170,11 +170,11 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 
 /* ===== ZONE MAP (topic list) ===== */
 #screen-zone { max-width: 480px; margin: 0 auto; width: 100%; }
-.zone-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,.15); background: rgba(0,0,0,.12); }
-.zone-header-title { font-size: 14px; font-weight: 900; color: #fff; }
+.zone-header { display: flex; align-items: center; gap: 12px; padding: 16px 16px; border-bottom: 1px solid rgba(255,255,255,.15); background: linear-gradient(135deg, #1a3a8f 0%, #7c3aed 100%); }
+.zone-header-title { font-size: 15px; font-weight: 900; color: #fff; }
 .zone-header-icon { font-size: 22px; }
-.back-btn { background: rgba(255,255,255,.15); border: none; cursor: pointer; font-size: 20px; color: #fff; padding: 6px 10px; border-radius: 10px; transition: all .15s; }
-.back-btn:hover { background: rgba(255,255,255,.25); color: #fff; }
+.back-btn { background: rgba(255,255,255,.2); border: none; cursor: pointer; font-size: 20px; color: #fff; padding: 6px 10px; border-radius: 10px; transition: all .15s; }
+.back-btn:hover { background: rgba(255,255,255,.35); color: #fff; }
 /* back-btn defined under .zone-header */
 .zone-header-title { font-size: 14px; font-weight: 900; }
 .zone-header-icon { font-size: 22px; }
@@ -7109,7 +7109,7 @@ function openZone(zone) {
   const list = document.getElementById('section-list');
   list.innerHTML = chapters.map(ch => `
     <div style="margin-bottom:6px">
-      <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase;padding:10px 0 6px">${ch}</div>
+      <div style="font-size:10px;font-weight:800;color:#2979ff;letter-spacing:1.5px;text-transform:uppercase;padding:12px 0 6px;border-bottom:2px solid #e3eeff;margin-bottom:8px">${ch}</div>
       ${chapterMap[ch].map(sec => {
         const doneCount = (sec.topicIds || []).filter(id => ST.doneTopics[id]).length;
         const total = (sec.topicIds || []).length;
