@@ -816,6 +816,121 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
         </div>
         <span style="margin-left:auto;font-size:22px;color:#4caf50">›</span>
       </button>
+      <button onclick="startTrainer('column')" style="background:linear-gradient(135deg,#001a2a,#001020);border:2px solid #ff9a55;border-radius:16px;padding:20px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:40px">📐</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#ff9a55;letter-spacing:1px">В СТОЛБИК</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Сложение и вычитание как в учебнике — в столбик</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#ff9a55">›</span>
+      </button>
+      <button onclick="startTrainer('mental')" style="background:linear-gradient(135deg,#1a001a,#0e000e);border:2px solid #e0aaff;border-radius:16px;padding:20px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:40px">⚡</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#e0aaff;letter-spacing:1px">УСТНЫЙ СЧЁТ</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Сложение и вычитание двузначных — без остановки!</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#e0aaff">›</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ======= СТОЛБИК ARENA ======= -->
+<div id="screen-column-arena" class="screen">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)">
+    <button class="back-btn" onclick="show('screen-trainer')">←</button>
+    <div style="font-family:var(--pixel);font-size:10px;color:#ff9a55;letter-spacing:1px">📐 В СТОЛБИК</div>
+    <div style="font-family:var(--pixel);font-size:10px;color:var(--accent)">⭐<span id="col-score">0</span></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;gap:20px;max-width:420px;margin:0 auto;width:100%">
+    <!-- Прогресс -->
+    <div style="width:100%;display:flex;align-items:center;gap:10px">
+      <div style="flex:1;height:8px;background:var(--bg3);border-radius:99px;overflow:hidden">
+        <div id="col-progress-bar" style="height:100%;background:linear-gradient(90deg,#ff9a55,#f5c842);border-radius:99px;transition:width .3s;width:0%"></div>
+      </div>
+      <span id="col-progress-text" style="font-size:11px;color:var(--text2)">0/15</span>
+    </div>
+    <!-- Пример в столбик -->
+    <div id="col-card" style="width:100%;background:var(--card);border:2px solid #ff9a55;border-radius:24px;padding:32px 20px;transition:all .2s">
+      <div id="col-example" style="font-family:'Nunito',sans-serif;font-size:36px;font-weight:900;color:var(--text);text-align:right;letter-spacing:2px;line-height:1.5;padding-right:20px"></div>
+    </div>
+    <!-- Поле ввода -->
+    <div style="width:100%;display:flex;gap:10px;align-items:center">
+      <input id="col-input" type="number" inputmode="numeric" pattern="[0-9]*"
+        style="flex:1;background:var(--bg3);border:2px solid var(--border);border-radius:14px;padding:16px 18px;font-family:var(--pixel);font-size:22px;color:var(--text);text-align:center;outline:none;transition:border-color .2s"
+        placeholder="Ответ?"
+        onkeydown="if(event.key==='Enter')colCheck()"
+        oninput="this.style.borderColor='var(--border)'">
+      <button onclick="colCheck()" style="background:#ff9a55;border:none;border-radius:14px;padding:16px 20px;font-family:var(--pixel);font-size:14px;color:#000;font-weight:900;cursor:pointer;flex-shrink:0">✓</button>
+    </div>
+    <div id="col-result" style="min-height:32px;text-align:center;font-size:15px;font-weight:900"></div>
+    <!-- Клавиатура -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:280px">
+      <button onclick="colKey('1')" class="tr-key">1</button>
+      <button onclick="colKey('2')" class="tr-key">2</button>
+      <button onclick="colKey('3')" class="tr-key">3</button>
+      <button onclick="colKey('4')" class="tr-key">4</button>
+      <button onclick="colKey('5')" class="tr-key">5</button>
+      <button onclick="colKey('6')" class="tr-key">6</button>
+      <button onclick="colKey('7')" class="tr-key">7</button>
+      <button onclick="colKey('8')" class="tr-key">8</button>
+      <button onclick="colKey('9')" class="tr-key">9</button>
+      <button onclick="colKey('del')" class="tr-key" style="color:var(--accent2)">⌫</button>
+      <button onclick="colKey('0')" class="tr-key">0</button>
+      <button onclick="colCheck()" class="tr-key" style="background:#ff9a55;color:#000;font-weight:900">✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======= УСТНЫЙ СЧЁТ ARENA ======= -->
+<div id="screen-mental-arena" class="screen">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)">
+    <button class="back-btn" onclick="show('screen-trainer')">←</button>
+    <div style="font-family:var(--pixel);font-size:10px;color:#e0aaff;letter-spacing:1px">⚡ УСТНЫЙ СЧЁТ</div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <span id="men-streak-badge" style="font-family:var(--pixel);font-size:10px;color:#ff9a55;display:none">🔥<span id="men-streak-num">0</span></span>
+      <span style="font-family:var(--pixel);font-size:10px;color:var(--accent)">⭐<span id="men-score">0</span></span>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:16px;gap:12px;max-width:480px;margin:0 auto;width:100%">
+    <!-- Текущий пример — большой -->
+    <div id="men-card" style="width:100%;background:var(--card);border:2px solid #e0aaff;border-radius:24px;padding:28px 20px;text-align:center;transition:all .15s">
+      <div id="men-question" style="font-size:52px;font-weight:900;color:var(--text);letter-spacing:4px;line-height:1"></div>
+      <div id="men-result" style="min-height:28px;font-size:16px;font-weight:900;margin-top:8px"></div>
+    </div>
+    <!-- История последних ответов -->
+    <div id="men-history" style="width:100%;display:flex;flex-direction:column;gap:6px;min-height:60px"></div>
+    <!-- Ввод -->
+    <div style="width:100%;display:flex;gap:10px;align-items:center;margin-top:auto">
+      <input id="men-input" type="number" inputmode="numeric" pattern="[0-9]*"
+        style="flex:1;background:var(--bg3);border:2px solid var(--border);border-radius:14px;padding:14px 16px;font-family:var(--pixel);font-size:20px;color:var(--text);text-align:center;outline:none;transition:border-color .2s"
+        placeholder="?"
+        onkeydown="if(event.key==='Enter')menCheck()"
+        oninput="this.style.borderColor='var(--border)'">
+      <button onclick="menCheck()" style="background:#e0aaff;border:none;border-radius:14px;padding:14px 18px;font-family:var(--pixel);font-size:14px;color:#000;font-weight:900;cursor:pointer;flex-shrink:0">✓</button>
+    </div>
+    <!-- Клавиатура -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:280px">
+      <button onclick="menKey('1')" class="tr-key">1</button>
+      <button onclick="menKey('2')" class="tr-key">2</button>
+      <button onclick="menKey('3')" class="tr-key">3</button>
+      <button onclick="menKey('4')" class="tr-key">4</button>
+      <button onclick="menKey('5')" class="tr-key">5</button>
+      <button onclick="menKey('6')" class="tr-key">6</button>
+      <button onclick="menKey('7')" class="tr-key">7</button>
+      <button onclick="menKey('8')" class="tr-key">8</button>
+      <button onclick="menKey('9')" class="tr-key">9</button>
+      <button onclick="menKey('del')" class="tr-key" style="color:var(--accent2)">⌫</button>
+      <button onclick="menKey('0')" class="tr-key">0</button>
+      <button onclick="menCheck()" class="tr-key" style="background:#e0aaff;color:#000;font-weight:900">✓</button>
+    </div>
+    <!-- Прогресс внизу -->
+    <div style="width:100%;display:flex;align-items:center;gap:10px">
+      <div style="flex:1;height:6px;background:var(--bg3);border-radius:99px;overflow:hidden">
+        <div id="men-progress-bar" style="height:100%;background:linear-gradient(90deg,#e0aaff,#f5c842);border-radius:99px;transition:width .3s;width:0%"></div>
+      </div>
+      <span id="men-progress-text" style="font-size:11px;color:var(--text2)">0/20</span>
     </div>
   </div>
 </div>
@@ -8462,6 +8577,8 @@ function genQuestions(mode, n=20) {
 }
 
 function startTrainer(mode) {
+  if (mode === 'column') { startColumnTrainer(); return; }
+  if (mode === 'mental') { startMentalTrainer(); return; }
   TR.mode = mode;
   TR.q = genQuestions(mode);
   TR.idx = 0; TR.score = 0; TR.streak = 0; TR.errors = 0;
@@ -8474,7 +8591,11 @@ function startTrainer(mode) {
   setTimeout(() => document.getElementById('tr-input').focus(), 300);
 }
 
-function restartTrainer() { startTrainer(TR.mode); }
+function restartTrainer() {
+  if (TR.mode === 'column') { startColumnTrainer(); return; }
+  if (TR.mode === 'mental') { startMentalTrainer(); return; }
+  startTrainer(TR.mode);
+}
 
 function trShowQ() {
   const q = TR.q[TR.idx];
@@ -8617,6 +8738,222 @@ function checkAchievements() {
   ACHIEVEMENTS.forEach(a => {
     if (!unlocked.includes(a.key) && a.check()) unlockAchiev(a.key);
   });
+}
+
+// ============================================================
+//  ТРЕНАЖЁР «В СТОЛБИК»
+// ============================================================
+const COL = { q: [], idx: 0, score: 0, errors: 0, ans: 0 };
+
+function genColQ() {
+  const type = Math.random() < 0.5 ? '+' : '-';
+  if (type === '+') {
+    const a = rnd(100, 999), b = rnd(100, 999);
+    return { a, b, op: '+', ans: a + b };
+  } else {
+    const a = rnd(200, 999), b = rnd(100, a - 1);
+    return { a, b, op: '-', ans: a - b };
+  }
+}
+
+function renderColumnExample(q) {
+  const aStr = String(q.a);
+  const bStr = String(q.b);
+  const len = Math.max(aStr.length, bStr.length) + 1;
+  const aP = aStr.padStart(len);
+  const bP = bStr.padStart(len);
+  const line = '─'.repeat(len);
+  return `<div style="display:inline-block;text-align:right;font-family:'Courier New',monospace;font-size:34px;font-weight:900;line-height:1.6;color:var(--text)">
+    <div>${aP}</div>
+    <div><span style="color:#ff9a55">${q.op}</span>${bP.slice(1).padStart(len - 1)}</div>
+    <div style="border-top:3px solid #ff9a55;color:var(--text3);font-size:24px;padding-top:4px">${'?'.padStart(len)}</div>
+  </div>`;
+}
+
+function startColumnTrainer() {
+  COL.q = Array.from({length: 15}, () => genColQ());
+  COL.idx = 0; COL.score = 0; COL.errors = 0;
+  colShowQ();
+  show('screen-column-arena');
+  setTimeout(() => document.getElementById('col-input').focus(), 300);
+}
+
+function colShowQ() {
+  const q = COL.q[COL.idx];
+  COL.ans = q.ans;
+  document.getElementById('col-example').innerHTML = renderColumnExample(q);
+  document.getElementById('col-input').value = '';
+  document.getElementById('col-result').textContent = '';
+  document.getElementById('col-input').style.borderColor = 'var(--border)';
+  document.getElementById('col-card').style.borderColor = '#ff9a55';
+  document.getElementById('col-card').style.background = 'var(--card)';
+  const pct = Math.round(COL.idx / COL.q.length * 100);
+  document.getElementById('col-progress-bar').style.width = pct + '%';
+  document.getElementById('col-progress-text').textContent = COL.idx + '/' + COL.q.length;
+  document.getElementById('col-score').textContent = COL.score;
+}
+
+function colKey(k) {
+  const inp = document.getElementById('col-input');
+  if (k === 'del') inp.value = inp.value.slice(0, -1);
+  else inp.value += k;
+  inp.focus();
+}
+
+function colCheck() {
+  const val = parseInt(document.getElementById('col-input').value);
+  if (isNaN(val)) return;
+  const card = document.getElementById('col-card');
+  const res = document.getElementById('col-result');
+  if (val === COL.ans) {
+    COL.score += 10;
+    card.style.borderColor = 'var(--green)'; card.style.background = '#0a2010';
+    res.textContent = '✅ Верно! +10'; res.style.color = 'var(--green)';
+    spawnConfetti(12);
+    addXp(1); saveState();
+    setTimeout(() => {
+      COL.idx++;
+      if (COL.idx >= COL.q.length) { colFinish(); return; }
+      colShowQ();
+      document.getElementById('col-input').focus();
+    }, 700);
+  } else {
+    COL.errors++;
+    card.style.borderColor = 'var(--red)'; card.style.background = '#200a0a';
+    card.classList.add('tr-shake');
+    setTimeout(() => card.classList.remove('tr-shake'), 400);
+    document.getElementById('col-input').style.borderColor = 'var(--red)';
+    document.getElementById('col-input').value = '';
+    res.textContent = `❌ Нет! Ответ: ${COL.ans}`; res.style.color = 'var(--red)';
+    setTimeout(() => {
+      COL.idx++;
+      if (COL.idx >= COL.q.length) { colFinish(); return; }
+      colShowQ();
+      document.getElementById('col-input').focus();
+    }, 1400);
+  }
+}
+
+function colFinish() {
+  const pct = Math.round((COL.q.length - COL.errors) / COL.q.length * 100);
+  const icon = pct >= 80 ? '🏆' : pct >= 50 ? '⭐' : '💪';
+  // Показываем через экран результата тренажёра
+  document.getElementById('tr-res-icon').textContent = icon;
+  document.getElementById('tr-res-title').textContent = pct >= 80 ? 'СТОЛБИК ОСВОЕН!' : 'ТРЕНИРУЙСЯ!';
+  document.getElementById('tr-res-score').textContent = COL.score + ' XP';
+  document.getElementById('tr-res-sub').textContent = `Правильно: ${COL.q.length - COL.errors} из ${COL.q.length}`;
+  if (pct >= 80) spawnConfetti(40);
+  addXp(Math.round(COL.score / 2)); saveState();
+  show('screen-trainer-result');
+}
+
+// ============================================================
+//  ТРЕНАЖЁР «УСТНЫЙ СЧЁТ»
+// ============================================================
+const MEN = { q: [], idx: 0, score: 0, streak: 0, errors: 0, ans: 0, history: [] };
+
+function genMenQ() {
+  const type = Math.random() < 0.5 ? '+' : '-';
+  if (type === '+') {
+    const a = rnd(10, 99), b = rnd(10, 99);
+    return { str: `${a} + ${b} =`, ans: a + b };
+  } else {
+    const a = rnd(30, 99), b = rnd(10, a - 1);
+    return { str: `${a} − ${b} =`, ans: a - b };
+  }
+}
+
+function startMentalTrainer() {
+  MEN.q = Array.from({length: 20}, () => genMenQ());
+  MEN.idx = 0; MEN.score = 0; MEN.streak = 0; MEN.errors = 0; MEN.history = [];
+  menShowQ();
+  show('screen-mental-arena');
+  setTimeout(() => document.getElementById('men-input').focus(), 300);
+}
+
+function menShowQ() {
+  const q = MEN.q[MEN.idx];
+  MEN.ans = q.ans;
+  document.getElementById('men-question').textContent = q.str;
+  document.getElementById('men-input').value = '';
+  document.getElementById('men-result').textContent = '';
+  document.getElementById('men-input').style.borderColor = 'var(--border)';
+  document.getElementById('men-card').style.borderColor = '#e0aaff';
+  document.getElementById('men-card').style.background = 'var(--card)';
+  document.getElementById('men-score').textContent = MEN.score;
+  const pct = Math.round(MEN.idx / MEN.q.length * 100);
+  document.getElementById('men-progress-bar').style.width = pct + '%';
+  document.getElementById('men-progress-text').textContent = MEN.idx + '/' + MEN.q.length;
+  // История (последние 3)
+  const hist = document.getElementById('men-history');
+  hist.innerHTML = MEN.history.slice(-3).reverse().map(h =>
+    `<div style="text-align:center;font-size:15px;font-weight:700;opacity:.5;color:${h.ok ? 'var(--green)' : 'var(--red)'}">${h.str} <span style="${h.ok ? '' : 'text-decoration:line-through'}">${h.userAns}</span>${h.ok ? '' : ` → ${h.correct}`}</div>`
+  ).join('');
+  // Стрик
+  if (MEN.streak >= 2) {
+    document.getElementById('men-streak-badge').style.display = '';
+    document.getElementById('men-streak-num').textContent = MEN.streak;
+  } else {
+    document.getElementById('men-streak-badge').style.display = 'none';
+  }
+}
+
+function menKey(k) {
+  const inp = document.getElementById('men-input');
+  if (k === 'del') inp.value = inp.value.slice(0, -1);
+  else inp.value += k;
+  inp.focus();
+}
+
+function menCheck() {
+  const val = parseInt(document.getElementById('men-input').value);
+  if (isNaN(val)) return;
+  const q = MEN.q[MEN.idx];
+  const ok = val === MEN.ans;
+  MEN.history.push({ str: q.str, userAns: val, correct: MEN.ans, ok });
+  const card = document.getElementById('men-card');
+  const res = document.getElementById('men-result');
+  if (ok) {
+    MEN.score += 10 + (MEN.streak >= 3 ? 5 : 0);
+    MEN.streak++;
+    card.style.borderColor = 'var(--green)'; card.style.background = '#0a2010';
+    res.textContent = MEN.streak >= 5 ? '🔥 +15!' : '✅ +10';
+    res.style.color = 'var(--green)';
+    spawnConfetti(8);
+    addXp(1); saveState();
+    setTimeout(() => {
+      MEN.idx++;
+      if (MEN.idx >= MEN.q.length) { menFinish(); return; }
+      menShowQ();
+      document.getElementById('men-input').focus();
+    }, 500);
+  } else {
+    MEN.streak = 0; MEN.errors++;
+    card.style.borderColor = 'var(--red)'; card.style.background = '#200a0a';
+    card.classList.add('tr-shake');
+    setTimeout(() => card.classList.remove('tr-shake'), 400);
+    document.getElementById('men-input').value = '';
+    res.textContent = `❌ → ${MEN.ans}`;
+    res.style.color = 'var(--red)';
+    setTimeout(() => {
+      MEN.idx++;
+      if (MEN.idx >= MEN.q.length) { menFinish(); return; }
+      menShowQ();
+      document.getElementById('men-input').focus();
+    }, 1000);
+  }
+}
+
+function menFinish() {
+  const pct = Math.round((MEN.q.length - MEN.errors) / MEN.q.length * 100);
+  const icon = pct >= 90 ? '🏆' : pct >= 60 ? '⭐' : '💪';
+  document.getElementById('tr-res-icon').textContent = icon;
+  document.getElementById('tr-res-title').textContent = pct >= 90 ? 'СЧЁТЧИК!' : pct >= 60 ? 'ХОРОШО!' : 'ТРЕНИРУЙСЯ!';
+  document.getElementById('tr-res-score').textContent = MEN.score + ' XP';
+  document.getElementById('tr-res-sub').textContent = `Правильно: ${MEN.q.length - MEN.errors} из ${MEN.q.length}`;
+  if (pct >= 90) spawnConfetti(60);
+  addXp(Math.round(MEN.score / 2)); saveState();
+  show('screen-trainer-result');
 }
 
 // ============================================================
