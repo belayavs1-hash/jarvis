@@ -1001,6 +1001,78 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
         </div>
         <span style="margin-left:auto;font-size:22px;color:#80cbc4">›</span>
       </button>
+
+      <!-- РАЗДЕЛИТЕЛЬ: ПРОЦЕНТЫ -->
+      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);letter-spacing:2px;margin-top:8px;margin-bottom:2px">── ПРОЦЕНТЫ ──</div>
+
+      <button onclick="startTrainer('pct_from')" style="background:linear-gradient(135deg,#1a1000,#0e0a00);border:2px solid #ffd54f;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:36px">📊</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#ffd54f;letter-spacing:1px">% ОТ ЧИСЛА</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Найти процент от числа — выбери ответ</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#ffd54f">›</span>
+      </button>
+      <button onclick="startTrainer('pct_of')" style="background:linear-gradient(135deg,#001a10,#000e08);border:2px solid #80cbc4;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:36px">🔢</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#80cbc4;letter-spacing:1px">% ОДНОГО ОТ ДРУГОГО</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Какой процент составляет одно число от другого?</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#80cbc4">›</span>
+      </button>
+      <button onclick="startTrainer('pct_by')" style="background:linear-gradient(135deg,#10001a,#08000e);border:2px solid #ce93d8;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:36px">🔍</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#ce93d8;letter-spacing:1px">ЧИСЛО ПО ПРОЦЕНТУ</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Известен процент — найди всё число</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#ce93d8">›</span>
+      </button>
+      <button onclick="startTrainer('pct_mix')" style="background:linear-gradient(135deg,#0a0a1a,#05050e);border:2px solid #9fa8da;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:36px">🎯</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#9fa8da;letter-spacing:1px">ПРОЦЕНТЫ МИХ-МАХ</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Все три типа вперемешку</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#9fa8da">›</span>
+      </button>
+
+      <!-- РАЗДЕЛИТЕЛЬ: ЗАДАЧИ -->
+      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);letter-spacing:2px;margin-top:8px;margin-bottom:2px">── ЗАДАЧИ ──</div>
+
+      <button onclick="startTrainer('task_nat')" style="background:linear-gradient(135deg,#001a10,#000e08);border:2px solid #69f0ae;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:36px">🧮</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#69f0ae;letter-spacing:1px">С НАТУРАЛЬНЫМИ ЧИСЛАМИ</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Купить, заработать, посчитать — выбери ответ</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#69f0ae">›</span>
+      </button>
+      <button onclick="startTrainer('task_move')" style="background:linear-gradient(135deg,#001520,#000a14);border:2px solid #4fc3f7;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:36px">🚂</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#4fc3f7;letter-spacing:1px">ЗАДАЧИ НА ДВИЖЕНИЕ</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Скорость, время, расстояние</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#4fc3f7">›</span>
+      </button>
+      <button onclick="startTrainer('task_geo')" style="background:linear-gradient(135deg,#0a1a00,#050e00);border:2px solid #dce775;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:36px">📐</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#dce775;letter-spacing:1px">ГЕОМЕТРИЧЕСКИЕ ЗАДАЧИ</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Площадь, периметр прямоугольника и квадрата</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#dce775">›</span>
+      </button>
+      <button onclick="startTrainer('task_mix')" style="background:linear-gradient(135deg,#1a0010,#0e0008);border:2px solid #f48fb1;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:36px">🎲</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#f48fb1;letter-spacing:1px">ЗАДАЧИ МИХ-МАХ</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Разные типы задач вперемешку</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#f48fb1">›</span>
+      </button>
     </div>
   </div>
 </div>
@@ -1153,6 +1225,32 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
       <button onclick="trKey('0')" class="tr-key">0</button>
       <button onclick="trCheck()" class="tr-key" style="background:var(--accent);color:#000;font-weight:900">✓</button>
     </div>
+  </div>
+</div>
+
+<!-- ======= WORD TRAINER (задачи / проценты) ======= -->
+<div id="screen-word-arena" class="screen">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)">
+    <button class="back-btn" onclick="show('screen-trainer')">←</button>
+    <div id="wt-header-title" style="font-family:var(--pixel);font-size:10px;color:var(--accent);letter-spacing:1px"></div>
+    <div style="font-family:var(--pixel);font-size:10px;color:var(--accent)">⭐<span id="wt-score">0</span></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;padding:16px;gap:14px;max-width:480px;margin:0 auto;width:100%;overflow-y:auto">
+    <!-- Прогресс -->
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="flex:1;height:8px;background:var(--bg3);border-radius:99px;overflow:hidden">
+        <div id="wt-progress-bar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;transition:width .3s;width:0%"></div>
+      </div>
+      <span id="wt-progress-text" style="font-size:11px;color:var(--text2);white-space:nowrap">0/10</span>
+    </div>
+    <!-- Карточка задачи -->
+    <div id="wt-card" style="background:var(--card);border:2px solid var(--border);border-radius:20px;padding:20px 16px;transition:border-color .3s">
+      <div id="wt-question" style="font-size:15px;line-height:1.7;color:var(--text)"></div>
+    </div>
+    <!-- Варианты -->
+    <div id="wt-options" style="display:flex;flex-direction:column;gap:10px"></div>
+    <!-- Пояснение -->
+    <div id="wt-explain" style="min-height:28px;font-size:14px;font-weight:700;text-align:center;padding:8px"></div>
   </div>
 </div>
 
@@ -8895,6 +8993,217 @@ function genDecDivQ() {
 function gcd(a,b){while(b){const t=b;b=a%b;a=t;}return a;}
 function rnd(a,b) { return Math.floor(Math.random()*(b-a+1))+a; }
 
+// ============================================================
+//  ГЕНЕРАТОРЫ ТЕКСТОВЫХ ЗАДАЧ (проценты + задачи)
+//  Формат: { q: текст задачи, ans: правильный ответ (строка), opts: [4 варианта строк], explain: текст }
+// ============================================================
+
+function wrongNums(correct, count=3) {
+  // генерирует count непохожих неправильных вариантов
+  const n = parseInt(correct);
+  const set = new Set();
+  while(set.size < count) {
+    const delta = [rnd(1,5)*10, rnd(1,3)*5, rnd(1,8), rnd(-5,-1)*10].filter(d => n+d > 0);
+    const wrong = n + delta[Math.floor(Math.random()*delta.length)];
+    if(wrong !== n && wrong > 0) set.add(wrong);
+  }
+  return [...set].slice(0,count);
+}
+
+function shuffle4(correct, wrongs) {
+  const all = [String(correct), ...wrongs.slice(0,3).map(String)];
+  for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]];}
+  return all;
+}
+
+// --- ПРОЦЕНТЫ: найти % от числа ---
+const PCT_TEMPLATES_FROM = [
+  (n,p,r) => ({ q:`В классе ${n} учеников. ${p}% из них занимаются спортом. Сколько учеников занимаются спортом?`, explain:`${n} × ${p} ÷ 100 = ${r}` }),
+  (n,p,r) => ({ q:`Книга стоит ${n} рублей. На неё скидка ${p}%. Сколько рублей составляет скидка?`, explain:`${n} × ${p} ÷ 100 = ${r}` }),
+  (n,p,r) => ({ q:`На складе ${n} ящиков. ${p}% из них уже отправили. Сколько ящиков отправили?`, explain:`${n} × ${p} ÷ 100 = ${r}` }),
+  (n,p,r) => ({ q:`Урожай составил ${n} кг. Продали ${p}%. Сколько килограммов продали?`, explain:`${n} × ${p} ÷ 100 = ${r}` }),
+  (n,p,r) => ({ q:`В школе ${n} учеников. ${p}% предпочитают математику. Сколько это учеников?`, explain:`${n} × ${p} ÷ 100 = ${r}` }),
+];
+function genPctFromQ() {
+  const bases = [100,200,300,400,500,60,80,120,150,250];
+  const pcts  = [10,20,25,50,5,30,40];
+  const n = bases[rnd(0,bases.length-1)], p = pcts[rnd(0,pcts.length-1)];
+  const r = n*p/100;
+  if(!Number.isInteger(r)) return genPctFromQ();
+  const tmpl = PCT_TEMPLATES_FROM[rnd(0,PCT_TEMPLATES_FROM.length-1)](n,p,r);
+  const opts = shuffle4(r, wrongNums(r));
+  return { q: tmpl.q, ans: String(r), opts, explain: tmpl.explain };
+}
+
+// --- ПРОЦЕНТЫ: найти % одного от другого ---
+const PCT_TEMPLATES_OF = [
+  (a,b,r) => ({ q:`Из ${b} задач ученица решила ${a}. Сколько процентов задач она решила?`, explain:`${a} ÷ ${b} × 100 = ${r}%` }),
+  (a,b,r) => ({ q:`Из ${b} страниц книги прочитано ${a}. Сколько процентов прочитано?`, explain:`${a} ÷ ${b} × 100 = ${r}%` }),
+  (a,b,r) => ({ q:`В команде ${b} игроков, ${a} из них забили голы. Какой процент забил голы?`, explain:`${a} ÷ ${b} × 100 = ${r}%` }),
+];
+function genPctOfQ() {
+  const pairs = [[10,20],[20,40],[15,60],[25,100],[30,60],[40,80],[5,20],[50,200]];
+  const [a,b] = pairs[rnd(0,pairs.length-1)];
+  const r = Math.round(a/b*100);
+  const tmpl = PCT_TEMPLATES_OF[rnd(0,PCT_TEMPLATES_OF.length-1)](a,b,r);
+  const wrongs = [r+10,r+20,Math.max(5,r-10),r+5].filter(x=>x!==r&&x>0&&x<=100);
+  const opts = shuffle4(r+'%', wrongs.slice(0,3).map(x=>x+'%'));
+  return { q: tmpl.q, ans: r+'%', opts, explain: tmpl.explain };
+}
+
+// --- ПРОЦЕНТЫ: найти число по % ---
+const PCT_TEMPLATES_BY = [
+  (r,p,n) => ({ q:`${p}% числа равны ${r}. Найди это число.`, explain:`${r} ÷ ${p} × 100 = ${n}` }),
+  (r,p,n) => ({ q:`${p}% учеников класса — это ${r} человека. Сколько всего учеников?`, explain:`${r} ÷ ${p} × 100 = ${n}` }),
+  (r,p,n) => ({ q:`Скидка ${p}% составила ${r} рублей. Какова была первоначальная цена?`, explain:`${r} ÷ ${p} × 100 = ${n}` }),
+];
+function genPctByQ() {
+  const bases = [100,200,400,500,300], pcts = [10,20,25,50];
+  const n = bases[rnd(0,bases.length-1)], p = pcts[rnd(0,pcts.length-1)];
+  const r = n*p/100;
+  if(!Number.isInteger(r)) return genPctByQ();
+  const tmpl = PCT_TEMPLATES_BY[rnd(0,PCT_TEMPLATES_BY.length-1)](r,p,n);
+  const opts = shuffle4(n, wrongNums(n));
+  return { q: tmpl.q, ans: String(n), opts, explain: tmpl.explain };
+}
+
+// --- ЗАДАЧИ: натуральные числа ---
+const TASK_NAT_TEMPLATES = [
+  () => { const v=rnd(40,120),t=rnd(2,5),r=v*t; return { q:`Поезд едет со скоростью ${v} км/ч. Какое расстояние он проедет за ${t} часа?`, ans:String(r), explain:`${v} × ${t} = ${r} км` }; },
+  () => { const d=rnd(100,500),t=rnd(2,5),v=d/t; if(!Number.isInteger(v))return TASK_NAT_TEMPLATES[0](); return { q:`Расстояние между городами ${d} км. Автобус проехал его за ${t} ч. Какова скорость автобуса?`, ans:String(v), explain:`${d} ÷ ${t} = ${v} км/ч` }; },
+  () => { const p=rnd(3,8),q=rnd(10,50),r=p*q; return { q:`Купили ${p} кг яблок по ${q} рублей за кг. Сколько заплатили?`, ans:String(r), explain:`${p} × ${q} = ${r} руб.` }; },
+  () => { const a=rnd(50,200),b=rnd(10,a-5),r=a-b; return { q:`На складе было ${a} мешков. Отгрузили ${b} мешков. Сколько осталось?`, ans:String(r), explain:`${a} − ${b} = ${r}` }; },
+  () => { const w=rnd(3,8),d=rnd(5,10),r=w*d; return { q:`Рабочий зарабатывает ${w} тыс. рублей в день. Сколько он заработает за ${d} дней?`, ans:String(r), explain:`${w} × ${d} = ${r} тыс. руб.` }; },
+];
+function genTaskNatQ() {
+  const fn = TASK_NAT_TEMPLATES[rnd(0, TASK_NAT_TEMPLATES.length-1)];
+  const t = fn();
+  const opts = shuffle4(t.ans, wrongNums(t.ans));
+  return { ...t, opts };
+}
+
+// --- ЗАДАЧИ: движение ---
+const TASK_MOVE_TEMPLATES = [
+  () => { const v1=rnd(40,80),v2=rnd(20,50),t=rnd(2,4),r=(v1+v2)*t; return { q:`Два велосипедиста выехали навстречу. Скорости: ${v1} и ${v2} км/ч. Через сколько км они встретятся через ${t} ч? (расстояние)`, ans:String(r), explain:`(${v1}+${v2})×${t}=${r} км` }; },
+  () => { const v=rnd(50,100),t=rnd(2,5),d=v*t; return { q:`Машина едет ${v} км/ч. Через ${t} ч какое расстояние она проедет?`, ans:String(d), explain:`${v}×${t}=${d} км` }; },
+  () => { const d=rnd(120,400),v=rnd(40,80),t=Math.round(d/v); const dd=v*t; return { q:`Расстояние ${dd} км, скорость ${v} км/ч. За сколько часов доедем?`, ans:String(t), explain:`${dd}÷${v}=${t} ч` }; },
+  () => { const v1=rnd(30,60),v2=rnd(10,20),t=rnd(2,4),r=(v1-v2)*t; return { q:`Два велосипедиста едут в одну сторону. Скорости: ${v1} и ${v2} км/ч. На сколько км первый опередит второго через ${t} ч?`, ans:String(r), explain:`(${v1}-${v2})×${t}=${r} км` }; },
+];
+function genTaskMoveQ() {
+  const fn = TASK_MOVE_TEMPLATES[rnd(0, TASK_MOVE_TEMPLATES.length-1)];
+  const t = fn();
+  const opts = shuffle4(t.ans, wrongNums(t.ans));
+  return { ...t, opts };
+}
+
+// --- ЗАДАЧИ: геометрия ---
+const TASK_GEO_TEMPLATES = [
+  () => { const a=rnd(3,15),b=rnd(3,12); return { q:`Прямоугольник со сторонами ${a} см и ${b} см. Найди площадь.`, ans:String(a*b), explain:`${a}×${b}=${a*b} см²` }; },
+  () => { const a=rnd(3,15),b=rnd(3,12); return { q:`Прямоугольник со сторонами ${a} см и ${b} см. Найди периметр.`, ans:String(2*(a+b)), explain:`2×(${a}+${b})=${2*(a+b)} см` }; },
+  () => { const a=rnd(3,12); return { q:`Квадрат со стороной ${a} см. Найди площадь.`, ans:String(a*a), explain:`${a}²=${a*a} см²` }; },
+  () => { const a=rnd(3,12); return { q:`Квадрат со стороной ${a} см. Найди периметр.`, ans:String(4*a), explain:`4×${a}=${4*a} см` }; },
+  () => { const a=rnd(3,10),h=rnd(3,10); return { q:`Треугольник с основанием ${a} см и высотой ${h} см. Найди площадь.`, ans:String(a*h/2), explain:`${a}×${h}÷2=${a*h/2} см²` }; },
+];
+function genTaskGeoQ() {
+  const fn = TASK_GEO_TEMPLATES[rnd(0, TASK_GEO_TEMPLATES.length-1)];
+  const t = fn();
+  if(!Number.isInteger(parseFloat(t.ans))) return genTaskGeoQ();
+  const opts = shuffle4(t.ans, wrongNums(t.ans));
+  return { ...t, opts };
+}
+
+// ============================================================
+//  WORD TRAINER — экран с текстовыми задачами
+// ============================================================
+const WT = { mode: null, q: [], idx: 0, score: 0, total: 10 };
+
+function genWordQuestions(mode, n=10) {
+  const arr = [];
+  for(let i=0;i<n;i++) {
+    if      (mode==='pct_from') arr.push(genPctFromQ());
+    else if (mode==='pct_of')   arr.push(genPctOfQ());
+    else if (mode==='pct_by')   arr.push(genPctByQ());
+    else if (mode==='pct_mix')  arr.push([genPctFromQ,genPctOfQ,genPctByQ][rnd(0,2)]());
+    else if (mode==='task_nat') arr.push(genTaskNatQ());
+    else if (mode==='task_move')arr.push(genTaskMoveQ());
+    else if (mode==='task_geo') arr.push(genTaskGeoQ());
+    else if (mode==='task_mix') arr.push([genTaskNatQ,genTaskMoveQ,genTaskGeoQ][rnd(0,2)]());
+  }
+  return arr;
+}
+
+const WT_TITLES = {
+  pct_from:'% ОТ ЧИСЛА', pct_of:'% ОДНОГО ОТ ДРУГОГО', pct_by:'ЧИСЛО ПО %', pct_mix:'ПРОЦЕНТЫ МИХ-МАХ',
+  task_nat:'ЗАДАЧИ: ЧИСЛА', task_move:'ЗАДАЧИ: ДВИЖЕНИЕ', task_geo:'ЗАДАЧИ: ГЕОМЕТРИЯ', task_mix:'ЗАДАЧИ МИХ-МАХ'
+};
+
+function startWordTrainer(mode) {
+  WT.mode = mode;
+  WT.q = genWordQuestions(mode);
+  WT.idx = 0; WT.score = 0;
+  document.getElementById('wt-header-title').textContent = WT_TITLES[mode] || 'ТРЕНАЖЁР';
+  document.getElementById('wt-score').textContent = '0';
+  wtShowQ();
+  show('screen-word-arena');
+}
+
+function wtShowQ() {
+  const q = WT.q[WT.idx];
+  if(!q) { wtFinish(); return; }
+  const pct = Math.round(WT.idx / WT.q.length * 100);
+  document.getElementById('wt-progress-bar').style.width = pct + '%';
+  document.getElementById('wt-progress-text').textContent = WT.idx + '/' + WT.q.length;
+  document.getElementById('wt-question').textContent = q.q;
+  document.getElementById('wt-card').style.borderColor = 'var(--border)';
+  document.getElementById('wt-explain').textContent = '';
+  document.getElementById('wt-options').innerHTML = q.opts.map((opt,i) =>
+    `<button onclick="wtAnswer('${opt.replace(/'/g,"\\'")}',this)"
+      style="width:100%;padding:14px 16px;background:var(--card);border:2px solid var(--border);border-radius:14px;font-size:15px;font-weight:700;color:var(--text);cursor:pointer;text-align:left;transition:all .2s"
+    >${opt}</button>`
+  ).join('');
+}
+
+function wtAnswer(chosen, btn) {
+  const q = WT.q[WT.idx];
+  const correct = chosen === q.ans;
+  document.getElementById('wt-options').querySelectorAll('button').forEach(b => {
+    b.onclick = null;
+    const bVal = b.textContent.trim();
+    if(bVal === q.ans) { b.style.background='rgba(76,175,80,.25)'; b.style.borderColor='#4caf50'; }
+    else if(b === btn && !correct) { b.style.background='rgba(229,57,53,.2)'; b.style.borderColor='#e53935'; }
+  });
+  const exp = document.getElementById('wt-explain');
+  if(correct) {
+    WT.score++;
+    document.getElementById('wt-score').textContent = WT.score;
+    exp.textContent = '✅ Верно! ' + (q.explain || '');
+    exp.style.color = '#4caf50';
+    spawnConfetti(8);
+  } else {
+    exp.textContent = '❌ ' + q.explain;
+    exp.style.color = '#ef5350';
+  }
+  setTimeout(() => { WT.idx++; wtShowQ(); }, 1400);
+}
+
+function wtFinish() {
+  const pct = Math.round(WT.score / WT.q.length * 100);
+  const icon = pct===100?'🏆':pct>=70?'⭐':'💪';
+  const msg = pct===100?'ИДЕАЛЬНО!':pct>=70?'МОЛОДЕЦ!':'ТРЕНИРУЙСЯ!';
+  addXp(WT.score * 3); saveState();
+  document.getElementById('wt-options').innerHTML = `
+    <div style="text-align:center;padding:32px 0">
+      <div style="font-size:72px;margin-bottom:12px">${icon}</div>
+      <div style="font-family:var(--pixel);font-size:14px;color:var(--accent);letter-spacing:2px;margin-bottom:8px">${msg}</div>
+      <div style="font-size:28px;font-weight:900;color:var(--accent2);margin-bottom:20px">${WT.score}/${WT.q.length}</div>
+      <button onclick="startWordTrainer(WT.mode)" class="btn-main" style="margin-bottom:10px">🔄 ЕЩЁ РАЗ</button>
+      <button onclick="show('screen-trainer')" class="btn-sec" style="padding:13px;font-weight:800;font-size:13px">← Другой тренажёр</button>
+    </div>`;
+  document.getElementById('wt-progress-bar').style.width = '100%';
+  document.getElementById('wt-explain').textContent = '';
+  document.getElementById('wt-card').style.display = 'none';
+}
+
 function genQuestions(mode, n=20) {
   const arr = [];
   for (let i=0; i<n; i++) {
@@ -8928,6 +9237,7 @@ function genQuestions(mode, n=20) {
 function startTrainer(mode) {
   if (mode === 'column') { startColumnTrainer(); return; }
   if (mode === 'mental') { startMentalTrainer(); return; }
+  if (['pct_from','pct_of','pct_by','pct_mix','task_nat','task_move','task_geo','task_mix'].includes(mode)) { startWordTrainer(mode); return; }
   TR.mode = mode;
   TR.q = genQuestions(mode);
   TR.idx = 0; TR.score = 0; TR.streak = 0; TR.errors = 0;
