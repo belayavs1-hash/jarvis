@@ -9041,17 +9041,18 @@ function genBracketsQ() {
   return { q:`(${a} ${op} ${b}) × ${c} = ?`, ans:inner*c, hint:`сначала скобки: ${inner}` };
 }
 
-// Примеры с тремя числами: a ○ b ○ c
+// Примеры с тремя числами: a ○ b ○ c (только + и −, слева направо)
 function genThreeQ() {
-  const a=rnd(10,99), b=rnd(2,20), c=rnd(2,20);
-  const ops=['+','-','×']; const op1=ops[rnd(0,1)], op2=ops[rnd(0,1)];
-  let ans, q;
-  if(op1==='+' && op2==='+') { ans=a+b+c; q=`${a} + ${b} + ${c}`; }
-  else if(op1==='+' && op2==='-') { ans=a+b-c; q=`${a} + ${b} − ${c}`; }
-  else if(op1==='-' && op2==='+') { ans=a-b+c; q=`${a} − ${b} + ${c}`; }
-  else { ans=a-b-c; q=`${a} − ${b} − ${c}`; }
-  if(ans<0) return genThreeQ();
-  return { q:`${q} = ?`, ans, hint:'' };
+  const a=rnd(20,99), b=rnd(2,30), c=rnd(2,30);
+  const variants = [
+    { q:`${a} + ${b} + ${c}`, ans:a+b+c },
+    { q:`${a} + ${b} − ${c}`, ans:a+b-c },
+    { q:`${a} − ${b} + ${c}`, ans:a-b+c },
+    { q:`${a} − ${b} − ${c}`, ans:a-b-c },
+  ].filter(v => v.ans > 0);
+  if(variants.length === 0) return genThreeQ();
+  const v = variants[rnd(0, variants.length-1)];
+  return { q:`${v.q} = ?`, ans:v.ans, hint:'считай слева направо' };
 }
 
 // Дроби (числовой числитель — знаменатель одинаковый)
@@ -9060,7 +9061,7 @@ function genFracAddQ() {
   return { q:`${n1}/${d} + ${n2}/${d} = ?/${d}`, ans:n1+n2, hint:`${n1}+${n2}` };
 }
 function genFracSubQ() {
-  const d=rnd(2,12), n1=rnd(2,d-1), n2=rnd(1,n1-1);
+  const d=rnd(3,12), n1=rnd(2,d-1), n2=rnd(1,n1-1);
   return { q:`${n1}/${d} − ${n2}/${d} = ?/${d}`, ans:n1-n2, hint:`${n1}−${n2}` };
 }
 function genFracMulQ() {
@@ -9078,17 +9079,16 @@ function genFracDivQ() {
   return { q:`${a}/${b} ÷ ${c} = ?/${rd}`, ans:rn, hint:`знаменатель: ${b}×${c}=${den}` };
 }
 
-// Десятичные дроби (ответ ×10 чтобы вводить целым числом)
+// Десятичные дроби — один знак после запятой, ответ ×10 (целое число)
 function genDecAddQ() {
-  const a=rnd(1,99), b=rnd(1,99);
-  const ra=(a/10).toFixed(1), rb=(b/10).toFixed(1), ans=parseFloat(((a+b)/10).toFixed(1));
-  if(!Number.isInteger(ans)) return { q:`${ra} + ${rb} = ? (×10)`, ans:a+b, hint:`ответ ×10: ${a+b}` };
-  return { q:`${ra} + ${rb} = ?`, ans:a+b, hint:'' };
+  const a=rnd(1,45), b=rnd(1,45);
+  const ra=(a/10).toFixed(1), rb=(b/10).toFixed(1);
+  return { q:`${ra} + ${rb} = ? (×10)`, ans:a+b, hint:`${a}+${b}=${a+b}, т.е. ${((a+b)/10).toFixed(1)}` };
 }
 function genDecSubQ() {
-  const a=rnd(11,99), b=rnd(1,a-1);
+  const a=rnd(11,90), b=rnd(1,a-1);
   const ra=(a/10).toFixed(1), rb=(b/10).toFixed(1);
-  return { q:`${ra} − ${rb} = ? (×10)`, ans:a-b, hint:`ответ ×10: ${a-b}` };
+  return { q:`${ra} − ${rb} = ? (×10)`, ans:a-b, hint:`${a}−${b}=${a-b}, т.е. ${((a-b)/10).toFixed(1)}` };
 }
 function genDecMulQ() {
   const a=rnd(1,9), b=rnd(1,9);
@@ -9181,11 +9181,13 @@ function genPctByQ() {
 
 // --- ЗАДАЧИ: натуральные числа ---
 const TASK_NAT_TEMPLATES = [
-  () => { const v=rnd(40,120),t=rnd(2,5),r=v*t; return { q:`Поезд едет со скоростью ${v} км/ч. Какое расстояние он проедет за ${t} часа?`, ans:String(r), explain:`${v} × ${t} = ${r} км` }; },
-  () => { const d=rnd(100,500),t=rnd(2,5),v=d/t; if(!Number.isInteger(v))return TASK_NAT_TEMPLATES[0](); return { q:`Расстояние между городами ${d} км. Автобус проехал его за ${t} ч. Какова скорость автобуса?`, ans:String(v), explain:`${d} ÷ ${t} = ${v} км/ч` }; },
+  () => { const v=rnd(40,120),t=rnd(2,5),r=v*t; return { q:`Поезд едет со скоростью ${v} км/ч. Какое расстояние он проедет за ${t} ч?`, ans:String(r), explain:`${v} × ${t} = ${r} км` }; },
+  () => { const t=rnd(2,5); const v=rnd(40,100); const d=v*t; return { q:`Расстояние между городами ${d} км. Автобус проехал его за ${t} ч. Какова скорость автобуса?`, ans:String(v), explain:`${d} ÷ ${t} = ${v} км/ч` }; },
   () => { const p=rnd(3,8),q=rnd(10,50),r=p*q; return { q:`Купили ${p} кг яблок по ${q} рублей за кг. Сколько заплатили?`, ans:String(r), explain:`${p} × ${q} = ${r} руб.` }; },
   () => { const a=rnd(50,200),b=rnd(10,a-5),r=a-b; return { q:`На складе было ${a} мешков. Отгрузили ${b} мешков. Сколько осталось?`, ans:String(r), explain:`${a} − ${b} = ${r}` }; },
   () => { const w=rnd(3,8),d=rnd(5,10),r=w*d; return { q:`Рабочий зарабатывает ${w} тыс. рублей в день. Сколько он заработает за ${d} дней?`, ans:String(r), explain:`${w} × ${d} = ${r} тыс. руб.` }; },
+  () => { const a=rnd(5,20),b=rnd(3,a-1),r=a-b; return { q:`В вазе было ${a} конфет. Съели ${b}. Сколько осталось?`, ans:String(r), explain:`${a} − ${b} = ${r}` }; },
+  () => { const n=rnd(3,8),c=rnd(10,50),r=n*c; return { q:`${n} одинаковых тетрадей стоят ${r} рублей. Сколько стоит одна?`, ans:String(c), explain:`${r} ÷ ${n} = ${c} руб.` }; },
 ];
 function genTaskNatQ() {
   const fn = TASK_NAT_TEMPLATES[rnd(0, TASK_NAT_TEMPLATES.length-1)];
@@ -9196,10 +9198,11 @@ function genTaskNatQ() {
 
 // --- ЗАДАЧИ: движение ---
 const TASK_MOVE_TEMPLATES = [
-  () => { const v1=rnd(40,80),v2=rnd(20,50),t=rnd(2,4),r=(v1+v2)*t; return { q:`Два велосипедиста выехали навстречу. Скорости: ${v1} и ${v2} км/ч. Через сколько км они встретятся через ${t} ч? (расстояние)`, ans:String(r), explain:`(${v1}+${v2})×${t}=${r} км` }; },
-  () => { const v=rnd(50,100),t=rnd(2,5),d=v*t; return { q:`Машина едет ${v} км/ч. Через ${t} ч какое расстояние она проедет?`, ans:String(d), explain:`${v}×${t}=${d} км` }; },
-  () => { const d=rnd(120,400),v=rnd(40,80),t=Math.round(d/v); const dd=v*t; return { q:`Расстояние ${dd} км, скорость ${v} км/ч. За сколько часов доедем?`, ans:String(t), explain:`${dd}÷${v}=${t} ч` }; },
-  () => { const v1=rnd(30,60),v2=rnd(10,20),t=rnd(2,4),r=(v1-v2)*t; return { q:`Два велосипедиста едут в одну сторону. Скорости: ${v1} и ${v2} км/ч. На сколько км первый опередит второго через ${t} ч?`, ans:String(r), explain:`(${v1}-${v2})×${t}=${r} км` }; },
+  () => { const v1=rnd(30,60),v2=rnd(20,40),t=rnd(2,4),r=(v1+v2)*t; return { q:`Два велосипедиста выехали навстречу друг другу. Скорость первого — ${v1} км/ч, второго — ${v2} км/ч. Какое расстояние между ними было в начале, если они встретились через ${t} ч?`, ans:String(r), explain:`(${v1}+${v2})×${t}=${r} км` }; },
+  () => { const v=rnd(40,90),t=rnd(2,5),d=v*t; return { q:`Машина едет со скоростью ${v} км/ч. Какое расстояние она проедет за ${t} ч?`, ans:String(d), explain:`${v}×${t}=${d} км` }; },
+  () => { const t=rnd(2,6),v=rnd(40,80),dd=v*t; return { q:`Расстояние между городами ${dd} км. Автобус едет со скоростью ${v} км/ч. За сколько часов он доедет?`, ans:String(t), explain:`${dd}÷${v}=${t} ч` }; },
+  () => { const v1=rnd(40,70),v2=rnd(10,30),t=rnd(2,4),r=(v1-v2)*t; return { q:`Два пешехода вышли из одной точки в одном направлении. Скорость первого — ${v1} км/ч, второго — ${v2} км/ч. На сколько км первый обгонит второго за ${t} ч?`, ans:String(r), explain:`(${v1}−${v2})×${t}=${r} км` }; },
+  () => { const v=rnd(50,120),d=rnd(2,6)*v; const t=d/v; return { q:`Поезд проехал ${d} км со скоростью ${v} км/ч. Сколько часов он ехал?`, ans:String(t), explain:`${d}÷${v}=${t} ч` }; },
 ];
 function genTaskMoveQ() {
   const fn = TASK_MOVE_TEMPLATES[rnd(0, TASK_MOVE_TEMPLATES.length-1)];
@@ -9214,12 +9217,11 @@ const TASK_GEO_TEMPLATES = [
   () => { const a=rnd(3,15),b=rnd(3,12); return { q:`Прямоугольник со сторонами ${a} см и ${b} см. Найди периметр.`, ans:String(2*(a+b)), explain:`2×(${a}+${b})=${2*(a+b)} см` }; },
   () => { const a=rnd(3,12); return { q:`Квадрат со стороной ${a} см. Найди площадь.`, ans:String(a*a), explain:`${a}²=${a*a} см²` }; },
   () => { const a=rnd(3,12); return { q:`Квадрат со стороной ${a} см. Найди периметр.`, ans:String(4*a), explain:`4×${a}=${4*a} см` }; },
-  () => { const a=rnd(3,10),h=rnd(3,10); return { q:`Треугольник с основанием ${a} см и высотой ${h} см. Найди площадь.`, ans:String(a*h/2), explain:`${a}×${h}÷2=${a*h/2} см²` }; },
+  () => { const a=rnd(3,10)*2,h=rnd(3,10); return { q:`Треугольник с основанием ${a} см и высотой ${h} см. Найди площадь.`, ans:String(a*h/2), explain:`${a}×${h}÷2=${a*h/2} см²` }; },
 ];
 function genTaskGeoQ() {
   const fn = TASK_GEO_TEMPLATES[rnd(0, TASK_GEO_TEMPLATES.length-1)];
   const t = fn();
-  if(!Number.isInteger(parseFloat(t.ans))) return genTaskGeoQ();
   const opts = shuffle4(t.ans, wrongNums(t.ans));
   return { ...t, opts };
 }
