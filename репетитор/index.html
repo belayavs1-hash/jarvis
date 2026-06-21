@@ -429,29 +429,63 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 .tr-key:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
 .tr-key:active { transform: scale(.92) translateY(2px); box-shadow: 0 1px 0 var(--border); background: var(--bg3); }
 
-/* Trainer list cards — override dark inline styles */
-#screen-trainer button[onclick^="startTrainer"] {
-  background: var(--card) !important;
-  border-color: var(--border) !important;
+/* Trainer list cards */
+.tr-section-label {
+  font-family: var(--pixel);
+  font-size: 9px;
+  color: var(--text3);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 14px 0 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2px;
+}
+.tr-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  cursor: pointer;
+  text-align: left;
+  transition: all .15s;
   box-shadow: var(--shadow);
-  transition: transform .15s, box-shadow .15s !important;
+  width: 100%;
 }
-#screen-trainer button[onclick^="startTrainer"]:hover {
-  transform: translateY(-3px) !important;
-  box-shadow: var(--shadow-md) !important;
-  border-color: var(--accent) !important;
-  background: var(--accent-light) !important;
+.tr-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent);
 }
-#screen-trainer button[onclick^="startTrainer"] span[style*="color:#"],
-#screen-trainer button[onclick^="startTrainer"] div[style*="color:#"] {
-  color: var(--text) !important;
+.tr-card:active { transform: scale(.98); }
+.tr-card-icon {
+  font-size: 28px;
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
-#screen-trainer button[onclick^="startTrainer"] div[style*="font-family:var(--pixel)"] {
-  color: var(--accent) !important;
+.tr-card-info { flex: 1; }
+.tr-card-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text);
 }
-#screen-trainer button[onclick^="startTrainer"] span[style*="margin-left:auto"] {
-  color: var(--accent) !important;
-  opacity: .6;
+.tr-card-sub {
+  font-size: 12px;
+  color: var(--text2);
+  margin-top: 3px;
+}
+.tr-card-arr {
+  font-size: 20px;
+  color: var(--text3);
+  margin-left: auto;
+  flex-shrink: 0;
 }
 @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)} }
 @keyframes popIn { 0%{transform:scale(0.5);opacity:0} 70%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
@@ -813,295 +847,255 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
     <span style="font-size:14px;font-weight:900;margin-left:8px">Тренажёры</span>
   </div>
   <div style="flex:1;overflow-y:auto;padding:16px;max-width:480px;margin:0 auto;width:100%">
-    <div style="font-size:13px;color:var(--text2);margin-bottom:16px">Выбери тренажёр — и решай примеры без подсказок. Считает стрик и очки!</div>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <button onclick="startTrainer('mult')" style="background:linear-gradient(135deg,#2a1a00,#1a0e00);border:2px solid var(--accent);border-radius:16px;padding:20px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:40px">✖️</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:var(--accent);letter-spacing:1px">УМНОЖЕНИЕ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Таблица умножения 1–10. Быстро, ярко, с огнём 🔥</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:var(--accent)">›</span>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6">Выбери тренажёр — и решай примеры без подсказок. Считает стрик и очки! ⭐</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+
+      <!-- §1–2: СЛОЖЕНИЕ И ВЫЧИТАНИЕ -->
+      <div class="tr-section-label">§1–2 · СЛОЖЕНИЕ И ВЫЧИТАНИЕ</div>
+      <button class="tr-card" onclick="startTrainer('add100')">
+        <span class="tr-card-icon" style="background:#dcfce7">➕</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Сложение до 100</div>
+          <div class="tr-card-sub">Двузначные числа — в уме!</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('div')" style="background:linear-gradient(135deg,#001a2a,#000e1a);border:2px solid #7fd8f5;border-radius:16px;padding:20px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:40px">➗</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#7fd8f5;letter-spacing:1px">ДЕЛЕНИЕ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Деление без остатка из таблицы умножения</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#7fd8f5">›</span>
+      <button class="tr-card" onclick="startTrainer('sub100')">
+        <span class="tr-card-icon" style="background:#fee2e2">➖</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Вычитание до 100</div>
+          <div class="tr-card-sub">Двузначные числа — в уме!</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('mixed')" style="background:linear-gradient(135deg,#1a002a,#0e001a);border:2px solid #e0aaff;border-radius:16px;padding:20px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:40px">🎯</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#e0aaff;letter-spacing:1px">МИХ-МАХ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Умножение и деление вперемешку — проверь себя!</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#e0aaff">›</span>
+      <button class="tr-card" onclick="startTrainer('add1000')">
+        <span class="tr-card-icon" style="background:#d1fae5">🔢</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Сложение до 1000</div>
+          <div class="tr-card-sub">Трёхзначные числа — держим в голове!</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('squares')" style="background:linear-gradient(135deg,#00200a,#001508);border:2px solid #4caf50;border-radius:16px;padding:20px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:40px">⬛</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#4caf50;letter-spacing:1px">КВАДРАТЫ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Квадраты чисел от 1 до 20 — пригодится всегда!</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#4caf50">›</span>
+      <button class="tr-card" onclick="startTrainer('sub1000')">
+        <span class="tr-card-icon" style="background:#fce7f3">🧮</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Вычитание до 1000</div>
+          <div class="tr-card-sub">Трёхзначные числа — в уме!</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('column')" style="background:linear-gradient(135deg,#001a2a,#001020);border:2px solid #ff9a55;border-radius:16px;padding:20px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:40px">📐</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#ff9a55;letter-spacing:1px">В СТОЛБИК</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Сложение и вычитание как в учебнике — в столбик</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#ff9a55">›</span>
+      <button class="tr-card" onclick="startTrainer('column')">
+        <span class="tr-card-icon" style="background:#ffedd5">📐</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">В столбик</div>
+          <div class="tr-card-sub">Сложение и вычитание как в учебнике</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('mental')" style="background:linear-gradient(135deg,#1a001a,#0e000e);border:2px solid #e0aaff;border-radius:16px;padding:20px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:40px">⚡</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#e0aaff;letter-spacing:1px">УСТНЫЙ СЧЁТ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Сложение и вычитание двузначных — без остановки!</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#e0aaff">›</span>
+      <button class="tr-card" onclick="startTrainer('mental')">
+        <span class="tr-card-icon" style="background:#ede9fe">⚡</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Устный счёт — спринт</div>
+          <div class="tr-card-sub">Как можно быстрее — без остановки!</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
 
-      <!-- РАЗДЕЛИТЕЛЬ: ДРОБИ -->
-      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);letter-spacing:2px;margin-top:8px;margin-bottom:2px">── ДРОБИ ──</div>
-
-      <button onclick="startTrainer('frac_add')" style="background:linear-gradient(135deg,#001a0a,#00100a);border:2px solid #69f0ae;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">➕</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#69f0ae;letter-spacing:1px">СЛОЖЕНИЕ ДРОБЕЙ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Дроби с одинаковым знаменателем — введи числитель</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#69f0ae">›</span>
+      <!-- §3: УМНОЖЕНИЕ, ДЕЛЕНИЕ, СТЕПЕНИ -->
+      <div class="tr-section-label">§3 · УМНОЖЕНИЕ И ДЕЛЕНИЕ</div>
+      <button class="tr-card" onclick="startTrainer('mult')">
+        <span class="tr-card-icon" style="background:#ede9fe">✖️</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Таблица умножения</div>
+          <div class="tr-card-sub">1–10. Быстро, ярко, с огнём 🔥</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('frac_sub')" style="background:linear-gradient(135deg,#1a0a00,#100a00);border:2px solid #ffab40;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">➖</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#ffab40;letter-spacing:1px">ВЫЧИТАНИЕ ДРОБЕЙ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Дроби с одинаковым знаменателем — введи числитель</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#ffab40">›</span>
+      <button class="tr-card" onclick="startTrainer('div')">
+        <span class="tr-card-icon" style="background:#e0f2fe">➗</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Деление</div>
+          <div class="tr-card-sub">Деление без остатка из таблицы</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('frac_mix')" style="background:linear-gradient(135deg,#1a0a1a,#0a001a);border:2px solid #ce93d8;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">🎯</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#ce93d8;letter-spacing:1px">ДРОБИ МИХ-МАХ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Сложение и вычитание вперемешку</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#ce93d8">›</span>
+      <button class="tr-card" onclick="startTrainer('mixed')">
+        <span class="tr-card-icon" style="background:#fdf4ff">🎯</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Мих-мах: × и ÷</div>
+          <div class="tr-card-sub">Умножение и деление вперемешку</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-
-      <!-- РАЗДЕЛИТЕЛЬ: СТЕПЕНИ -->
-      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);letter-spacing:2px;margin-top:8px;margin-bottom:2px">── СТЕПЕНИ ──</div>
-
-      <button onclick="startTrainer('cubes')" style="background:linear-gradient(135deg,#001520,#000a14);border:2px solid #4fc3f7;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">🎲</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#4fc3f7;letter-spacing:1px">КУБЫ ЧИСЕЛ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Числа в кубе: 1³…10³</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#4fc3f7">›</span>
+      <button class="tr-card" onclick="startTrainer('squares')">
+        <span class="tr-card-icon" style="background:#f0fdf4">⬜</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Квадраты чисел</div>
+          <div class="tr-card-sub">1² … 20² — пригодится всегда!</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('pow2')" style="background:linear-gradient(135deg,#1a1500,#0a0a00);border:2px solid #fff176;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">💡</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#fff176;letter-spacing:1px">СТЕПЕНИ ДВОЙКИ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">2¹ … 2¹⁰ — знай наизусть!</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#fff176">›</span>
+      <button class="tr-card" onclick="startTrainer('brackets')">
+        <span class="tr-card-icon" style="background:#fefce8">( )</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Примеры со скобками</div>
+          <div class="tr-card-sub">(a + b) × c — сначала скобки!</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('pow3')" style="background:linear-gradient(135deg,#1a0a00,#100a00);border:2px solid #ffcc80;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">🔢</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#ffcc80;letter-spacing:1px">СТЕПЕНИ ТРОЙКИ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">3¹ … 3⁶ — знай наизусть!</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#ffcc80">›</span>
+      <button class="tr-card" onclick="startTrainer('three')">
+        <span class="tr-card-icon" style="background:#ecfdf5">3️⃣</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Три числа подряд</div>
+          <div class="tr-card-sub">a + b − c, a − b + c — слева направо</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
 
-      <!-- РАЗДЕЛИТЕЛЬ: УСТНЫЙ СЧЁТ -->
-      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);letter-spacing:2px;margin-top:8px;margin-bottom:2px">── УСТНЫЙ СЧЁТ ──</div>
-
-      <button onclick="startTrainer('add100')" style="background:linear-gradient(135deg,#001a0a,#000e05);border:2px solid #a5d6a7;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">➕</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#a5d6a7;letter-spacing:1px">СЛОЖЕНИЕ ДО 100</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Двузначные числа — в уме!</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#a5d6a7">›</span>
+      <!-- §3: СТЕПЕНИ -->
+      <div class="tr-section-label">§3 · СТЕПЕНИ</div>
+      <button class="tr-card" onclick="startTrainer('cubes')">
+        <span class="tr-card-icon" style="background:#e0f2fe">🎲</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Кубы чисел</div>
+          <div class="tr-card-sub">1³ … 10³ — знай наизусть!</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('sub100')" style="background:linear-gradient(135deg,#1a0a00,#100500);border:2px solid #ef9a9a;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">➖</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#ef9a9a;letter-spacing:1px">ВЫЧИТАНИЕ ДО 100</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Двузначные числа — в уме!</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#ef9a9a">›</span>
+      <button class="tr-card" onclick="startTrainer('pow2')">
+        <span class="tr-card-icon" style="background:#fefce8">💡</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Степени двойки</div>
+          <div class="tr-card-sub">2¹ … 2¹⁰ — знай наизусть!</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('add1000')" style="background:linear-gradient(135deg,#00100a,#000a05);border:2px solid #80cbc4;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">🔢</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#80cbc4;letter-spacing:1px">СЛОЖЕНИЕ ДО 1000</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Трёхзначные числа — держим в голове!</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#80cbc4">›</span>
-      </button>
-      <button onclick="startTrainer('sub1000')" style="background:linear-gradient(135deg,#100a00,#0a0500);border:2px solid #f48fb1;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">🧮</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#f48fb1;letter-spacing:1px">ВЫЧИТАНИЕ ДО 1000</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Трёхзначные числа — в уме!</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#f48fb1">›</span>
+      <button class="tr-card" onclick="startTrainer('pow3')">
+        <span class="tr-card-icon" style="background:#ffedd5">🔢</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Степени тройки</div>
+          <div class="tr-card-sub">3¹ … 3⁶ — знай наизусть!</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
 
-      <!-- РАЗДЕЛИТЕЛЬ: ДЕСЯТИЧНЫЕ ДРОБИ -->
-      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);letter-spacing:2px;margin-top:8px;margin-bottom:2px">── ДЕСЯТИЧНЫЕ ДРОБИ ──</div>
-
-      <button onclick="startTrainer('dec_add')" style="background:linear-gradient(135deg,#001a10,#000e08);border:2px solid #b2dfdb;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">➕</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#b2dfdb;letter-spacing:1px">СЛОЖЕНИЕ ДЕС.ДРОБЕЙ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">0.1 + 0.2 = ? (вводи ×10)</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#b2dfdb">›</span>
-      </button>
-      <button onclick="startTrainer('dec_sub')" style="background:linear-gradient(135deg,#1a1000,#0a0800);border:2px solid #ffcc02;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">➖</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#ffcc02;letter-spacing:1px">ВЫЧИТАНИЕ ДЕС.ДРОБЕЙ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">0.9 − 0.3 = ? (вводи ×10)</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#ffcc02">›</span>
-      </button>
-      <button onclick="startTrainer('dec_mul')" style="background:linear-gradient(135deg,#10001a,#08000e);border:2px solid #ce93d8;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">✖️</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#ce93d8;letter-spacing:1px">УМНОЖЕНИЕ ДЕС.ДРОБЕЙ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">0.3 × 5 = ? (вводи ×10)</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#ce93d8">›</span>
-      </button>
-      <button onclick="startTrainer('dec_div')" style="background:linear-gradient(135deg,#001a1a,#000e0e);border:2px solid #80deea;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">➗</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#80deea;letter-spacing:1px">ДЕЛЕНИЕ ДЕС.ДРОБЕЙ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">0.6 ÷ 2 = ? (вводи ×10)</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#80deea">›</span>
-      </button>
-      <button onclick="startTrainer('dec_mix')" style="background:linear-gradient(135deg,#0a0a1a,#05050e);border:2px solid #9fa8da;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">🎯</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#9fa8da;letter-spacing:1px">ДЕС.ДРОБИ МИХ-МАХ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Все 4 действия вперемешку</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#9fa8da">›</span>
+      <!-- §4: ГЕОМЕТРИЯ -->
+      <div class="tr-section-label">§4 · ГЕОМЕТРИЯ</div>
+      <button class="tr-card" onclick="startTrainer('task_geo')">
+        <span class="tr-card-icon" style="background:#f0fdf4">📐</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Геометрические задачи</div>
+          <div class="tr-card-sub">Площадь, периметр — выбери ответ</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
 
-      <!-- РАЗДЕЛИТЕЛЬ: ДЕЛЕНИЕ ОБЫКН.ДРОБЕЙ -->
-      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);letter-spacing:2px;margin-top:8px;margin-bottom:2px">── ДРОБИ: ДЕЛЕНИЕ ──</div>
-
-      <button onclick="startTrainer('frac_div')" style="background:linear-gradient(135deg,#001a0a,#000a05);border:2px solid #a5d6a7;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">➗</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#a5d6a7;letter-spacing:1px">ДЕЛЕНИЕ ДРОБЕЙ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">a/b ÷ c = ? — введи числитель</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#a5d6a7">›</span>
+      <!-- §5: ОБЫКНОВЕННЫЕ ДРОБИ -->
+      <div class="tr-section-label">§5 · ОБЫКНОВЕННЫЕ ДРОБИ</div>
+      <button class="tr-card" onclick="startTrainer('frac_add')">
+        <span class="tr-card-icon" style="background:#dcfce7">➕</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Сложение дробей</div>
+          <div class="tr-card-sub">С одинаковым знаменателем — числитель</div>
+        </div><span class="tr-card-arr">›</span>
+      </button>
+      <button class="tr-card" onclick="startTrainer('frac_sub')">
+        <span class="tr-card-icon" style="background:#ffedd5">➖</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Вычитание дробей</div>
+          <div class="tr-card-sub">С одинаковым знаменателем — числитель</div>
+        </div><span class="tr-card-arr">›</span>
+      </button>
+      <button class="tr-card" onclick="startTrainer('frac_mix')">
+        <span class="tr-card-icon" style="background:#fdf4ff">🎯</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Дроби мих-мах</div>
+          <div class="tr-card-sub">Сложение и вычитание вперемешку</div>
+        </div><span class="tr-card-arr">›</span>
+      </button>
+      <button class="tr-card" onclick="startTrainer('frac_div')">
+        <span class="tr-card-icon" style="background:#d1fae5">➗</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Деление дробей</div>
+          <div class="tr-card-sub">a/b ÷ c = ? — введи числитель</div>
+        </div><span class="tr-card-arr">›</span>
+      </button>
+      <button class="tr-card" onclick="startTrainer('task_nat')">
+        <span class="tr-card-icon" style="background:#ecfdf5">🧮</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Задачи с натуральными</div>
+          <div class="tr-card-sub">Купить, разделить, посчитать — выбор</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
 
-      <!-- РАЗДЕЛИТЕЛЬ: КОМБО -->
-      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);letter-spacing:2px;margin-top:8px;margin-bottom:2px">── КОМБО ──</div>
-
-      <button onclick="startTrainer('brackets')" style="background:linear-gradient(135deg,#0a1a00,#050e00);border:2px solid #dce775;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">( )</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#dce775;letter-spacing:1px">ПРИМЕРЫ СО СКОБКАМИ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">(a + b) × c — сначала скобки!</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#dce775">›</span>
+      <!-- §6: ДЕСЯТИЧНЫЕ ДРОБИ -->
+      <div class="tr-section-label">§6 · ДЕСЯТИЧНЫЕ ДРОБИ</div>
+      <button class="tr-card" onclick="startTrainer('dec_add')">
+        <span class="tr-card-icon" style="background:#d1fae5">➕</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Сложение дес. дробей</div>
+          <div class="tr-card-sub">0.1 + 0.2 = ? (вводи ×10)</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('three')" style="background:linear-gradient(135deg,#001a10,#000a08);border:2px solid #80cbc4;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">3️⃣</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#80cbc4;letter-spacing:1px">ПРИМЕРЫ С ТРЕМЯ ЧИСЛАМИ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">a + b − c, a − b + c — слева направо</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#80cbc4">›</span>
+      <button class="tr-card" onclick="startTrainer('dec_sub')">
+        <span class="tr-card-icon" style="background:#fefce8">➖</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Вычитание дес. дробей</div>
+          <div class="tr-card-sub">0.9 − 0.3 = ? (вводи ×10)</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-
-      <!-- РАЗДЕЛИТЕЛЬ: ПРОЦЕНТЫ -->
-      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);letter-spacing:2px;margin-top:8px;margin-bottom:2px">── ПРОЦЕНТЫ ──</div>
-
-      <button onclick="startTrainer('pct_from')" style="background:linear-gradient(135deg,#1a1000,#0e0a00);border:2px solid #ffd54f;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">📊</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#ffd54f;letter-spacing:1px">% ОТ ЧИСЛА</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Найти процент от числа — выбери ответ</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#ffd54f">›</span>
+      <button class="tr-card" onclick="startTrainer('dec_mul')">
+        <span class="tr-card-icon" style="background:#fdf4ff">✖️</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Умножение дес. дробей</div>
+          <div class="tr-card-sub">0.3 × 5 = ? (вводи ×10)</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('pct_of')" style="background:linear-gradient(135deg,#001a10,#000e08);border:2px solid #80cbc4;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">🔢</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#80cbc4;letter-spacing:1px">% ОДНОГО ОТ ДРУГОГО</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Какой процент составляет одно число от другого?</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#80cbc4">›</span>
+      <button class="tr-card" onclick="startTrainer('dec_div')">
+        <span class="tr-card-icon" style="background:#e0f2fe">➗</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Деление дес. дробей</div>
+          <div class="tr-card-sub">0.6 ÷ 2 = ? (вводи ×10)</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('pct_by')" style="background:linear-gradient(135deg,#10001a,#08000e);border:2px solid #ce93d8;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">🔍</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#ce93d8;letter-spacing:1px">ЧИСЛО ПО ПРОЦЕНТУ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Известен процент — найди всё число</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#ce93d8">›</span>
-      </button>
-      <button onclick="startTrainer('pct_mix')" style="background:linear-gradient(135deg,#0a0a1a,#05050e);border:2px solid #9fa8da;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">🎯</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#9fa8da;letter-spacing:1px">ПРОЦЕНТЫ МИХ-МАХ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Все три типа вперемешку</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#9fa8da">›</span>
+      <button class="tr-card" onclick="startTrainer('dec_mix')">
+        <span class="tr-card-icon" style="background:#ede9fe">🎯</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Дес. дроби мих-мах</div>
+          <div class="tr-card-sub">Все 4 действия вперемешку</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
 
-      <!-- РАЗДЕЛИТЕЛЬ: ЗАДАЧИ -->
-      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);letter-spacing:2px;margin-top:8px;margin-bottom:2px">── ЗАДАЧИ ──</div>
+      <!-- §6–7: ПРОЦЕНТЫ -->
+      <div class="tr-section-label">§5–6 · ПРОЦЕНТЫ</div>
+      <button class="tr-card" onclick="startTrainer('pct_from')">
+        <span class="tr-card-icon" style="background:#fefce8">📊</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">% от числа</div>
+          <div class="tr-card-sub">Найти процент от числа — выбери ответ</div>
+        </div><span class="tr-card-arr">›</span>
+      </button>
+      <button class="tr-card" onclick="startTrainer('pct_of')">
+        <span class="tr-card-icon" style="background:#e0f2fe">🔢</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">% одного от другого</div>
+          <div class="tr-card-sub">Сколько процентов составляет часть?</div>
+        </div><span class="tr-card-arr">›</span>
+      </button>
+      <button class="tr-card" onclick="startTrainer('pct_by')">
+        <span class="tr-card-icon" style="background:#fdf4ff">🔍</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Число по проценту</div>
+          <div class="tr-card-sub">Известен процент — найди всё число</div>
+        </div><span class="tr-card-arr">›</span>
+      </button>
+      <button class="tr-card" onclick="startTrainer('pct_mix')">
+        <span class="tr-card-icon" style="background:#ede9fe">🎯</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Проценты мих-мах</div>
+          <div class="tr-card-sub">Все три типа вперемешку</div>
+        </div><span class="tr-card-arr">›</span>
+      </button>
 
-      <button onclick="startTrainer('task_nat')" style="background:linear-gradient(135deg,#001a10,#000e08);border:2px solid #69f0ae;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">🧮</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#69f0ae;letter-spacing:1px">С НАТУРАЛЬНЫМИ ЧИСЛАМИ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Купить, заработать, посчитать — выбери ответ</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#69f0ae">›</span>
+      <!-- ЗАДАЧИ НА ДВИЖЕНИЕ -->
+      <div class="tr-section-label">§3–4 · ЗАДАЧИ НА ДВИЖЕНИЕ</div>
+      <button class="tr-card" onclick="startTrainer('task_move')">
+        <span class="tr-card-icon" style="background:#e0f2fe">🚂</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Задачи на движение</div>
+          <div class="tr-card-sub">Скорость, время, расстояние</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
-      <button onclick="startTrainer('task_move')" style="background:linear-gradient(135deg,#001520,#000a14);border:2px solid #4fc3f7;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">🚂</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#4fc3f7;letter-spacing:1px">ЗАДАЧИ НА ДВИЖЕНИЕ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Скорость, время, расстояние</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#4fc3f7">›</span>
-      </button>
-      <button onclick="startTrainer('task_geo')" style="background:linear-gradient(135deg,#0a1a00,#050e00);border:2px solid #dce775;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">📐</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#dce775;letter-spacing:1px">ГЕОМЕТРИЧЕСКИЕ ЗАДАЧИ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Площадь, периметр прямоугольника и квадрата</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#dce775">›</span>
-      </button>
-      <button onclick="startTrainer('task_mix')" style="background:linear-gradient(135deg,#1a0010,#0e0008);border:2px solid #f48fb1;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
-        <span style="font-size:36px">🎲</span>
-        <div>
-          <div style="font-family:var(--pixel);font-size:11px;color:#f48fb1;letter-spacing:1px">ЗАДАЧИ МИХ-МАХ</div>
-          <div style="font-size:13px;color:var(--text2);margin-top:4px">Разные типы задач вперемешку</div>
-        </div>
-        <span style="margin-left:auto;font-size:22px;color:#f48fb1">›</span>
+      <button class="tr-card" onclick="startTrainer('task_mix')">
+        <span class="tr-card-icon" style="background:#fce7f3">🎲</span>
+        <div class="tr-card-info">
+          <div class="tr-card-title">Задачи мих-мах</div>
+          <div class="tr-card-sub">Разные типы задач вперемешку</div>
+        </div><span class="tr-card-arr">›</span>
       </button>
     </div>
   </div>
