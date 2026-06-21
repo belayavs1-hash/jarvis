@@ -7137,10 +7137,9 @@ function startChat(checkOnly = false) {
   show('screen-chat');
   // Засчитываем первый шаг
   if (!ST.progress) ST.progress = [];
-  if (!ST.progress.some(p => p.ts > Date.now() - 86400000)) {
-    ST.progress.push({ zone: ST.zone, ts: Date.now() });
-    saveState();
-  }
+  ST.progress.push({ zone: ST.zone, topicId: ST.topicId || null, ts: Date.now() });
+  if (ST.progress.length > 200) ST.progress = ST.progress.slice(-200);
+  saveState();
   checkAchievements();
   document.getElementById('chat-input').addEventListener('input', updateSendBtn);
   setTimeout(async () => {
@@ -7692,50 +7691,163 @@ function showTrainer() { show('screen-trainer'); }
 //  PARENT DASHBOARD
 // ============================================================
 function showParent() {
-  const today = new Date().toLocaleDateString('ru-RU', { day:'numeric', month:'long' });
+  const today = new Date().toLocaleDateString('ru-RU', { day:'numeric', month:'long', year:'numeric' });
+  const name = ST.user?.name || 'Ученица';
   const totalTopics = Object.keys(ST.doneTopics).length;
   const allTopics = Object.values(CURRICULUM).reduce((s, c) => s + c.topics.length, 0);
-  const pct = Math.round(totalTopics / allTopics * 100);
-  const sessions = ST.progress.length;
-  const name = ST.user?.name || 'Ученик';
+  const pct = allTopics ? Math.round(totalTopics / allTopics * 100) : 0;
+
+  // --- Прогресс по предметам ---
   let zoneHtml = '';
   Object.entries(CURRICULUM).forEach(([z, c]) => {
     const done = c.topics.filter(t => ST.doneTopics[t.id]).length;
     const p = c.topics.length ? Math.round(done / c.topics.length * 100) : 0;
-    zoneHtml += `<div class="zone-prog-item">
-      <span class="zp-icon">${c.icon}</span>
-      <div class="zp-info">
-        <div class="zp-name">${c.name}</div>
-        <div class="zp-bar"><div class="zp-fill" style="width:${p}%;background:${c.color}"></div></div>
-      </div>
-      <div class="zp-pct" style="color:${c.color}">${p}%</div>
-    </div>`;
+    zoneHtml += `
+      <div class="zone-prog-item">
+        <span class="zp-icon">${c.icon}</span>
+        <div class="zp-info">
+          <div class="zp-name">${c.name}</div>
+          <div class="zp-bar"><div class="zp-fill" style="width:${p}%;background:${c.color}"></div></div>
+        </div>
+        <div class="zp-pct" style="color:${c.color}">${done}/${c.topics.length}</div>
+      </div>`;
   });
+
+  // --- Пройденные темы (последние 5) ---
+  const doneList = Object.keys(ST.doneTopics);
+  let doneHtml = '';
+  if (doneList.length === 0) {
+    doneHtml = `<div style="color:var(--text3);font-size:13px">Ни одной темы ещё не пройдено.</div>`;
+  } else {
+    const recent = doneList.slice(-5).reverse();
+    doneHtml = recent.map(id => {
+      let topicName = id;
+      Object.values(CURRICULUM).forEach(c => {
+        const t = c.topics.find(t => t.id === id);
+        if (t) topicName = t.name;
+      });
+      return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
+        <span style="color:#4caf50;font-size:16px">✅</span>
+        <span style="font-size:13px;color:var(--text)">${topicName}</span>
+      </div>`;
+    }).join('');
+    if (doneList.length > 5) doneHtml += `<div style="font-size:12px;color:var(--text3);padding-top:6px">и ещё ${doneList.length - 5} тем...</div>`;
+  }
+
+  // --- Где застряла: темы без прогресса или открытые но не завершённые ---
+  const trainerData = JSON.parse(localStorage.getItem('trainerStats') || '{}');
+  const stuckHtml = (() => {
+    // Ищем темы в progress (открывали), но не в doneTopics
+    const opened = [...new Set((ST.progress || []).map(p => p.topicId).filter(Boolean))];
+    const stuck = opened.filter(id => !ST.doneTopics[id]);
+    if (stuck.length === 0) return `<div style="color:var(--text3);font-size:13px">Не обнаружено — ${name} доводит темы до конца 💪</div>`;
+    return stuck.slice(0,3).map(id => {
+      let topicName = id;
+      Object.values(CURRICULUM).forEach(c => {
+        const t = c.topics.find(t => t.id === id);
+        if (t) topicName = t.name;
+      });
+      return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
+        <span style="color:#f59e0b;font-size:16px">⚠️</span>
+        <div>
+          <div style="font-size:13px;color:var(--text)">${topicName}</div>
+          <div style="font-size:11px;color:var(--text3)">Открывала, но не завершила</div>
+        </div>
+      </div>`;
+    }).join('');
+  })();
+
+  // --- Похвала и совет ---
+  const praise = (() => {
+    if (totalTopics === 0) return { icon:'🌱', text:`${name} только начинает. Поддержите её — первая пройденная тема будет большой победой!` };
+    if (totalTopics >= 10) return { icon:'🏆', text:`${name} — настоящий профессионал! Уже ${totalTopics} тем пройдено. Продолжайте в том же темпе.` };
+    if (totalTopics >= 5)  return { icon:'⭐', text:`${name} набирает обороты — ${totalTopics} тем изучено. Отличный прогресс!` };
+    return { icon:'💪', text:`${name} делает первые шаги — ${totalTopics} тем${totalTopics>1?'ы':''} уже за плечами. Хорошее начало!` };
+  })();
+
+  const advice = (() => {
+    const stuck = (ST.progress || []).map(p => p.topicId).filter(id => id && !ST.doneTopics[id]);
+    if (stuck.length > 0) {
+      let stuckName = stuck[0];
+      Object.values(CURRICULUM).forEach(c => { const t = c.topics.find(t => t.id === stuck[0]); if (t) stuckName = t.name; });
+      return `Обратите внимание на тему <strong>«${stuckName}»</strong> — ${name} её открывала, но не завершила. Предложите сделать вместе или сначала попрактиковать в тренажёре.`;
+    }
+    if (ST.xp < 30) return `Предложите начать с лёгкой темы в Математической Шахте — это даст быстрый первый результат и мотивацию двигаться дальше.`;
+    if (totalTopics >= 3) return `Попробуйте тренажёр «Устный счёт» или «Мих-мах» — 5 минут в день заметно улучшают скорость вычислений.`;
+    return `Хвалите за каждую завершённую тему, даже маленькую. Для ребёнка важнее признание, чем оценка.`;
+  })();
+
+  // --- Тренажёры: какие запускала ---
+  const trainerHint = totalTopics > 0
+    ? `${name} занималась в тренажёрах. Тренажёры развивают скорость — рекомендуем использовать их как разминку перед уроком.`
+    : `Тренажёры ещё не использовались. Попробуйте «Таблица умножения» — это 5 минут и сразу видно результат.`;
+
   document.getElementById('parent-body').innerHTML = `
-    <div style="margin-bottom:16px;font-size:13px;color:var(--text2)">
-      Данные на <strong style="color:var(--text)">${today}</strong>
-    </div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:14px">Данные на ${today}</div>
+
+    <!-- СТАТЫ -->
     <div class="stat-row">
-      <div class="stat-box"><span class="stat-num">${ST.xp}</span><span class="stat-label">XP заработано</span></div>
-      <div class="stat-box"><span class="stat-num">${totalTopics}</span><span class="stat-label">Тем изучено</span></div>
-      <div class="stat-box"><span class="stat-num">${pct}%</span><span class="stat-label">Прогресс</span></div>
+      <div class="stat-box">
+        <span class="stat-num" style="color:var(--accent)">${ST.xp}</span>
+        <span class="stat-label">XP заработано</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num" style="color:#4caf50">${totalTopics}</span>
+        <span class="stat-label">Тем пройдено</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num" style="color:#7fd8f5">${pct}%</span>
+        <span class="stat-label">Общий прогресс</span>
+      </div>
     </div>
+
+    <!-- ПОХВАЛА -->
+    <div style="background:linear-gradient(135deg,#1a2000,#0a1200);border:2px solid #4caf5044;border-radius:16px;padding:16px;margin-bottom:12px;display:flex;gap:12px;align-items:flex-start">
+      <span style="font-size:32px">${praise.icon}</span>
+      <div style="font-size:13px;color:var(--text);line-height:1.6">${praise.text}</div>
+    </div>
+
+    <!-- ПРОГРЕСС ПО ПРЕДМЕТАМ -->
     <div class="insight-card">
       <div class="insight-header">📊 Прогресс по предметам</div>
       <div>${zoneHtml}</div>
     </div>
+
+    <!-- ПРОЙДЕННЫЕ ТЕМЫ -->
     <div class="insight-card">
-      <div class="insight-header">💡 Для родителя</div>
-      <div class="insight-body">
-        Умник <strong>не даёт готовые ответы</strong> — задаёт вопросы и направляет.<br><br>
-        ${totalTopics === 0
-          ? `${name} ещё не прошёл ни одной темы. Самое время начать!`
-          : `${name} уже изучил ${totalTopics} тем${totalTopics >= 5 ? ' — хороший прогресс!' : '.'}${ST.xp >= 50 ? ' Набрал ' + ST.xp + ' XP — старается!' : ''}`}
+      <div class="insight-header">✅ Последние пройденные темы</div>
+      <div>${doneHtml}</div>
+    </div>
+
+    <!-- ГДЕ ЗАСТРЯЛА -->
+    <div class="insight-card">
+      <div class="insight-header">⚠️ Где нужна помощь</div>
+      <div>${stuckHtml}</div>
+    </div>
+
+    <!-- СОВЕТ -->
+    <div style="background:linear-gradient(135deg,#001a2a,#000e18);border:2px solid #7fd8f544;border-radius:16px;padding:16px;margin-bottom:12px">
+      <div style="font-family:var(--pixel);font-size:9px;color:#7fd8f5;letter-spacing:1px;margin-bottom:8px">💡 СОВЕТ РОДИТЕЛЮ</div>
+      <div style="font-size:13px;color:var(--text);line-height:1.7">${advice}</div>
+    </div>
+
+    <!-- ТРЕНАЖЁРЫ -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px">
+      <div style="font-family:var(--pixel);font-size:9px;color:var(--accent);letter-spacing:1px;margin-bottom:8px">⚡ ТРЕНАЖЁРЫ</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.7">${trainerHint}</div>
+    </div>
+
+    <!-- КАК РАБОТАЕТ УМНИК -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:20px">
+      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);letter-spacing:1px;margin-bottom:8px">🧙 КАК РАБОТАЕТ УМНИК</div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.8">
+        Умник <strong style="color:var(--text)">не даёт готовые ответы</strong> — задаёт наводящие вопросы, чтобы ребёнок думал сам.<br>
+        Если ${name} ошибается — Умник мягко направляет, а не критикует.<br>
+        Фото решения можно отправить прямо в чат — Умник проверит.
       </div>
     </div>
-    <div style="margin-top:16px">
-      <button class="btn-main" style="font-size:9px" onclick="show('screen-login')">← ВЫЙТИ</button>
-    </div>
+
+    <button class="btn-sec" style="width:100%;padding:13px;font-weight:800;font-size:13px" onclick="goHome()">← На главную</button>
   `;
   show('screen-parent');
 }
