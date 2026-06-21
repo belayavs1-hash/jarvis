@@ -757,6 +757,7 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
       <label class="send-btn" style="background:var(--bg3);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center" title="Прикрепить фото решения">
         📷<input type="file" accept="image/*" capture="environment" style="display:none" onchange="openPhotoCheck();onPhotoSelected(event)">
       </label>
+      <button id="done-chat-btn" class="send-btn" onclick="manualTopicDone()" style="display:none;background:#4caf50;font-size:14px;font-weight:900;width:auto;padding:0 10px;color:#fff" title="Тема пройдена">✅ Готово</button>
       <textarea id="chat-input" class="input" rows="1" placeholder="Напиши ответ или вопрос..." onkeydown="chatKey(event)"></textarea>
       <button class="send-btn" id="mic-btn" onclick="toggleVoice()" style="display:none;background:var(--bg3);font-size:16px" title="Голосовой ввод">🎤</button>
       <button class="send-btn" id="send-btn" onclick="sendMsg()" disabled>↑</button>
@@ -7078,13 +7079,21 @@ async function processResponse(text) {
 
   // Авто-триггер: Умник сам говорит что всё решено — показать закрепление
   if (reply && !ST.bonusShown) {
-    const finishPhrases = ['справился со всеми', 'прошёл все задания', 'прошла все задания', 'решил все', 'решила все', 'таблица заполнена полностью', 'задание выполнено', 'все подзадания'];
+    const finishPhrases = [
+      'справился со всеми', 'прошёл все задания', 'прошла все задания',
+      'решил все', 'решила все', 'таблица заполнена полностью',
+      'задание выполнено', 'все подзадания', 'все примеры решены',
+      'все четыре примера', 'все примеры верно', 'все пункты решены',
+      'отлично, все', 'молодец, все', 'справились со всем'
+    ];
     const botSaysFinish = finishPhrases.some(p => reply.toLowerCase().includes(p));
     if (botSaysFinish) {
       ST.bonusShown = true;
       if (ST.topicId) ST.doneTopics[ST.topicId] = true;
       saveState();
-      setTimeout(() => showPraise(), 800);
+      checkAchievements();
+      showDoneChatBtn();
+      setTimeout(() => showTopicDone(), 1200);
     }
   }
 }
@@ -7172,6 +7181,19 @@ function showPraise() {
     setTimeout(scrollDown, 100);
     setTimeout(scrollDown, 400);
   }, 1000);
+}
+
+function manualTopicDone() {
+  if (ST.topicId) ST.doneTopics[ST.topicId] = true;
+  ST.bonusShown = true;
+  saveState();
+  checkAchievements();
+  showTopicDone();
+}
+
+function showDoneChatBtn() {
+  const btn = document.getElementById('done-chat-btn');
+  if (btn) btn.style.display = 'flex';
 }
 
 function showTopicDone() {
@@ -7994,37 +8016,20 @@ function progressDots() {
 // --- РЕЗУЛЬТАТ ---
 function renderMMResult() {
   const pct = Math.round(MM.score / MM.total * 100);
-  let icon, title;
-  if (pct === 100) { icon = '🏆'; title = 'КАРТА СОСТАВЛЕНА!'; addXp(20); }
-  else if (pct >= 67) { icon = '⭐'; title = 'ОТЛИЧНО!'; addXp(12); }
-  else { icon = '💪'; title = 'ТРЕНИРУЙСЯ!'; addXp(5); }
-
-  const rule = MM.rule;
-  document.getElementById('mm-body').innerHTML = `
-    <div class="mm-result">
-      <div class="mm-result-icon">${icon}</div>
-      <div class="mm-result-title">${title}</div>
-      <div class="mm-result-score">${MM.score}/${MM.total}</div>
-      <div class="mm-progress" style="margin-bottom:20px">${Array.from({length:MM.total},(_,i)=>`<div class="mm-dot ${i < MM.score ? 'done' : 'active'}"></div>`).join('')}</div>
-      <div style="text-align:left;width:100%;margin-bottom:20px">
-        <div style="font-family:var(--pixel);font-size:9px;color:var(--accent);margin-bottom:10px;letter-spacing:1px">📌 ТВОЯ КАРТА: ${rule.title}</div>
-        ${rule.keywords.slice(0,6).map(k => `<div class="mm-node"><div class="mm-node-key">🔑 ${k}</div></div>`).join('')}
-        <div class="mm-node"><div class="mm-node-key">💡 Пример</div><div class="mm-node-val">${rule.example}</div></div>
-      </div>
-      <button class="btn-main" onclick="saveMindMapAndExit()">💾 СОХРАНИТЬ И ВЫЙТИ</button>
-      <button class="btn-main" style="margin-top:10px;background:var(--bg3);color:var(--text)" onclick="exitMindMap()">← К уроку</button>
-    </div>`;
+  if (pct === 100) addXp(20);
+  else if (pct >= 67) addXp(12);
+  else addXp(5);
+  if (ST.topicId) ST.doneTopics[ST.topicId] = true;
+  saveState();
+  checkAchievements();
+  setTimeout(() => showTopicDone(), 400);
 }
 
 function saveMindMapAndExit() {
-  const rule = MM.rule;
-  const topic = CURRICULUM[ST.zone].topics.find(t => t.id === ST.topicId);
-  const items = rule.keywords.slice(0,6).map(k => ({ q: '🔑 Ключевое слово', a: k }));
-  items.push({ q: '💡 Пример', a: rule.example });
-  saveMyCheat(ST.zone, topic ? topic.name : rule.title, items);
-  addXp(5);
-  show('screen-chat');
-  setTimeout(() => appendMsg('bot', '🧠 Шпаргалка сохранена в «Базу знаний»! Пополняй её — это твоя суперсила 🌟'), 200);
+  if (ST.topicId) ST.doneTopics[ST.topicId] = true;
+  saveState();
+  checkAchievements();
+  showTopicDone();
 }
 
 function exitMindMap() { show('screen-chat'); }
