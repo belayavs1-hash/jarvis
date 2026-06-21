@@ -7,26 +7,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #4a4580;
-  --bg2: #3d3970;
-  --bg3: #5a5690;
+  --bg: #1a2744;
+  --bg2: #142040;
+  --bg3: #223058;
   --card: #ffffff;
-  --border: #d8d4f0;
-  --accent: #6c63ff;
-  --accent2: #ff7043;
-  --accent-light: #ede9ff;
-  --math-color: #e67e22;
-  --math-bg: #fff8ee;
-  --russian-color: #0288d1;
-  --russian-bg: #e8f4fd;
-  --english-color: #2e7d32;
+  --border: #d0d8f0;
+  --accent: #2979ff;
+  --accent2: #ff6d00;
+  --accent-light: #e3eeff;
+  --math-color: #ff6d00;
+  --math-bg: #fff3e0;
+  --russian-color: #00b0ff;
+  --russian-bg: #e1f5fe;
+  --english-color: #00c853;
   --english-bg: #e8f5e9;
-  --speech-color: #8e24aa;
+  --speech-color: #d500f9;
   --speech-bg: #f3e5f5;
-  --text: #1a1f36;
-  --text2: #4a5568;
-  --text3: #8896b0;
-  --green: #27ae60;
+  --text: #1a2744;
+  --text2: #3d4f7c;
+  --text3: #7a8ab0;
+  --green: #00c853;
   --red: #e53935;
   --pixel: 'Press Start 2P', monospace;
   --body: 'Nunito', sans-serif;
@@ -45,7 +45,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 #screen-parent, #screen-rule, #screen-trainer, #screen-trainer-arena,
 #screen-trainer-result, #screen-column-arena, #screen-mental-arena,
 #screen-word-arena, #screen-section {
-  background: #f5f3ff;
+  background: #f0f4ff;
 }
 
 /* ===== LOGIN ===== */
@@ -136,32 +136,32 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 .zone-arrow { font-size: 22px; margin-left: auto; opacity: .85; font-weight: 700; }
 
 /* Math */
-.math .zone-card { border-color: #f59e0b55; background: #3d3970; border-left: 5px solid #f59e0b; }
-.math .zone-icon-box { background: rgba(245,158,11,.18); border-color: #f59e0b66; }
-.math .zone-name { color: #fbbf24; }
+.math .zone-card { border-color: #ff6d0040; background: #1e2f5a; border-left: 5px solid #ff6d00; }
+.math .zone-icon-box { background: rgba(255,109,0,.18); border-color: #ff6d0060; }
+.math .zone-name { color: #ffab40; }
 .math .zone-desc { color: rgba(255,255,255,.7); }
-.math .zone-arrow { color: #fbbf24; }
+.math .zone-arrow { color: #ffab40; }
 .math .prog-bar { background: rgba(255,255,255,.15); }
 /* Russian */
-.russian .zone-card { border-color: #0288d155; background: #3d3970; border-left: 5px solid #29b6f6; }
-.russian .zone-icon-box { background: rgba(41,182,246,.18); border-color: #29b6f666; }
-.russian .zone-name { color: #7dd3fc; }
+.russian .zone-card { border-color: #00b0ff40; background: #1e2f5a; border-left: 5px solid #00b0ff; }
+.russian .zone-icon-box { background: rgba(0,176,255,.18); border-color: #00b0ff60; }
+.russian .zone-name { color: #64d8ff; }
 .russian .zone-desc { color: rgba(255,255,255,.7); }
-.russian .zone-arrow { color: #7dd3fc; }
+.russian .zone-arrow { color: #64d8ff; }
 .russian .prog-bar { background: rgba(255,255,255,.15); }
 /* English */
-.english .zone-card { border-color: #2e7d3255; background: #3d3970; border-left: 5px solid #4ade80; }
-.english .zone-icon-box { background: rgba(74,222,128,.18); border-color: #4ade8066; }
-.english .zone-name { color: #86efac; }
+.english .zone-card { border-color: #00c85340; background: #1e2f5a; border-left: 5px solid #00c853; }
+.english .zone-icon-box { background: rgba(0,200,83,.18); border-color: #00c85360; }
+.english .zone-name { color: #69f0ae; }
 .english .zone-desc { color: rgba(255,255,255,.7); }
-.english .zone-arrow { color: #86efac; }
+.english .zone-arrow { color: #69f0ae; }
 .english .prog-bar { background: rgba(255,255,255,.15); }
 /* Speech */
-.speech .zone-card { border-color: #8e24aa55; background: #3d3970; border-left: 5px solid #c084fc; }
-.speech .zone-icon-box { background: rgba(192,132,252,.18); border-color: #c084fc66; }
-.speech .zone-name { color: #e9d5ff; }
+.speech .zone-card { border-color: #d500f940; background: #1e2f5a; border-left: 5px solid #d500f9; }
+.speech .zone-icon-box { background: rgba(213,0,249,.18); border-color: #d500f960; }
+.speech .zone-name { color: #ea80fc; }
 .speech .zone-desc { color: rgba(255,255,255,.7); }
-.speech .zone-arrow { color: #e9d5ff; }
+.speech .zone-arrow { color: #ea80fc; }
 .speech .prog-bar { background: rgba(255,255,255,.15); }
 
 /* Progress bar */
@@ -666,7 +666,7 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
             <div class="zone-info">
               <div class="zone-name">Математическая Шахта</div>
               <div class="zone-desc">Числа, дроби, проценты, уравнения</div>
-              <div class="prog-bar mt1"><div class="prog-fill" id="prog-math" style="background:#fbbf24"></div></div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-math" style="background:#ffab40"></div></div>
             </div>
             <div class="zone-arrow">›</div>
           </div>
@@ -680,7 +680,7 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
             <div class="zone-info">
               <div class="zone-name">Башня Русского</div>
               <div class="zone-desc">Орфография, пунктуация, сочинения</div>
-              <div class="prog-bar mt1"><div class="prog-fill" id="prog-russian" style="background:#7dd3fc"></div></div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-russian" style="background:#64d8ff"></div></div>
             </div>
             <div class="zone-arrow">›</div>
           </div>
@@ -694,7 +694,7 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
             <div class="zone-info">
               <div class="zone-name">Английская Деревня</div>
               <div class="zone-desc">Слова, грамматика, чтение, перевод</div>
-              <div class="prog-bar mt1"><div class="prog-fill" id="prog-english" style="background:#86efac"></div></div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-english" style="background:#69f0ae"></div></div>
             </div>
             <div class="zone-arrow">›</div>
           </div>
@@ -708,7 +708,7 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
             <div class="zone-info">
               <div class="zone-name">Мастерская Речи</div>
               <div class="zone-desc">Сочинения, изложения, описание</div>
-              <div class="prog-bar mt1"><div class="prog-fill" id="prog-speech" style="background:#e9d5ff"></div></div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-speech" style="background:#ea80fc"></div></div>
             </div>
             <div class="zone-arrow">›</div>
           </div>
@@ -7121,7 +7121,7 @@ function openZone(zone) {
             <div class="t-sub">стр. ${sec.page} · ${total} тем${total===1?'а':total<5?'ы':''}${doneCount>0?' · '+doneCount+'/'+total+' пройдено':''}</div>
             <div class="prog-bar mt1" style="height:3px"><div class="prog-fill" style="width:${pct}%;background:var(--accent)"></div></div>
           </div>
-          <div style="font-size:18px;color:var(--text3)">›</div>
+          <div style="font-size:22px;font-weight:700;color:var(--accent)">›</div>
         </div>`;
       }).join('')}
     </div>`).join('');
