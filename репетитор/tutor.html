@@ -125,7 +125,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 .zone-card { border-radius: 18px; border: 2px solid; padding: 18px 16px; cursor: pointer; transition: all .2s; position: relative; overflow: hidden; box-shadow: var(--shadow); }
 .zone-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
 .zone-card:active { transform: translateY(0); }
-.zone-card .z-bg { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 64px; opacity: .10; pointer-events: none; }
+.zone-card .z-bg { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 64px; opacity: .22; pointer-events: none; }
 .zone-inner { display: flex; gap: 14px; align-items: center; position: relative; }
 .zone-icon-box { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 30px; flex-shrink: 0; border: 2px solid; }
 .zone-info { flex: 1; }
@@ -133,7 +133,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 .zone-desc { font-size: 12px; opacity: .75; margin-top: 2px; }
 .zone-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 999px; border: 1px solid; margin-top: 5px; text-transform: uppercase; letter-spacing: .5px; }
 .zone-lvl { font-family: var(--pixel); font-size: 8px; opacity: .6; margin-top: 4px; }
-.zone-arrow { font-size: 18px; margin-left: auto; opacity: .5; }
+.zone-arrow { font-size: 22px; margin-left: auto; opacity: .85; font-weight: 700; }
 
 /* Math */
 .math .zone-card { border-color: rgba(255,255,255,.25); background: #fff; border-left: 5px solid #f59e0b; }
@@ -7012,12 +7012,13 @@ function renderHome() {
   // Баннер «Продолжить»
   const banner = document.getElementById('continue-banner');
   const ls = ST.lastSession;
-  if (banner && ls && ls.topicId && !ST.doneTopics[ls.topicId]) {
+  const topicNotDone = !ls?.topicId || !ST.doneTopics[ls.topicId];
+  if (banner && ls && ls.zone && ls.task && topicNotDone) {
     const cur = CURRICULUM[ls.zone];
-    const topic = cur && cur.topics.find(t => t.id === ls.topicId);
-    const topicName = topic ? topic.name : ls.task;
+    const topic = ls.topicId && cur && cur.topics.find(t => t.id === ls.topicId);
+    const topicName = topic ? topic.name : ls.task.slice(0, 60) + (ls.task.length > 60 ? '…' : '');
     const ago = Math.round((Date.now() - ls.ts) / 60000);
-    const agoStr = ago < 60 ? `${ago} мин назад` : `${Math.round(ago/60)} ч назад`;
+    const agoStr = ago < 2 ? 'только что' : ago < 60 ? `${ago} мин назад` : `${Math.round(ago/60)} ч назад`;
     document.getElementById('continue-task').textContent = topicName;
     document.getElementById('continue-meta').textContent = `${cur ? cur.name : ls.zone} · ${ls.msgCount} сообщ. · ${agoStr}`;
     banner.style.display = '';
