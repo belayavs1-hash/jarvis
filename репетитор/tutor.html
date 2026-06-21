@@ -833,6 +833,54 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
         </div>
         <span style="margin-left:auto;font-size:22px;color:#e0aaff">›</span>
       </button>
+
+      <!-- РАЗДЕЛИТЕЛЬ: ДРОБИ -->
+      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);letter-spacing:2px;margin-top:8px;margin-bottom:2px">── ДРОБИ ──</div>
+
+      <button onclick="startTrainer('frac_add')" style="background:linear-gradient(135deg,#001a0a,#00100a);border:2px solid #69f0ae;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:36px">➕</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#69f0ae;letter-spacing:1px">СЛОЖЕНИЕ ДРОБЕЙ</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Дроби с одинаковым знаменателем — введи числитель</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#69f0ae">›</span>
+      </button>
+      <button onclick="startTrainer('frac_sub')" style="background:linear-gradient(135deg,#1a0a00,#100a00);border:2px solid #ffab40;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:36px">➖</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#ffab40;letter-spacing:1px">ВЫЧИТАНИЕ ДРОБЕЙ</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Дроби с одинаковым знаменателем — введи числитель</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#ffab40">›</span>
+      </button>
+      <button onclick="startTrainer('frac_mix')" style="background:linear-gradient(135deg,#1a0a1a,#0a001a);border:2px solid #ce93d8;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:36px">🎯</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#ce93d8;letter-spacing:1px">ДРОБИ МИХ-МАХ</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Сложение и вычитание вперемешку</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#ce93d8">›</span>
+      </button>
+
+      <!-- РАЗДЕЛИТЕЛЬ: СТЕПЕНИ -->
+      <div style="font-family:var(--pixel);font-size:9px;color:var(--text3);letter-spacing:2px;margin-top:8px;margin-bottom:2px">── СТЕПЕНИ ──</div>
+
+      <button onclick="startTrainer('cubes')" style="background:linear-gradient(135deg,#001520,#000a14);border:2px solid #4fc3f7;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:36px">🎲</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#4fc3f7;letter-spacing:1px">КУБЫ ЧИСЕЛ</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">Числа в кубе: 1³…10³</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#4fc3f7">›</span>
+      </button>
+      <button onclick="startTrainer('pow2')" style="background:linear-gradient(135deg,#1a1500,#0a0a00);border:2px solid #fff176;border-radius:16px;padding:16px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;text-align:left;transition:transform .15s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">
+        <span style="font-size:36px">💡</span>
+        <div>
+          <div style="font-family:var(--pixel);font-size:11px;color:#fff176;letter-spacing:1px">СТЕПЕНИ ДВОЙКИ</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px">2¹ … 2¹⁰ — знай наизусть!</div>
+        </div>
+        <span style="margin-left:auto;font-size:22px;color:#fff176">›</span>
+      </button>
     </div>
   </div>
 </div>
@@ -7818,9 +7866,9 @@ function startMindMap() {
     return;
   }
   MM = { step: 0, total: 3, score: 0, topicId: ST.topicId, rule, steps: [] };
-  // Генерируем 3 шага: случайно выбираем типы без повторов
-  const types = ['match', 'odd', 'select'];
-  MM.steps = shuffle([...types]);
+  // Генерируем 3 шага из 5 доступных типов — случайно, без повторов
+  const allTypes = ['match', 'odd', 'select', 'fill', 'quiz2'];
+  MM.steps = shuffle([...allTypes]).slice(0, 3);
   show('screen-mindmap');
   renderMMStep();
 }
@@ -7838,6 +7886,8 @@ function renderMMStep() {
   const type = MM.steps[MM.step];
   if (type === 'match') renderMMMatch();
   else if (type === 'odd') renderMMOdd();
+  else if (type === 'fill') renderMMFill();
+  else if (type === 'quiz2') renderMMQuiz2();
   else renderMMSelect();
 }
 
@@ -8011,6 +8061,80 @@ function progressDots() {
   return Array.from({length: MM.total}, (_,i) =>
     `<div class="mm-dot ${i < MM.step ? 'done' : i === MM.step ? 'active' : ''}"></div>`
   ).join('');
+}
+
+// --- ШАГ: ВПИШИ ОТВЕТ ---
+function renderMMFill() {
+  const rule = MM.rule;
+  const q = rule.quiz[Math.floor(Math.random() * rule.quiz.length)];
+  MM.fillAnswer = q.opts[q.ans].toString().toLowerCase().trim();
+  document.getElementById('mm-body').innerHTML = `
+    <div class="mm-topic">${rule.title}</div>
+    <div class="mm-progress">${progressDots()}</div>
+    <div class="mm-instruction">✏️ Впиши правильный ответ</div>
+    <div style="font-size:18px;font-weight:700;text-align:center;margin:16px 0;color:var(--text)">${q.q}</div>
+    <input id="mm-fill-input" type="text" inputmode="text"
+      style="width:100%;background:var(--bg3);border:2px solid var(--border);border-radius:14px;padding:14px 18px;font-size:20px;color:var(--text);text-align:center;box-sizing:border-box;outline:none"
+      placeholder="Твой ответ..."
+      onkeydown="if(event.key==='Enter')mmCheckFill()">
+    <button class="btn-main" style="margin-top:14px" onclick="mmCheckFill()">Проверить</button>
+    <div id="mm-fill-result" style="min-height:28px;text-align:center;margin-top:8px;font-size:15px;font-weight:900"></div>
+  `;
+  setTimeout(() => { const el = document.getElementById('mm-fill-input'); if(el) el.focus(); }, 100);
+}
+
+function mmCheckFill() {
+  const input = document.getElementById('mm-fill-input');
+  if (!input) return;
+  const val = input.value.toLowerCase().trim();
+  const correct = val === MM.fillAnswer || val.replace(/\s/g,'') === MM.fillAnswer.replace(/\s/g,'');
+  const res = document.getElementById('mm-fill-result');
+  input.style.borderColor = correct ? '#4caf50' : '#e53935';
+  input.disabled = true;
+  if (correct) {
+    MM.score++;
+    res.textContent = '✅ Верно!';
+    res.style.color = '#4caf50';
+  } else {
+    res.innerHTML = `❌ Правильный ответ: <b>${MM.fillAnswer}</b>`;
+    res.style.color = '#e53935';
+  }
+  document.querySelector('[onclick="mmCheckFill()"]').disabled = true;
+  setTimeout(() => { MM.step++; renderMMStep(); }, 1100);
+}
+
+// --- ШАГ: БЫСТРЫЙ КВИЗ (2 ВОПРОСА) ---
+function renderMMQuiz2() {
+  const rule = MM.rule;
+  const quiz = rule.quiz;
+  // берём вопрос, которого ещё не видели (по индексу шага)
+  const q = quiz[MM.step % quiz.length] || quiz[0];
+  const opts = [...q.opts];
+  const correctText = opts[q.ans];
+  MM.quiz2Answer = q.ans;
+  MM.quiz2Opts = opts;
+  document.getElementById('mm-body').innerHTML = `
+    <div class="mm-topic">${rule.title}</div>
+    <div class="mm-progress">${progressDots()}</div>
+    <div class="mm-instruction">⚡ Быстрый вопрос</div>
+    <div style="font-size:17px;font-weight:700;text-align:center;margin:14px 0;line-height:1.4;color:var(--text)">${q.q}</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${opts.map((opt,i) => `<button class="mm-stmt" id="mq2-${i}" style="text-align:left;padding:12px 16px;cursor:pointer" onclick="mmAnswerQuiz2(${i})">${opt}</button>`).join('')}
+    </div>
+  `;
+}
+
+function mmAnswerQuiz2(i) {
+  document.querySelectorAll('[id^="mq2-"]').forEach(el => el.onclick = null);
+  const correct = i === MM.quiz2Answer;
+  document.getElementById('mq2-'+i).style.background = correct ? 'rgba(76,175,80,.3)' : 'rgba(229,57,53,.2)';
+  document.getElementById('mq2-'+i).style.borderColor = correct ? '#4caf50' : '#e53935';
+  if (!correct) {
+    const rightEl = document.getElementById('mq2-'+MM.quiz2Answer);
+    if (rightEl) { rightEl.style.background='rgba(76,175,80,.3)'; rightEl.style.borderColor='#4caf50'; }
+  }
+  if (correct) MM.score++;
+  setTimeout(() => { MM.step++; renderMMStep(); }, 900);
 }
 
 // --- РЕЗУЛЬТАТ ---
@@ -8568,14 +8692,38 @@ const TR = { mode: null, q: [], idx: 0, score: 0, streak: 0, errors: 0, ans: 0 }
 function genMultQ()   { const a=rnd(2,10), b=rnd(2,10); return { q:`${a} × ${b} = ?`, ans:a*b, hint:'' }; }
 function genDivQ()    { const b=rnd(2,10), r=rnd(2,10); return { q:`${b*r} ÷ ${b} = ?`, ans:r, hint:'' }; }
 function genSquareQ() { const a=rnd(1,20); return { q:`${a}² = ?`, ans:a*a, hint:`${a} × ${a}` }; }
+function genCubeQ()   { const a=rnd(1,10); return { q:`${a}³ = ?`, ans:a*a*a, hint:`${a}×${a}×${a}` }; }
+function genPow2Q()   { const e=rnd(1,10); return { q:`2^${e} = ?`, ans:Math.pow(2,e), hint:`степень двойки` }; }
+function genFracAddQ() {
+  const d=rnd(2,12), n1=rnd(1,d-1), n2=rnd(1,d-n1);
+  return { q:`${n1}/${d} + ${n2}/${d} = ?/${d}`, ans:n1+n2, hint:`${n1}+${n2} (знаменатель ${d})` };
+}
+function genFracSubQ() {
+  const d=rnd(2,12), n1=rnd(2,d-1), n2=rnd(1,n1-1);
+  return { q:`${n1}/${d} − ${n2}/${d} = ?/${d}`, ans:n1-n2, hint:`${n1}−${n2} (знаменатель ${d})` };
+}
+function genFracMulQ() {
+  const a=rnd(1,9), b=rnd(2,9), c=rnd(1,9);
+  const num=a*c, den=b;
+  const g=gcd(num,den); const rn=num/g, rd=den/g;
+  if(rd===1) return { q:`${a}/${b} × ${c} = ?`, ans:rn, hint:`${a}×${c}÷${b}` };
+  return { q:`${a}/${b} × ${c} = ?/${rd}`, ans:rn, hint:`${a}×${c}=${num}, делим на ${g}` };
+}
+function gcd(a,b){while(b){const t=b;b=a%b;a=t;}return a;}
 function rnd(a,b) { return Math.floor(Math.random()*(b-a+1))+a; }
 
 function genQuestions(mode, n=20) {
   const arr = [];
   for (let i=0; i<n; i++) {
-    if (mode==='mult')    arr.push(genMultQ());
-    else if (mode==='div') arr.push(genDivQ());
+    if (mode==='mult')      arr.push(genMultQ());
+    else if (mode==='div')  arr.push(genDivQ());
     else if (mode==='squares') arr.push(genSquareQ());
+    else if (mode==='cubes')   arr.push(genCubeQ());
+    else if (mode==='pow2')    arr.push(genPow2Q());
+    else if (mode==='frac_add') arr.push(genFracAddQ());
+    else if (mode==='frac_sub') arr.push(genFracSubQ());
+    else if (mode==='frac_mul') arr.push(genFracMulQ());
+    else if (mode==='frac_mix') arr.push(Math.random()<.5 ? genFracAddQ() : genFracSubQ());
     else { arr.push(Math.random()<.5 ? genMultQ() : genDivQ()); }
   }
   return arr;
@@ -8587,7 +8735,12 @@ function startTrainer(mode) {
   TR.mode = mode;
   TR.q = genQuestions(mode);
   TR.idx = 0; TR.score = 0; TR.streak = 0; TR.errors = 0;
-  const titles = { mult:'✖️ УМНОЖЕНИЕ', div:'➗ ДЕЛЕНИЕ', mixed:'🎯 МИХ-МАХ', squares:'⬛ КВАДРАТЫ' };
+  const titles = {
+    mult:'✖️ УМНОЖЕНИЕ', div:'➗ ДЕЛЕНИЕ', mixed:'🎯 МИХ-МАХ', squares:'⬛ КВАДРАТЫ',
+    cubes:'🎲 КУБЫ', pow2:'💡 СТЕПЕНИ 2',
+    frac_add:'➕ ДРОБИ: СЛОЖЕНИЕ', frac_sub:'➖ ДРОБИ: ВЫЧИТАНИЕ',
+    frac_mul:'✖️ ДРОБИ: УМНОЖЕНИЕ', frac_mix:'🎯 ДРОБИ: МИХ-МАХ'
+  };
   document.getElementById('tr-header-title').textContent = titles[mode] || 'ТРЕНАЖЁР';
   document.getElementById('tr-score').textContent = '0';
   document.getElementById('tr-streak-badge').style.display = 'none';
