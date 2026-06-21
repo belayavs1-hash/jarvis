@@ -136,25 +136,33 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 .zone-arrow { font-size: 22px; margin-left: auto; opacity: .85; font-weight: 700; }
 
 /* Math */
-.math .zone-card { border-color: rgba(255,255,255,.25); background: #fff; border-left: 5px solid #f59e0b; }
-.math .zone-icon-box { background: #fff8ee; border-color: #f59e0b44; }
-.math .zone-name { color: #b45309; }
-.math .zone-tag { color: #b45309; border-color: #f59e0b55; background: #fef9ee; }
+.math .zone-card { border-color: #f59e0b55; background: #3d3970; border-left: 5px solid #f59e0b; }
+.math .zone-icon-box { background: rgba(245,158,11,.18); border-color: #f59e0b66; }
+.math .zone-name { color: #fbbf24; }
+.math .zone-desc { color: rgba(255,255,255,.7); }
+.math .zone-arrow { color: #fbbf24; }
+.math .prog-bar { background: rgba(255,255,255,.15); }
 /* Russian */
-.russian .zone-card { border-color: rgba(255,255,255,.25); background: #fff; border-left: 5px solid #0288d1; }
-.russian .zone-icon-box { background: #e1f5fe; border-color: #0288d155; }
-.russian .zone-name { color: #01579b; }
-.russian .zone-tag { color: #01579b; border-color: #0288d155; background: #f0f9ff; }
+.russian .zone-card { border-color: #0288d155; background: #3d3970; border-left: 5px solid #29b6f6; }
+.russian .zone-icon-box { background: rgba(41,182,246,.18); border-color: #29b6f666; }
+.russian .zone-name { color: #7dd3fc; }
+.russian .zone-desc { color: rgba(255,255,255,.7); }
+.russian .zone-arrow { color: #7dd3fc; }
+.russian .prog-bar { background: rgba(255,255,255,.15); }
 /* English */
-.english .zone-card { border-color: rgba(255,255,255,.25); background: #fff; border-left: 5px solid #2e7d32; }
-.english .zone-icon-box { background: #f1f8e9; border-color: #2e7d3255; }
-.english .zone-name { color: #1b5e20; }
-.english .zone-tag { color: #1b5e20; border-color: #2e7d3255; background: #f0fdf4; }
+.english .zone-card { border-color: #2e7d3255; background: #3d3970; border-left: 5px solid #4ade80; }
+.english .zone-icon-box { background: rgba(74,222,128,.18); border-color: #4ade8066; }
+.english .zone-name { color: #86efac; }
+.english .zone-desc { color: rgba(255,255,255,.7); }
+.english .zone-arrow { color: #86efac; }
+.english .prog-bar { background: rgba(255,255,255,.15); }
 /* Speech */
-.speech .zone-card { border-color: rgba(255,255,255,.25); background: #fff; border-left: 5px solid #8e24aa; }
-.speech .zone-icon-box { background: #fce4ec; border-color: #8e24aa55; }
-.speech .zone-name { color: #6a1b9a; }
-.speech .zone-tag { color: #6a1b9a; border-color: #8e24aa55; background: #fdf4ff; }
+.speech .zone-card { border-color: #8e24aa55; background: #3d3970; border-left: 5px solid #c084fc; }
+.speech .zone-icon-box { background: rgba(192,132,252,.18); border-color: #c084fc66; }
+.speech .zone-name { color: #e9d5ff; }
+.speech .zone-desc { color: rgba(255,255,255,.7); }
+.speech .zone-arrow { color: #e9d5ff; }
+.speech .prog-bar { background: rgba(255,255,255,.15); }
 
 /* Progress bar */
 .prog-bar { height: 5px; background: rgba(255,255,255,.2); border-radius: 99px; margin-top: 8px; overflow: hidden; }
@@ -654,13 +662,13 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
         <div class="zone-card">
           <div class="z-bg">⚙️</div>
           <div class="zone-inner">
-            <div class="zone-icon-box" style="border-color:#f59e0b44;background:#f59e0b18">⚙️</div>
+            <div class="zone-icon-box">⚙️</div>
             <div class="zone-info">
-              <div class="zone-name" style="color:var(--math-color)">Математическая Шахта</div>
+              <div class="zone-name">Математическая Шахта</div>
               <div class="zone-desc">Числа, дроби, проценты, уравнения</div>
-              <div class="prog-bar mt1"><div class="prog-fill" id="prog-math" style="width:0%;background:var(--math-color)"></div></div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-math" style="background:#fbbf24"></div></div>
             </div>
-            <div class="zone-arrow" style="color:var(--math-color)">›</div>
+            <div class="zone-arrow">›</div>
           </div>
         </div>
       </div>
@@ -668,13 +676,13 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
         <div class="zone-card">
           <div class="z-bg">🏰</div>
           <div class="zone-inner">
-            <div class="zone-icon-box" style="border-color:#7ec8e344;background:#7ec8e318">🏰</div>
+            <div class="zone-icon-box">🏰</div>
             <div class="zone-info">
-              <div class="zone-name" style="color:var(--russian-color)">Башня Русского</div>
+              <div class="zone-name">Башня Русского</div>
               <div class="zone-desc">Орфография, пунктуация, сочинения</div>
-              <div class="prog-bar mt1"><div class="prog-fill" id="prog-russian" style="width:0%;background:var(--russian-color)"></div></div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-russian" style="background:#7dd3fc"></div></div>
             </div>
-            <div class="zone-arrow" style="color:var(--russian-color)">›</div>
+            <div class="zone-arrow">›</div>
           </div>
         </div>
       </div>
@@ -682,13 +690,13 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
         <div class="zone-card">
           <div class="z-bg">🌳</div>
           <div class="zone-inner">
-            <div class="zone-icon-box" style="border-color:#90ee9044;background:#90ee9018">🌳</div>
+            <div class="zone-icon-box">🌳</div>
             <div class="zone-info">
-              <div class="zone-name" style="color:var(--english-color)">Английская Деревня</div>
+              <div class="zone-name">Английская Деревня</div>
               <div class="zone-desc">Слова, грамматика, чтение, перевод</div>
-              <div class="prog-bar mt1"><div class="prog-fill" id="prog-english" style="width:0%;background:var(--english-color)"></div></div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-english" style="background:#86efac"></div></div>
             </div>
-            <div class="zone-arrow" style="color:var(--english-color)">›</div>
+            <div class="zone-arrow">›</div>
           </div>
         </div>
       </div>
@@ -696,13 +704,13 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
         <div class="zone-card">
           <div class="z-bg">🔮</div>
           <div class="zone-inner">
-            <div class="zone-icon-box" style="border-color:#dda0dd44;background:#dda0dd18">🔮</div>
+            <div class="zone-icon-box">🔮</div>
             <div class="zone-info">
-              <div class="zone-name" style="color:var(--speech-color)">Мастерская Речи</div>
+              <div class="zone-name">Мастерская Речи</div>
               <div class="zone-desc">Сочинения, изложения, описание</div>
-              <div class="prog-bar mt1"><div class="prog-fill" id="prog-speech" style="width:0%;background:var(--speech-color)"></div></div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-speech" style="background:#e9d5ff"></div></div>
             </div>
-            <div class="zone-arrow" style="color:var(--speech-color)">›</div>
+            <div class="zone-arrow">›</div>
           </div>
         </div>
       </div>
