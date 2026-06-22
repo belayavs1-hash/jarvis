@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Пятый Уровень — ИИ-репетитор</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #2563EB;
+  --blue2: #1d4ed8;
+  --purple: #7C3AED;
+  --green: #22C55E;
+  --gold: #FACC15;
+  --red: #EF4444;
+  --bg: #F8FAFC;
+  --ink: #0F172A;
+  --ink2: #334155;
+  --ink3: #64748B;
+  --card: #ffffff;
+  --border: rgba(255,255,255,.12);
+  --radius: 20px;
+  --glass: rgba(15,23,42,.78);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: radial-gradient(circle at 20% 10%, #1a3a8f 0, #0e1933 40%, #080d1c 100%) fixed;
+  min-height: 100vh;
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ===== NAV ===== */
+.top-nav {
+  background: rgba(10,15,35,.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  padding: 0 20px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-logo { font-size: 18px; font-weight: 900; color: var(--gold); letter-spacing: .5px; flex: 1; }
+.nav-xp { background: rgba(250,204,21,.15); border: 1px solid rgba(250,204,21,.35); border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: 800; color: var(--gold); }
+.nav-back { background: none; border: none; cursor: pointer; color: rgba(255,255,255,.7); font-size: 14px; font-weight: 700; padding: 6px 12px 6px 0; transition: color .2s; }
+.nav-back:hover { color: #fff; }
+.nav-menu { display: flex; gap: 4px; }
+.nav-menu a { color: rgba(255,255,255,.55); text-decoration: none; font-size: 13px; font-weight: 700; padding: 6px 10px; border-radius: 10px; transition: all .2s; cursor: pointer; }
+.nav-menu a:hover, .nav-menu a.active { background: rgba(255,255,255,.1); color: #fff; }
+
+/* ===== BOTTOM NAV (mobile) ===== */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(10,15,35,.95);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding: 8px 0 env(safe-area-inset-bottom);
+  z-index: 100;
+}
+.bottom-nav a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  color: rgba(255,255,255,.45);
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 0;
+  transition: color .2s;
+  cursor: pointer;
+}
+.bottom-nav a span.icon { font-size: 20px; }
+.bottom-nav a:hover, .bottom-nav a.active { color: var(--gold); }
+
+/* ===== LOGIN ===== */
+#screen-login {
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.login-wrap {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(15,23,42,.82);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 40px 32px;
+  text-align: center;
+}
+.login-logo { font-size: 52px; margin-bottom: 8px; }
+.login-title { font-size: 26px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+.login-sub { font-size: 14px; color: rgba(255,255,255,.55); margin-bottom: 32px; }
+.login-label { font-size: 13px; font-weight: 700; color: rgba(255,255,255,.6); text-align: left; margin-bottom: 6px; display: block; }
+.login-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  outline: none;
+  transition: border-color .2s;
+}
+.login-input:focus { border-color: var(--blue); }
+.login-input::placeholder { color: rgba(255,255,255,.3); }
+.role-row { display: flex; gap: 10px; margin-bottom: 28px; }
+.role-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 14px;
+  border: 2px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.55);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+}
+.role-btn.selected { border-color: var(--blue); background: rgba(37,99,235,.25); color: #fff; }
+.btn-primary {
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  border: none;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: #fff;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+  box-shadow: 0 6px 24px rgba(37,99,235,.4);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(37,99,235,.5); }
+.btn-primary:active { transform: translateY(0); }
+
+/* ===== HOME ===== */
+#screen-home { padding-bottom: 0; }
+.home-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 24px;
+  width: 100%;
+}
+.home-left { padding-right: 32px; }
+.home-greeting {
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.home-sub { font-size: 15px; color: rgba(255,255,255,.55); margin-bottom: 28px; }
+.xp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(250,204,21,.12);
+  border: 1px solid rgba(250,204,21,.3);
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--gold);
+  margin-bottom: 28px;
+}
+.sections-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.section-card {
+  background: rgba(255,255,255,.95);
+  border-radius: 20px;
+  padding: 20px 18px;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+.section-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,.25); }
+.section-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--accent, var(--blue));
+}
+.sc-icon { font-size: 28px; margin-bottom: 10px; display: block; }
+.sc-name { font-size: 15px; font-weight: 900; color: var(--ink); margin-bottom: 4px; }
+.sc-desc { font-size: 12px; color: var(--ink3); line-height: 1.4; }
+
+/* ===== VOXEL SCENE ===== */
+.home-right {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.voxel-scene {
+  position: relative;
+  width: 380px;
+  height: 380px;
+  flex-shrink: 0;
+}
+.voxel-block {
+  position: absolute;
+  border-radius: 6px;
+}
+.castle-base { width: 160px; height: 40px; bottom: 60px; left: 50%; transform: translateX(-50%); background: #4a5568; }
+.tower-l { width: 40px; height: 100px; bottom: 100px; left: 90px; background: #3b82f6; border-radius: 8px 8px 4px 4px; }
+.tower-r { width: 40px; height: 120px; bottom: 100px; right: 90px; background: #7c3aed; border-radius: 8px 8px 4px 4px; }
+.tower-c { width: 60px; height: 140px; bottom: 100px; left: 50%; transform: translateX(-50%); background: #2563eb; border-radius: 8px 8px 4px 4px; }
+.tower-flag { width: 22px; height: 14px; background: var(--gold); position: absolute; top: -16px; left: 10px; border-radius: 3px; }
+.tower-flag::after { content: 'π'; color: var(--ink); font-size: 9px; font-weight: 900; position: absolute; top: 1px; left: 4px; }
+.castle-wall { width: 220px; height: 50px; bottom: 100px; left: 50%; transform: translateX(-50%); background: #2d3a5a; border-radius: 4px; }
+.castle-door { width: 28px; height: 34px; background: #080d1c; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 14px 14px 0 0; }
+.ground { width: 300px; height: 20px; bottom: 40px; left: 50%; transform: translateX(-50%); background: linear-gradient(180deg, #22c55e, #16a34a); border-radius: 10px; }
+.sun { width: 48px; height: 48px; background: var(--gold); border-radius: 50%; position: absolute; top: 30px; right: 50px; box-shadow: 0 0 30px rgba(250,204,21,.5); }
+
+.float-sym {
+  position: absolute;
+  font-size: 22px;
+  font-weight: 900;
+  color: rgba(255,255,255,.7);
+  animation: floatSym 3s ease-in-out infinite;
+}
+.float-sym:nth-child(1) { top: 30px; left: 40px; animation-delay: 0s; }
+.float-sym:nth-child(2) { top: 80px; right: 30px; animation-delay: .8s; }
+.float-sym:nth-child(3) { bottom: 130px; left: 30px; animation-delay: 1.6s; }
+.float-sym:nth-child(4) { bottom: 150px; right: 60px; animation-delay: 2.2s; }
+@keyframes floatSym {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* ===== CARDS common ===== */
+.screen-body {
+  flex: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 24px 20px 32px;
+}
+.screen-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.screen-subtitle {
+  font-size: 14px;
+  color: rgba(255,255,255,.55);
+  margin-bottom: 24px;
+}
+.white-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.glass-card {
+  background: rgba(15,23,42,.78);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+/* ===== HOMEWORK ===== */
+.hw-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.form-group { margin-bottom: 16px; }
+.form-label { font-size: 12px; font-weight: 800; color: var(--ink3); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; display: block; }
+.form-select, .form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .2s;
+}
+.form-select:focus, .form-input:focus { border-color: var(--blue); }
+.btn-find {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform .15s;
+}
+.btn-find:hover { transform: translateY(-2px); }
+
+.task-card {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 12px;
+}
+.task-id { font-size: 11px; font-weight: 800; color: var(--blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.task-topic { font-size: 12px; color: var(--ink3); margin-bottom: 10px; }
+.task-text { font-size: 16px; font-weight: 700; color: var(--ink); line-height: 1.5; margin-bottom: 20px; }
+.task-actions { display: flex; flex-direction: column; gap: 8px; }
+.btn-secondary {
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 2px solid var(--blue);
+  background: transparent;
+  color: var(--blue);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-secondary:hover { background: rgba(37,99,235,.08); }
+.btn-ghost {
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  background: transparent;
+  color: var(--ink2);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-ghost:hover { border-color: #cbd5e1; background: #f1f5f9; }
+
+/* ===== WALKTHROUGH ===== */
+.hint-box {
+  background: rgba(37,99,235,.08);
+  border: 2px solid rgba(37,99,235,.2);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+}
+.hint-num { font-size: 11px; font-weight: 800; color: var(--blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.hint-text { font-size: 15px; color: var(--ink); font-weight: 600; line-height: 1.5; }
+.answer-area { margin-top: 20px; }
+.answer-area input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 2px solid #e2e8f0;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  outline: none;
+  transition: border-color .2s;
+  margin-bottom: 10px;
+}
+.answer-area input:focus { border-color: var(--blue); }
+.btn-check {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background: var(--green);
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform .15s;
+}
+.btn-check:hover { transform: translateY(-2px); }
+.result-ok { background: rgba(34,197,94,.1); border: 2px solid rgba(34,197,94,.3); border-radius: 14px; padding: 16px; text-align: center; }
+.result-ok .r-icon { font-size: 32px; }
+.result-ok .r-text { font-size: 16px; font-weight: 800; color: #15803d; margin-top: 4px; }
+.result-err { background: rgba(239,68,68,.1); border: 2px solid rgba(239,68,68,.3); border-radius: 14px; padding: 16px; text-align: center; }
+.result-err .r-icon { font-size: 32px; }
+.result-err .r-text { font-size: 16px; font-weight: 800; color: #b91c1c; margin-top: 4px; }
+.result-answer { font-size: 13px; color: var(--ink3); margin-top: 4px; }
+.hint-progress { display: flex; gap: 6px; margin-bottom: 20px; }
+.hp-dot { width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; transition: background .3s; }
+.hp-dot.done { background: var(--blue); }
+
+/* ===== MAP ===== */
+.map-block { margin-bottom: 28px; }
+.map-block-title {
+  font-size: 13px;
+  font-weight: 900;
+  color: rgba(255,255,255,.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+  padding-left: 4px;
+}
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.topic-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+.topic-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,.2); }
+.tc-name { font-size: 14px; font-weight: 900; color: var(--ink); margin-bottom: 4px; }
+.tc-desc { font-size: 12px; color: var(--ink3); margin-bottom: 12px; line-height: 1.4; }
+.prog-bar-wrap { height: 6px; background: #e2e8f0; border-radius: 3px; margin-bottom: 12px; overflow: hidden; }
+.prog-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--green), var(--blue)); transition: width .5s; }
+.tc-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.tc-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 6px;
+  border-radius: 10px;
+  border: 1.5px solid #e2e8f0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--ink2);
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.tc-btn:hover { border-color: var(--blue); color: var(--blue); background: rgba(37,99,235,.06); }
+
+/* ===== TRAINERS ===== */
+.trainers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.trainer-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+.trainer-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,.2); }
+.tr-icon { font-size: 32px; margin-bottom: 10px; display: block; }
+.tr-name { font-size: 13px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+.tr-count { font-size: 11px; color: var(--ink3); }
+
+/* ===== TRAINER SESSION ===== */
+.trainer-session { max-width: 600px; margin: 0 auto; }
+.session-progress { display: flex; gap: 8px; margin-bottom: 24px; }
+.sp-dot { flex: 1; height: 8px; border-radius: 4px; background: rgba(255,255,255,.2); transition: background .3s; }
+.sp-dot.done { background: var(--green); }
+.sp-dot.current { background: var(--blue); }
+.task-num { font-size: 13px; font-weight: 800; color: rgba(255,255,255,.55); margin-bottom: 6px; }
+.trainer-task-text { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 28px; line-height: 1.4; }
+.trainer-input {
+  width: 100%;
+  padding: 16px 20px;
+  border-radius: 16px;
+  border: 2px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 800;
+  text-align: center;
+  outline: none;
+  margin-bottom: 14px;
+  transition: border-color .2s;
+}
+.trainer-input:focus { border-color: var(--blue); }
+.trainer-input::placeholder { color: rgba(255,255,255,.3); }
+.xp-flash {
+  display: none;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--gold);
+  animation: xpPop .5s ease-out;
+}
+@keyframes xpPop {
+  0% { transform: scale(.5); opacity: 0; }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ===== PARENT ===== */
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+.stat-box { background: #fff; border-radius: 16px; padding: 18px; text-align: center; }
+.stat-val { font-size: 28px; font-weight: 900; color: var(--blue); display: block; }
+.stat-lbl { font-size: 12px; color: var(--ink3); font-weight: 700; margin-top: 4px; }
+
+/* ===== DONE SCREEN ===== */
+#screen-done {
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+}
+.done-wrap { max-width: 400px; width: 100%; }
+.done-big { font-size: 72px; animation: bounce .6s ease-out; }
+@keyframes bounce {
+  0% { transform: scale(.3); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+.done-title { font-size: 28px; font-weight: 900; color: #fff; margin: 16px 0 8px; }
+.done-sub { font-size: 16px; color: rgba(255,255,255,.6); margin-bottom: 8px; }
+.done-xp { font-size: 22px; font-weight: 900; color: var(--gold); margin-bottom: 32px; }
+.done-btns { display: flex; flex-direction: column; gap: 10px; }
+.confetti {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: hidden; z-index: 999;
+}
+.conf-piece {
+  position: absolute;
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  animation: confFall 2.5s ease-in forwards;
+}
+@keyframes confFall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ===== ACHIEVEMENTS ===== */
+.ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.ach-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px 12px;
+  text-align: center;
+  transition: transform .2s;
+}
+.ach-card.locked { opacity: .4; filter: grayscale(1); }
+.ach-card:not(.locked):hover { transform: translateY(-3px); }
+.ach-icon { font-size: 28px; margin-bottom: 6px; display: block; }
+.ach-name { font-size: 12px; font-weight: 800; color: var(--ink); margin-bottom: 2px; }
+.ach-desc { font-size: 10px; color: var(--ink3); line-height: 1.3; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .home-body { grid-template-columns: 1fr; padding: 16px; padding-bottom: 80px; }
+  .home-right { display: none; }
+  .sections-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .hw-grid { grid-template-columns: 1fr; }
+  .nav-menu { display: none; }
+  .bottom-nav { display: flex; }
+  .screen-body { padding-bottom: 88px; }
+  .stats-row { grid-template-columns: 1fr; }
+  .topics-grid { grid-template-columns: 1fr 1fr; }
+  .trainers-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 400px) {
+  .sections-grid { grid-template-columns: 1fr; }
+  .topics-grid { grid-template-columns: 1fr; }
+  .trainers-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="screen-login" class="screen active">
+  <div class="login-wrap">
+    <div class="login-logo">🏰</div>
+    <div class="login-title">ПЯТЫЙ УРОВЕНЬ</div>
+    <div class="login-sub">ИИ-репетитор по математике</div>
+    <label class="login-label">Твоё имя</label>
+    <input type="text" class="login-input" id="login-name" placeholder="Например: Яся" maxlength="30">
+    <label class="login-label">Я — это:</label>
+    <div class="role-row">
+      <button class="role-btn selected" data-role="student" onclick="selectRole(this)">🎒 Ученик</button>
+      <button class="role-btn" data-role="parent" onclick="selectRole(this)">👨‍👩‍👧 Родитель</button>
+    </div>
+    <button class="btn-primary" onclick="doLogin()">🚀 ПОЕХАЛИ!</button>
+  </div>
+</div>
+
+<!-- ===== HOME ===== -->
+<div id="screen-home" class="screen">
+  <nav class="top-nav">
+    <div class="nav-logo">⚡ Пятый Уровень</div>
+    <div class="nav-xp" id="nav-xp-home">⭐ 0 XP</div>
+    <div class="nav-menu">
+      <a onclick="showScreen('screen-homework')">📚 Домашка</a>
+      <a onclick="showScreen('screen-map')">🗺 Темы</a>
+      <a onclick="showScreen('screen-trainers')">⚡ Тренажёры</a>
+      <a onclick="showScreen('screen-parent')">🏆 Прогресс</a>
+    </div>
+  </nav>
+  <div class="home-body">
+    <div class="home-left">
+      <div class="home-greeting" id="home-greeting">Привет, Яся! 👋</div>
+      <div class="home-sub">Что будем делать сегодня?</div>
+      <div class="xp-pill" id="home-xp">⭐ 0 XP заработано</div>
+      <div class="sections-grid">
+        <div class="section-card" style="--accent:#2563EB" onclick="showScreen('screen-homework')">
+          <span class="sc-icon">📚</span>
+          <div class="sc-name">Домашка по номеру</div>
+          <div class="sc-desc">Введи номер задания из учебника</div>
+        </div>
+        <div class="section-card" style="--accent:#7C3AED" onclick="goWalkthrough()">
+          <span class="sc-icon">🤖</span>
+          <div class="sc-name">Разобрать с Умником</div>
+          <div class="sc-desc">Умник объяснит по шагам</div>
+        </div>
+        <div class="section-card" style="--accent:#22C55E" onclick="goCheck()">
+          <span class="sc-icon">✅</span>
+          <div class="sc-name">Проверить решение</div>
+          <div class="sc-desc">Я решил — проверь ответ</div>
+        </div>
+        <div class="section-card" style="--accent:#F59E0B" onclick="showScreen('screen-map')">
+          <span class="sc-icon">🗺</span>
+          <div class="sc-name">Карта тем</div>
+          <div class="sc-desc">Маршрут повторения тем</div>
+        </div>
+        <div class="section-card" style="--accent:#EF4444" onclick="showScreen('screen-trainers')">
+          <span class="sc-icon">⚡</span>
+          <div class="sc-name">Тренажёры</div>
+          <div class="sc-desc">Тренируй скорость счёта</div>
+        </div>
+        <div class="section-card" style="--accent:#EC4899" onclick="showScreen('screen-parent')">
+          <span class="sc-icon">👨‍👩‍👧</span>
+          <div class="sc-name">Кабинет родителя</div>
+          <div class="sc-desc">Прогресс и рекомендации</div>
+        </div>
+      </div>
+    </div>
+    <div class="home-right">
+      <div class="voxel-scene">
+        <div class="float-sym">5</div>
+        <div class="float-sym">Σ</div>
+        <div class="float-sym">+</div>
+        <div class="float-sym">½</div>
+        <div class="sun"></div>
+        <div class="ground voxel-block"></div>
+        <div class="castle-wall voxel-block">
+          <div class="castle-door"></div>
+        </div>
+        <div class="tower-l voxel-block"></div>
+        <div class="tower-r voxel-block"></div>
+        <div class="tower-c voxel-block">
+          <div class="tower-flag"></div>
+        </div>
+        <div class="castle-base voxel-block"></div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <a onclick="showScreen('screen-homework')"><span class="icon">📚</span>Домашка</a>
+    <a onclick="showScreen('screen-map')"><span class="icon">🗺</span>Темы</a>
+    <a onclick="showScreen('screen-trainers')"><span class="icon">⚡</span>Трени</a>
+    <a onclick="showScreen('screen-parent')"><span class="icon">🏆</span>Прогресс</a>
+  </div>
+</div>
+
+<!-- ===== HOMEWORK ===== -->
+<div id="screen-homework" class="screen">
+  <nav class="top-nav">
+    <button class="nav-back" onclick="showScreen('screen-home')">← Назад</button>
+    <div class="nav-logo">📚 Домашка по номеру</div>
+    <div class="nav-xp" id="nav-xp-hw">⭐ 0 XP</div>
+  </nav>
+  <div class="screen-body">
+    <div class="hw-grid">
+      <div>
+        <div class="white-card">
+          <div class="screen-title" style="color:var(--ink)">Найти задание</div>
+          <div class="screen-subtitle" style="color:var(--ink3)">Выбери часть, параграф и номер</div>
+          <div class="form-group">
+            <label class="form-label">Часть учебника</label>
+            <select class="form-select" id="hw-part" onchange="updateParas()">
+              <option value="1">Часть 1</option>
+              <option value="2">Часть 2</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Параграф</label>
+            <select class="form-select" id="hw-para"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Номер задания</label>
+            <input type="text" class="form-input" id="hw-num" placeholder="Например: 71">
+          </div>
+          <button class="btn-find" onclick="findTask()">🔍 Найти задание</button>
+        </div>
+      </div>
+      <div id="hw-result-col">
+        <div class="white-card" style="border: 2px dashed #e2e8f0; text-align:center; padding: 40px 20px; color: var(--ink3);">
+          <div style="font-size:40px;margin-bottom:12px">📖</div>
+          <div style="font-size:15px;font-weight:700">Введи номер задания<br>и нажми «Найти»</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <a onclick="showScreen('screen-homework')" class="active"><span class="icon">📚</span>Домашка</a>
+    <a onclick="showScreen('screen-map')"><span class="icon">🗺</span>Темы</a>
+    <a onclick="showScreen('screen-trainers')"><span class="icon">⚡</span>Трени</a>
+    <a onclick="showScreen('screen-parent')"><span class="icon">🏆</span>Прогресс</a>
+  </div>
+</div>
+
+<!-- ===== WALKTHROUGH ===== -->
+<div id="screen-walkthrough" class="screen">
+  <nav class="top-nav">
+    <button class="nav-back" id="wt-back-btn" onclick="showScreen('screen-homework')">← Назад</button>
+    <div class="nav-logo">🤖 Разбор с Умником</div>
+    <div class="nav-xp" id="nav-xp-wt">⭐ 0 XP</div>
+  </nav>
+  <div class="screen-body" style="max-width:680px">
+    <div class="white-card">
+      <div class="task-id" id="wt-task-id">Задание</div>
+      <div class="task-topic" id="wt-task-topic"></div>
+      <div class="task-text" id="wt-task-text"></div>
+      <div class="hint-progress" id="wt-hint-progress"></div>
+      <div id="wt-hints"></div>
+      <div id="wt-next-hint-wrap" style="margin-bottom:16px;">
+        <button class="btn-ghost" id="wt-next-btn" onclick="showNextHint()">💡 Следующая подсказка</button>
+      </div>
+      <div class="answer-area" id="wt-answer-area">
+        <label class="form-label">Твой ответ:</label>
+        <input type="text" id="wt-answer" placeholder="Введи ответ..." onkeydown="if(event.key==='Enter')checkWalkthrough()">
+        <button class="btn-check" onclick="checkWalkthrough()">✅ Проверить</button>
+      </div>
+      <div id="wt-result" style="margin-top:16px;display:none"></div>
+      <div id="wt-after" style="display:none;margin-top:16px">
+        <button class="btn-primary" onclick="afterWalkthrough()" style="width:100%">🏆 Отлично! На главную</button>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <a onclick="showScreen('screen-homework')"><span class="icon">📚</span>Домашка</a>
+    <a onclick="showScreen('screen-map')"><span class="icon">🗺</span>Темы</a>
+    <a onclick="showScreen('screen-trainers')"><span class="icon">⚡</span>Трени</a>
+    <a onclick="showScreen('screen-parent')"><span class="icon">🏆</span>Прогресс</a>
+  </div>
+</div>
+
+<!-- ===== CHECK ===== -->
+<div id="screen-check" class="screen">
+  <nav class="top-nav">
+    <button class="nav-back" id="chk-back-btn" onclick="showScreen('screen-homework')">← Назад</button>
+    <div class="nav-logo">✅ Проверить решение</div>
+    <div class="nav-xp" id="nav-xp-chk">⭐ 0 XP</div>
+  </nav>
+  <div class="screen-body" style="max-width:680px">
+    <div class="white-card">
+      <div class="task-id" id="chk-task-id">Задание</div>
+      <div class="task-topic" id="chk-task-topic"></div>
+      <div class="task-text" id="chk-task-text"></div>
+      <div class="form-group">
+        <label class="form-label">Краткий ответ</label>
+        <input type="text" class="form-input" id="chk-answer" placeholder="Например: 87">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Решение по шагам (необязательно)</label>
+        <textarea class="form-input" id="chk-steps" rows="4" placeholder="Опиши как решал..." style="resize:vertical"></textarea>
+      </div>
+      <button class="btn-check" onclick="checkSolution()">✅ Проверить</button>
+      <div id="chk-result" style="margin-top:16px;display:none"></div>
+      <div id="chk-after" style="display:none;margin-top:14px">
+        <button class="btn-secondary" onclick="goToWalkthrough()" style="width:100%">🤖 Разобрать ошибку с Умником</button>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <a onclick="showScreen('screen-homework')"><span class="icon">📚</span>Домашка</a>
+    <a onclick="showScreen('screen-map')"><span class="icon">🗺</span>Темы</a>
+    <a onclick="showScreen('screen-trainers')"><span class="icon">⚡</span>Трени</a>
+    <a onclick="showScreen('screen-parent')"><span class="icon">🏆</span>Прогресс</a>
+  </div>
+</div>
+
+<!-- ===== MAP ===== -->
+<div id="screen-map" class="screen">
+  <nav class="top-nav">
+    <button class="nav-back" onclick="showScreen('screen-home')">← Назад</button>
+    <div class="nav-logo">🗺 Карта тем</div>
+    <div class="nav-xp" id="nav-xp-map">⭐ 0 XP</div>
+    <div class="nav-menu">
+      <a onclick="showScreen('screen-homework')">📚 Домашка</a>
+      <a onclick="showScreen('screen-map')" class="active">🗺 Темы</a>
+      <a onclick="showScreen('screen-trainers')">⚡ Тренажёры</a>
+      <a onclick="showScreen('screen-parent')">🏆 Прогресс</a>
+    </div>
+  </nav>
+  <div class="screen-body">
+    <div class="screen-title">Карта тем</div>
+    <div class="screen-subtitle">Маршрут повторения — отдельно от домашних заданий</div>
+    <div id="map-content"></div>
+  </div>
+  <div class="bottom-nav">
+    <a onclick="showScreen('screen-homework')"><span class="icon">📚</span>Домашка</a>
+    <a onclick="showScreen('screen-map')" class="active"><span class="icon">🗺</span>Темы</a>
+    <a onclick="showScreen('screen-trainers')"><span class="icon">⚡</span>Трени</a>
+    <a onclick="showScreen('screen-parent')"><span class="icon">🏆</span>Прогресс</a>
+  </div>
+</div>
+
+<!-- ===== TRAINERS ===== -->
+<div id="screen-trainers" class="screen">
+  <nav class="top-nav">
+    <button class="nav-back" id="tr-back-btn" onclick="trainersBack()">← Назад</button>
+    <div class="nav-logo" id="tr-title">⚡ Тренажёры</div>
+    <div class="nav-xp" id="nav-xp-tr">⭐ 0 XP</div>
+    <div class="nav-menu">
+      <a onclick="showScreen('screen-homework')">📚 Домашка</a>
+      <a onclick="showScreen('screen-map')">🗺 Темы</a>
+      <a onclick="showScreen('screen-trainers')" class="active">⚡ Тренажёры</a>
+      <a onclick="showScreen('screen-parent')">🏆 Прогресс</a>
+    </div>
+  </nav>
+  <div class="screen-body">
+    <div id="tr-list-view">
+      <div class="screen-title">Тренажёры</div>
+      <div class="screen-subtitle">Выбери тип задания и прокачай навык</div>
+      <div class="trainers-grid" id="trainers-grid"></div>
+    </div>
+    <div id="tr-session-view" style="display:none">
+      <div class="trainer-session">
+        <div class="session-progress" id="tr-session-prog"></div>
+        <div class="task-num" id="tr-task-num">Задание 1 из 5</div>
+        <div class="trainer-task-text" id="tr-task-text"></div>
+        <input type="text" class="trainer-input" id="tr-input" placeholder="Ответ..." onkeydown="if(event.key==='Enter')checkTrainer()">
+        <button class="btn-check" onclick="checkTrainer()">✅ Проверить</button>
+        <div class="xp-flash" id="tr-xp-flash">+10 XP ⭐</div>
+        <div id="tr-result" style="margin-top:16px;display:none"></div>
+        <div id="tr-next-wrap" style="display:none;margin-top:12px">
+          <button class="btn-secondary" onclick="nextTrainerTask()">Следующее →</button>
+        </div>
+      </div>
+    </div>
+    <div id="tr-done-view" style="display:none;text-align:center;padding:40px 0">
+      <div style="font-size:56px;margin-bottom:16px">🏆</div>
+      <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:8px">Тренажёр пройден!</div>
+      <div style="font-size:16px;color:rgba(255,255,255,.6);margin-bottom:8px" id="tr-done-score"></div>
+      <div style="font-size:20px;font-weight:900;color:var(--gold);margin-bottom:32px" id="tr-done-xp">+50 XP</div>
+      <button class="btn-primary" onclick="showTrainerList()" style="max-width:300px;margin:0 auto;display:block">Ещё тренажёр</button>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <a onclick="showScreen('screen-homework')"><span class="icon">📚</span>Домашка</a>
+    <a onclick="showScreen('screen-map')"><span class="icon">🗺</span>Темы</a>
+    <a onclick="showScreen('screen-trainers')" class="active"><span class="icon">⚡</span>Трени</a>
+    <a onclick="showScreen('screen-parent')"><span class="icon">🏆</span>Прогресс</a>
+  </div>
+</div>
+
+<!-- ===== PARENT ===== -->
+<div id="screen-parent" class="screen">
+  <nav class="top-nav">
+    <button class="nav-back" onclick="showScreen('screen-home')">← Назад</button>
+    <div class="nav-logo">👨‍👩‍👧 Кабинет родителя</div>
+    <div class="nav-xp" id="nav-xp-par">⭐ 0 XP</div>
+    <div class="nav-menu">
+      <a onclick="showScreen('screen-homework')">📚 Домашка</a>
+      <a onclick="showScreen('screen-map')">🗺 Темы</a>
+      <a onclick="showScreen('screen-trainers')">⚡ Тренажёры</a>
+      <a onclick="showScreen('screen-parent')" class="active">🏆 Прогресс</a>
+    </div>
+  </nav>
+  <div class="screen-body">
+    <div class="screen-title">Прогресс ученика</div>
+    <div class="screen-subtitle" id="par-student-name">Яся</div>
+    <div class="stats-row" id="par-stats"></div>
+    <div class="white-card" id="par-topics-block" style="margin-bottom:16px"></div>
+    <div class="white-card" id="par-mistakes-block" style="margin-bottom:16px"></div>
+    <div class="white-card">
+      <div style="font-size:14px;font-weight:800;color:var(--ink);margin-bottom:12px">🏅 Достижения</div>
+      <div class="ach-grid" id="par-achievements"></div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <a onclick="showScreen('screen-homework')"><span class="icon">📚</span>Домашка</a>
+    <a onclick="showScreen('screen-map')"><span class="icon">🗺</span>Темы</a>
+    <a onclick="showScreen('screen-trainers')"><span class="icon">⚡</span>Трени</a>
+    <a onclick="showScreen('screen-parent')" class="active"><span class="icon">🏆</span>Прогресс</a>
+  </div>
+</div>
+
+<!-- ===== DONE ===== -->
+<div id="screen-done" class="screen">
+  <nav class="top-nav" style="position:fixed;top:0;left:0;right:0;">
+    <button class="nav-back" onclick="showScreen('screen-home')">← Главная</button>
+    <div class="nav-logo">🏆 Отлично!</div>
+  </nav>
+  <div class="done-wrap" style="margin-top:80px">
+    <div class="done-big" id="done-icon">🎉</div>
+    <div class="done-title" id="done-title">Молодец!</div>
+    <div class="done-sub" id="done-sub">Задание выполнено</div>
+    <div class="done-xp" id="done-xp">+20 XP ⭐</div>
+    <div class="done-btns">
+      <button class="btn-primary" onclick="showScreen('screen-homework')">📚 Следующее задание</button>
+      <button class="btn-secondary" onclick="showScreen('screen-home')" style="background:#fff">🏠 На главную</button>
+    </div>
+  </div>
+  <div class="confetti" id="confetti"></div>
+</div>
+
+<script>
+// ===== DATA =====
+const TASKS = [
+  { id:"1.71", part:1, para:"§1", topic:"Цепочки вычислений", text:"Заполни цепочку: 63 → +9 → +23 → -16 → -7 → +15 → ?", type:"number", answer:"87", hints:["Выполняй действия слева направо","63 + 9 = 72","72 + 23 = 95","95 − 16 = 79","79 − 7 = 72","72 + 15 = ?"] },
+  { id:"1.108", part:1, para:"§4", topic:"Отрезки", text:"На прямой точки A, B, C, D. AB=4 см, BC=2 см, CD=3 см. Найди AD.", type:"number", answer:"9", hints:["Нарисуй прямую с точками","AD = AB + BC + CD","Сложи все три отрезка: 4 + 2 + 3 = ?"] },
+  { id:"1.45", part:1, para:"§2", topic:"Сложение", text:"Найди значение: 347 + 285", type:"number", answer:"632", hints:["Складывай по разрядам","Единицы: 7 + 5 = 12, пишем 2, переносим 1","Десятки: 4 + 8 + 1 = 13, пишем 3, переносим 1","Сотни: 3 + 2 + 1 = 6"] },
+  { id:"1.92", part:1, para:"§3", topic:"Умножение", text:"Вычисли: 24 × 15", type:"number", answer:"360", hints:["24 × 15 = 24 × 10 + 24 × 5","24 × 10 = 240","24 × 5 = 120","240 + 120 = ?"] },
+  { id:"1.120", part:1, para:"§5", topic:"Координатная прямая", text:"Единичный отрезок равен 3. Найди координату точки на 4-м делении.", type:"number", answer:"12", hints:["Координата = номер деления × единичный отрезок","4 × 3 = ?"] },
+  { id:"5.40", part:2, para:"§26", topic:"Доли", text:"Отрезок 7 см разделили на 7 равных частей. Какую часть составляет одна часть?", type:"fraction", answer:"1/7", hints:["Знаменатель = на сколько частей разделили (7)","Числитель = сколько взяли (одну)","Одна из семи частей = ?"] },
+  { id:"5.103", part:2, para:"§27", topic:"Сравнение дробей", text:"Расположи в порядке возрастания: 3/10, 7/10, 1/10, 5/10", type:"text", answer:"1/10, 3/10, 5/10, 7/10", hints:["Знаменатели одинаковые — 10","Сравниваем только числители","Меньше числитель → меньше дробь","Расставь: 1, 3, 5, 7"] },
+  { id:"5.163", part:2, para:"§29", topic:"Сложение дробей", text:"Вычисли: 3/8 + 2/8", type:"fraction", answer:"5/8", hints:["Знаменатели одинаковые — оставляем","Складываем числители: 3 + 2 = 5","Записываем результат: ?/8"] },
+  { id:"5.78", part:2, para:"§28", topic:"Правильные и неправильные дроби", text:"Какая дробь больше единицы: 3/5, 7/6, 2/9?", type:"text", answer:"7/6", hints:["Правильная дробь: числитель < знаменатель","Неправильная: числитель ≥ знаменатель, она > 1","Проверь 7/6: числитель 7, знаменатель 6. 7 > 6, значит..."] },
+  { id:"5.55", part:2, para:"§26", topic:"Дроби", text:"Вычисли: 5/9 − 2/9", type:"fraction", answer:"3/9", hints:["Знаменатели одинаковые — оставляем","Вычитаем числители: 5 − 2 = 3","Записываем: ?/9"] }
+];
+
+const PARAS = {
+  1: ["§1 Натуральные числа","§2 Сложение и вычитание","§3 Умножение и деление","§4 Площади и объёмы","§5 Шкалы и координаты","§6 Сравнение чисел"],
+  2: ["§25 Окружность и круг","§26 Доли и дроби","§27 Сравнение дробей","§28 Правильные и неправильные дроби","§29 Сложение и вычитание дробей"]
+};
+
+const TOPICS_MAP = [
+  { block:"Натуральные числа", icon:"🔢", topics:[
+    {id:"nat1", name:"Натуральные числа и нуль", desc:"Как числа появились и что такое нуль"},
+    {id:"nat2", name:"Цифры и числа", desc:"Разряды, классы, запись больших чисел"},
+    {id:"nat3", name:"Сравнение натуральных чисел", desc:"Больше, меньше, равно"},
+    {id:"nat4", name:"Координатная прямая", desc:"Числа на прямой, шкалы"}
+  ]},
+  { block:"Действия с числами", icon:"🧮", topics:[
+    {id:"act1", name:"Сложение", desc:"Складываем по разрядам"},
+    {id:"act2", name:"Вычитание", desc:"Вычитаем, переносим"},
+    {id:"act3", name:"Умножение", desc:"Таблица и столбик"},
+    {id:"act4", name:"Деление", desc:"Деление с остатком"},
+    {id:"act5", name:"Порядок действий", desc:"Скобки и приоритеты"},
+    {id:"act6", name:"Цепочки вычислений", desc:"Последовательные действия"}
+  ]},
+  { block:"Геометрия", icon:"📐", topics:[
+    {id:"geo1", name:"Отрезок и длина", desc:"Измерение отрезков"},
+    {id:"geo2", name:"Ломаная", desc:"Ломаные линии и их длина"},
+    {id:"geo3", name:"Многоугольник", desc:"Стороны и вершины"},
+    {id:"geo4", name:"Периметр", desc:"Длина границы фигуры"},
+    {id:"geo5", name:"Площадь", desc:"Площадь прямоугольника"},
+    {id:"geo6", name:"Угол", desc:"Виды углов"},
+    {id:"geo7", name:"Прямая и луч", desc:"Бесконечные линии"},
+    {id:"geo8", name:"Окружность и круг", desc:"Радиус, диаметр"},
+    {id:"geo9", name:"Объём", desc:"Объём параллелепипеда"}
+  ]},
+  { block:"Дроби", icon:"½", topics:[
+    {id:"fr1", name:"Доли", desc:"Части целого"},
+    {id:"fr2", name:"Обыкновенные дроби", desc:"Числитель и знаменатель"},
+    {id:"fr3", name:"Дроби на числовой прямой", desc:"Отмечаем дроби на прямой"},
+    {id:"fr4", name:"Сравнение дробей", desc:"Одинаковые знаменатели"},
+    {id:"fr5", name:"Правильные и неправильные", desc:"Больше или меньше единицы"},
+    {id:"fr6", name:"Сложение дробей", desc:"С одинаковыми знаменателями"},
+    {id:"fr7", name:"Вычитание дробей", desc:"С одинаковыми знаменателями"}
+  ]},
+  { block:"Практические задачи", icon:"📊", topics:[
+    {id:"pr1", name:"Задачи на движение", desc:"Скорость, время, расстояние"},
+    {id:"pr2", name:"Задачи на стоимость", desc:"Цена, количество, стоимость"},
+    {id:"pr3", name:"Задачи на части", desc:"Нахождение части от числа"},
+    {id:"pr4", name:"Таблицы и диаграммы", desc:"Читаем и строим"},
+    {id:"pr5", name:"Шкалы и измерения", desc:"Цена деления"},
+    {id:"pr6", name:"Задачи на площадь", desc:"Практические задачи"}
+  ]}
+];
+
+const TRAINERS_DEF = [
+  {id:"add", icon:"➕", name:"Сложение", desc:"Двузначные числа"},
+  {id:"sub", icon:"➖", name:"Вычитание", desc:"С переходом"},
+  {id:"mul", icon:"✖️", name:"Умножение", desc:"Таблица умножения"},
+  {id:"div", icon:"➗", name:"Деление", desc:"Без остатка"},
+  {id:"add3", icon:"🔢", name:"Сложение 3 чисел", desc:"Трёхзначные"},
+  {id:"chain", icon:"🔗", name:"Цепочка", desc:"Последовательные действия"},
+  {id:"cmp", icon:"⚖️", name:"Сравнение дробей", desc:"Одинаковые знаменатели"},
+  {id:"fradd", icon:"½", name:"Сложение дробей", desc:"Равные знаменатели"},
+  {id:"frsub", icon:"⅓", name:"Вычитание дробей", desc:"Равные знаменатели"},
+  {id:"perim", icon:"📐", name:"Периметр", desc:"Прямоугольник"},
+  {id:"area", icon:"⬛", name:"Площадь", desc:"Прямоугольник"},
+  {id:"speed", icon:"🚂", name:"Задачи на движение", desc:"Скорость × время"}
+];
+
+const ACHIEVEMENTS = [
+  {id:"solved_self", icon:"🏆", name:"Решил сам", desc:"Первое самостоятельное решение"},
+  {id:"no_give_up", icon:"💪", name:"Не сдался", desc:"3 попытки подряд"},
+  {id:"found_error", icon:"🔍", name:"Нашёл ошибку", desc:"Обнаружил свою ошибку"},
+  {id:"fraction_master", icon:"½", name:"Мастер дробей", desc:"5 задач по дробям"},
+  {id:"geometer", icon:"📐", name:"Геометр", desc:"5 задач по геометрии"},
+  {id:"calculator", icon:"🧮", name:"Вычислитель", desc:"10 задач на счёт"},
+  {id:"task_day", icon:"⭐", name:"Задача дня", desc:"Задание дня разобрано"},
+  {id:"streak5", icon:"🔥", name:"5 дней подряд", desc:"Занимался 5 дней подряд"}
+];
+
+// ===== STATE =====
+let ST = {
+  user: null,
+  xp: 0,
+  solvedTasks: {},
+  topicProgress: {},
+  mistakes: [],
+  achievements: [],
+  hintsUsed: 0,
+  selfSolved: 0,
+  trainerStats: {},
+  history: []
+};
+
+const LS_KEY = 'piatiy_uroven_v2';
+function lsLoad() {
+  try { const d = localStorage.getItem(LS_KEY); if(d) ST = Object.assign(ST, JSON.parse(d)); } catch(e){}
+}
+function lsSave() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(ST)); } catch(e){}
+}
+
+// ===== CURRENT TASK =====
+let currentTask = null;
+let wtHintIdx = 0;
+let wtAttempts = 0;
+let currentTrainer = null;
+let trTasks = [];
+let trIdx = 0;
+let trCorrect = 0;
+
+// ===== INIT =====
+lsLoad();
+if(ST.user) {
+  renderHome();
+  showScreen('screen-home');
+} else {
+  showScreen('screen-login');
+}
+updateParas();
+renderMap();
+renderTrainers();
+
+// ===== NAVIGATION =====
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  updateAllXP();
+  if(id === 'screen-parent') renderParent();
+  if(id === 'screen-trainers') showTrainerList();
+  window.scrollTo(0,0);
+}
+
+function updateAllXP() {
+  const xpStr = `⭐ ${ST.xp} XP`;
+  ['nav-xp-home','nav-xp-hw','nav-xp-wt','nav-xp-chk','nav-xp-map','nav-xp-tr','nav-xp-par'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = xpStr;
+  });
+}
+
+// ===== LOGIN =====
+function selectRole(btn) {
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+function doLogin() {
+  const name = document.getElementById('login-name').value.trim() || 'Яся';
+  const roleBtn = document.querySelector('.role-btn.selected');
+  const role = roleBtn ? roleBtn.dataset.role : 'student';
+  ST.user = { name, role };
+  lsSave();
+  renderHome();
+  showScreen('screen-home');
+}
+
+// ===== HOME =====
+function renderHome() {
+  if(!ST.user) return;
+  document.getElementById('home-greeting').textContent = `Привет, ${ST.user.name}! 👋`;
+  document.getElementById('home-xp').textContent = `⭐ ${ST.xp} XP заработано`;
+  document.getElementById('nav-xp-home').textContent = `⭐ ${ST.xp} XP`;
+}
+
+// ===== HOMEWORK =====
+function updateParas() {
+  const part = parseInt(document.getElementById('hw-part').value);
+  const sel = document.getElementById('hw-para');
+  sel.innerHTML = (PARAS[part] || []).map(p => `<option>${p}</option>`).join('');
+}
+
+function findTask() {
+  const part = parseInt(document.getElementById('hw-part').value);
+  const para = document.getElementById('hw-para').value.split(' ')[0]; // §N
+  const num = document.getElementById('hw-num').value.trim();
+  if(!num) { alert('Введи номер задания'); return; }
+  const taskId = `${part}.${num}`;
+  const task = TASKS.find(t => t.id === taskId);
+  const col = document.getElementById('hw-result-col');
+  if(!task) {
+    col.innerHTML = `<div class="white-card" style="border:2px solid var(--red);text-align:center;padding:32px 20px">
+      <div style="font-size:36px;margin-bottom:12px">😕</div>
+      <div style="font-size:16px;font-weight:800;color:var(--ink)">Задание ${taskId} не найдено</div>
+      <div style="font-size:13px;color:var(--ink3);margin-top:8px">В базе есть: 1.71, 1.45, 1.92, 1.108, 1.120,<br>5.40, 5.55, 5.78, 5.103, 5.163</div>
+    </div>`;
+    return;
+  }
+  currentTask = task;
+  const done = ST.solvedTasks[task.id];
+  col.innerHTML = `<div class="white-card">
+    <div class="task-id">Задание ${task.id} ${done ? '✅' : ''}</div>
+    <div class="task-topic">${task.topic}</div>
+    <div class="task-text">${task.text}</div>
+    <div class="task-actions">
+      <button class="btn-find" onclick="goToWalkthroughFromHW()">🤖 Разобрать с Умником</button>
+      <button class="btn-secondary" onclick="goToCheckFromHW()">✅ Я сделал сам — проверить</button>
+    </div>
+  </div>`;
+}
+
+function goToWalkthroughFromHW() {
+  if(!currentTask) return;
+  openWalkthrough(currentTask, 'screen-homework');
+}
+function goToCheckFromHW() {
+  if(!currentTask) return;
+  openCheck(currentTask, 'screen-homework');
+}
+function goWalkthrough() {
+  if(currentTask) { openWalkthrough(currentTask, 'screen-home'); return; }
+  showScreen('screen-homework');
+}
+function goCheck() {
+  if(currentTask) { openCheck(currentTask, 'screen-home'); return; }
+  showScreen('screen-homework');
+}
+
+// ===== WALKTHROUGH =====
+function openWalkthrough(task, backScreen) {
+  currentTask = task;
+  wtHintIdx = 0;
+  wtAttempts = 0;
+  document.getElementById('wt-back-btn').onclick = () => showScreen(backScreen);
+  document.getElementById('wt-task-id').textContent = `Задание ${task.id}`;
+  document.getElementById('wt-task-topic').textContent = task.topic;
+  document.getElementById('wt-task-text').textContent = task.text;
+  document.getElementById('wt-answer').value = '';
+  document.getElementById('wt-result').style.display = 'none';
+  document.getElementById('wt-after').style.display = 'none';
+  document.getElementById('wt-answer-area').style.display = 'block';
+  document.getElementById('wt-next-hint-wrap').style.display = 'block';
+  renderHintProgress();
+  renderHints();
+  showScreen('screen-walkthrough');
+}
+
+function renderHintProgress() {
+  const t = currentTask;
+  const dots = t.hints.map((_, i) => `<div class="hp-dot${i < wtHintIdx ? ' done' : ''}"></div>`).join('');
+  document.getElementById('wt-hint-progress').innerHTML = dots;
+  document.getElementById('wt-next-btn').style.display = wtHintIdx >= t.hints.length ? 'none' : 'block';
+}
+
+function renderHints() {
+  const t = currentTask;
+  let html = '';
+  for(let i = 0; i < wtHintIdx; i++) {
+    html += `<div class="hint-box">
+      <div class="hint-num">Подсказка ${i+1}</div>
+      <div class="hint-text">${t.hints[i]}</div>
+    </div>`;
+  }
+  document.getElementById('wt-hints').innerHTML = html;
+}
+
+function showNextHint() {
+  if(!currentTask) return;
+  if(wtHintIdx < currentTask.hints.length) {
+    wtHintIdx++;
+    ST.hintsUsed++;
+    lsSave();
+    renderHints();
+    renderHintProgress();
+  }
+}
+
+function checkWalkthrough() {
+  const userAns = document.getElementById('wt-answer').value.trim();
+  if(!userAns) { alert('Введи ответ'); return; }
+  wtAttempts++;
+  const correct = checkAnswer(userAns, currentTask);
+  const resultEl = document.getElementById('wt-result');
+  resultEl.style.display = 'block';
+  if(correct) {
+    resultEl.innerHTML = `<div class="result-ok">
+      <div class="r-icon">🎉</div>
+      <div class="r-text">Правильно!</div>
+    </div>`;
+    document.getElementById('wt-answer-area').style.display = 'none';
+    document.getElementById('wt-next-hint-wrap').style.display = 'none';
+    document.getElementById('wt-after').style.display = 'block';
+    const xp = wtHintIdx === 0 ? 20 : 10;
+    addXP(xp);
+    markSolved(currentTask.id, {attempts: wtAttempts, withHints: wtHintIdx > 0, correct: true});
+    if(wtHintIdx === 0) grantAchievement('solved_self');
+    showDone('🤖', 'Разобрался!', `С Умником по ${currentTask.hints.length} подсказкам`, xp);
+  } else {
+    resultEl.innerHTML = `<div class="result-err">
+      <div class="r-icon">🤔</div>
+      <div class="r-text">Не совсем... попробуй ещё раз</div>
+      ${wtAttempts >= 3 ? `<div class="result-answer">Правильный ответ: <b>${currentTask.answer}</b></div>` : ''}
+    </div>`;
+    if(wtAttempts >= 3) grantAchievement('no_give_up');
+    addMistake(currentTask.topic, 'wrong_answer');
+  }
+}
+
+function afterWalkthrough() {
+  showScreen('screen-home');
+}
+
+// ===== CHECK =====
+function openCheck(task, backScreen) {
+  currentTask = task;
+  document.getElementById('chk-back-btn').onclick = () => showScreen(backScreen);
+  document.getElementById('chk-task-id').textContent = `Задание ${task.id}`;
+  document.getElementById('chk-task-topic').textContent = task.topic;
+  document.getElementById('chk-task-text').textContent = task.text;
+  document.getElementById('chk-answer').value = '';
+  document.getElementById('chk-steps').value = '';
+  document.getElementById('chk-result').style.display = 'none';
+  document.getElementById('chk-after').style.display = 'none';
+  showScreen('screen-check');
+}
+
+function checkSolution() {
+  const userAns = document.getElementById('chk-answer').value.trim();
+  if(!userAns) { alert('Введи ответ'); return; }
+  const correct = checkAnswer(userAns, currentTask);
+  const resultEl = document.getElementById('chk-result');
+  resultEl.style.display = 'block';
+  if(correct) {
+    resultEl.innerHTML = `<div class="result-ok">
+      <div class="r-icon">✅</div>
+      <div class="r-text">Правильно! Решил самостоятельно!</div>
+    </div>`;
+    addXP(25);
+    ST.selfSolved++;
+    markSolved(currentTask.id, {attempts:1, withHints:false, correct:true});
+    grantAchievement('solved_self');
+    document.getElementById('chk-after').style.display = 'none';
+    showDone('🏆', 'Решил сам!', `Задание ${currentTask.id} выполнено`, 25);
+  } else {
+    resultEl.innerHTML = `<div class="result-err">
+      <div class="r-icon">❌</div>
+      <div class="r-text">Ответ неверный</div>
+      <div class="result-answer">Ожидался: <b>${currentTask.answer}</b></div>
+    </div>`;
+    addMistake(currentTask.topic, 'self_check_wrong');
+    grantAchievement('found_error');
+    document.getElementById('chk-after').style.display = 'block';
+  }
+}
+
+function goToWalkthrough() {
+  if(currentTask) openWalkthrough(currentTask, 'screen-check');
+}
+
+// ===== MAP =====
+function renderMap() {
+  const cont = document.getElementById('map-content');
+  if(!cont) return;
+  cont.innerHTML = TOPICS_MAP.map(block => `
+    <div class="map-block">
+      <div class="map-block-title">${block.icon} ${block.block}</div>
+      <div class="topics-grid">
+        ${block.topics.map(t => {
+          const prog = ST.topicProgress[t.id] || 0;
+          return `<div class="topic-card">
+            <div class="tc-name">${t.name}</div>
+            <div class="tc-desc">${t.desc}</div>
+            <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${prog}%"></div></div>
+            <div class="tc-btns">
+              <button class="tc-btn" onclick="topicLearn('${t.id}')">📖 Понять</button>
+              <button class="tc-btn" onclick="topicTrain('${t.id}')">⚡ Трени</button>
+              <button class="tc-btn" onclick="topicCheck('${t.id}')">✅ Проверить</button>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function topicLearn(id) {
+  ST.topicProgress[id] = Math.min(100, (ST.topicProgress[id] || 0) + 20);
+  lsSave();
+  renderMap();
+  addXP(5);
+}
+function topicTrain(id) { showScreen('screen-trainers'); }
+function topicCheck(id) {
+  const tasksByTopic = TASKS.filter(t => {
+    const block = TOPICS_MAP.find(b => b.topics.some(tp => tp.id === id));
+    return block && block.topics.some(tp => tp.id === id && tp.name.toLowerCase().includes(t.topic.toLowerCase().split(' ')[0]));
+  });
+  if(tasksByTopic.length) { openWalkthrough(tasksByTopic[0], 'screen-map'); return; }
+  const rnd = TASKS[Math.floor(Math.random() * TASKS.length)];
+  openWalkthrough(rnd, 'screen-map');
+}
+
+// ===== TRAINERS =====
+function renderTrainers() {
+  const grid = document.getElementById('trainers-grid');
+  if(!grid) return;
+  grid.innerHTML = TRAINERS_DEF.map(tr => {
+    const stats = ST.trainerStats[tr.id] || {done:0};
+    return `<div class="trainer-card" onclick="startTrainer('${tr.id}')">
+      <span class="tr-icon">${tr.icon}</span>
+      <div class="tr-name">${tr.name}</div>
+      <div class="tr-count">${tr.desc}${stats.done ? ` · ${stats.done} сессий` : ''}</div>
+    </div>`;
+  }).join('');
+}
+
+function showTrainerList() {
+  document.getElementById('tr-list-view').style.display = 'block';
+  document.getElementById('tr-session-view').style.display = 'none';
+  document.getElementById('tr-done-view').style.display = 'none';
+  document.getElementById('tr-title').textContent = '⚡ Тренажёры';
+  document.getElementById('tr-back-btn').onclick = () => showScreen('screen-home');
+  renderTrainers();
+}
+
+function trainersBack() {
+  if(document.getElementById('tr-session-view').style.display !== 'none') {
+    if(!confirm('Выйти из тренажёра?')) return;
+    showTrainerList();
+  } else {
+    showScreen('screen-home');
+  }
+}
+
+function startTrainer(id) {
+  currentTrainer = TRAINERS_DEF.find(t => t.id === id);
+  trTasks = generateTrainerTasks(id, 5);
+  trIdx = 0;
+  trCorrect = 0;
+  document.getElementById('tr-list-view').style.display = 'none';
+  document.getElementById('tr-done-view').style.display = 'none';
+  document.getElementById('tr-session-view').style.display = 'block';
+  document.getElementById('tr-title').textContent = currentTrainer.icon + ' ' + currentTrainer.name;
+  document.getElementById('tr-back-btn').onclick = trainersBack;
+  renderTrainerTask();
+}
+
+function generateTrainerTasks(type, count) {
+  const tasks = [];
+  for(let i = 0; i < count; i++) {
+    tasks.push(genOne(type));
+  }
+  return tasks;
+}
+
+function rnd(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+
+function genOne(type) {
+  let q, a;
+  switch(type) {
+    case 'add': { const x=rnd(10,99),y=rnd(10,99); q=`${x} + ${y}`; a=String(x+y); break; }
+    case 'sub': { const x=rnd(20,99),y=rnd(10,x); q=`${x} − ${y}`; a=String(x-y); break; }
+    case 'mul': { const x=rnd(2,12),y=rnd(2,12); q=`${x} × ${y}`; a=String(x*y); break; }
+    case 'div': { const y=rnd(2,12),x=y*rnd(2,12); q=`${x} ÷ ${y}`; a=String(x/y); break; }
+    case 'add3': { const x=rnd(100,499),y=rnd(100,499),z=rnd(10,99); q=`${x} + ${y} + ${z}`; a=String(x+y+z); break; }
+    case 'chain': { const x=rnd(10,50),d1=rnd(1,20),d2=rnd(1,20); q=`${x} + ${d1} − ${d2}`; a=String(x+d1-d2); break; }
+    case 'cmp': { const den=rnd(4,10),a1=rnd(1,den-1),a2=rnd(1,den-1); q=`Сравни: ${a1}/${den} и ${a2}/${den}. Знак?`; a=a1>a2?'>':a1<a2?'<':'='; break; }
+    case 'fradd': { const den=rnd(4,10),a1=rnd(1,den-2),a2=rnd(1,den-1-a1); q=`${a1}/${den} + ${a2}/${den}`; a=`${a1+a2}/${den}`; break; }
+    case 'frsub': { const den=rnd(4,10),a2=rnd(1,den-2),a1=rnd(a2+1,den-1); q=`${a1}/${den} − ${a2}/${den}`; a=`${a1-a2}/${den}`; break; }
+    case 'perim': { const w=rnd(3,20),h=rnd(3,15); q=`Периметр прямоугольника ${w}×${h} см`; a=String(2*(w+h)); break; }
+    case 'area': { const w=rnd(3,20),h=rnd(3,15); q=`Площадь прямоугольника ${w}×${h} см`; a=String(w*h); break; }
+    case 'speed': { const v=rnd(20,90),t=rnd(2,8); q=`Скорость ${v} км/ч, время ${t} ч. Расстояние?`; a=String(v*t); break; }
+    default: { const x=rnd(1,100),y=rnd(1,100); q=`${x} + ${y}`; a=String(x+y); }
+  }
+  return {q, a};
+}
+
+function renderTrainerTask() {
+  const task = trTasks[trIdx];
+  const prog = document.getElementById('tr-session-prog');
+  prog.innerHTML = trTasks.map((_,i) => `<div class="sp-dot${i < trIdx ? ' done' : i === trIdx ? ' current' : ''}"></div>`).join('');
+  document.getElementById('tr-task-num').textContent = `Задание ${trIdx+1} из ${trTasks.length}`;
+  document.getElementById('tr-task-text').textContent = task.q;
+  document.getElementById('tr-input').value = '';
+  document.getElementById('tr-input').focus();
+  document.getElementById('tr-result').style.display = 'none';
+  document.getElementById('tr-next-wrap').style.display = 'none';
+  document.getElementById('tr-xp-flash').style.display = 'none';
+}
+
+function checkTrainer() {
+  const userAns = document.getElementById('tr-input').value.trim();
+  if(!userAns) return;
+  const task = trTasks[trIdx];
+  const correct = userAns.replace(/\s/g,'').toLowerCase() === task.a.replace(/\s/g,'').toLowerCase();
+  const resultEl = document.getElementById('tr-result');
+  resultEl.style.display = 'block';
+  if(correct) {
+    resultEl.innerHTML = `<div class="result-ok"><div class="r-icon">✅</div><div class="r-text">Верно!</div></div>`;
+    trCorrect++;
+    addXP(10);
+    const flash = document.getElementById('tr-xp-flash');
+    flash.style.display = 'block';
+    setTimeout(() => flash.style.display = 'none', 1200);
+  } else {
+    resultEl.innerHTML = `<div class="result-err"><div class="r-icon">❌</div><div class="r-text">Неверно</div><div class="result-answer">Правильно: <b>${task.a}</b></div></div>`;
+    addMistake(currentTrainer.name, 'trainer_wrong');
+  }
+  document.getElementById('tr-next-wrap').style.display = 'block';
+  document.getElementById('tr-input').disabled = true;
+}
+
+function nextTrainerTask() {
+  document.getElementById('tr-input').disabled = false;
+  trIdx++;
+  if(trIdx >= trTasks.length) {
+    endTrainer();
+  } else {
+    renderTrainerTask();
+  }
+}
+
+function endTrainer() {
+  if(!ST.trainerStats[currentTrainer.id]) ST.trainerStats[currentTrainer.id] = {done:0, correct:0};
+  ST.trainerStats[currentTrainer.id].done++;
+  ST.trainerStats[currentTrainer.id].correct = (ST.trainerStats[currentTrainer.id].correct || 0) + trCorrect;
+  lsSave();
+  document.getElementById('tr-session-view').style.display = 'none';
+  document.getElementById('tr-done-view').style.display = 'block';
+  document.getElementById('tr-done-score').textContent = `${trCorrect} из ${trTasks.length} верно`;
+  document.getElementById('tr-done-xp').textContent = `+${trCorrect * 10} XP ⭐`;
+}
+
+// ===== PARENT =====
+function renderParent() {
+  if(ST.user) document.getElementById('par-student-name').textContent = ST.user.name;
+  const totalSolved = Object.keys(ST.solvedTasks).length;
+  const totalCorrect = Object.values(ST.solvedTasks).filter(s => s.correct).length;
+  document.getElementById('par-stats').innerHTML = `
+    <div class="stat-box"><span class="stat-val">${ST.xp}</span><div class="stat-lbl">XP заработано</div></div>
+    <div class="stat-box"><span class="stat-val" style="color:var(--green)">${totalCorrect}</span><div class="stat-lbl">Верных ответов</div></div>
+    <div class="stat-box"><span class="stat-val" style="color:var(--purple)">${ST.hintsUsed}</span><div class="stat-lbl">Подсказок использовано</div></div>
+  `;
+
+  const topicsHtml = TOPICS_MAP.slice(0,3).map(block =>
+    block.topics.slice(0,3).map(t => {
+      const prog = ST.topicProgress[t.id] || 0;
+      return `<div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px"><span>${t.name}</span><span>${prog}%</span></div>
+        <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${prog}%"></div></div>
+      </div>`;
+    }).join('')
+  ).join('');
+  document.getElementById('par-topics-block').innerHTML = `
+    <div style="font-size:14px;font-weight:800;color:var(--ink);margin-bottom:14px">📊 Прогресс по темам</div>
+    ${topicsHtml}
+    ${topicsHtml ? '' : '<div style="color:var(--ink3);font-size:14px">Пока нет данных — начни занятия!</div>'}
+  `;
+
+  const mistakesHtml = ST.mistakes.length
+    ? ST.mistakes.slice(-5).map(m => `<div style="font-size:13px;color:var(--red);padding:4px 0;border-bottom:1px solid #f1f5f9">❌ ${m.topic}</div>`).join('')
+    : '<div style="font-size:14px;color:var(--green)">🎉 Ошибок пока нет!</div>';
+  document.getElementById('par-mistakes-block').innerHTML = `
+    <div style="font-size:14px;font-weight:800;color:var(--ink);margin-bottom:12px">🔍 Последние ошибки</div>
+    ${mistakesHtml}
+  `;
+
+  document.getElementById('par-achievements').innerHTML = ACHIEVEMENTS.map(ach => {
+    const locked = !ST.achievements.includes(ach.id);
+    return `<div class="ach-card${locked ? ' locked' : ''}">
+      <span class="ach-icon">${ach.icon}</span>
+      <div class="ach-name">${ach.name}</div>
+      <div class="ach-desc">${ach.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+// ===== DONE SCREEN =====
+function showDone(icon, title, sub, xp) {
+  document.getElementById('done-icon').textContent = icon;
+  document.getElementById('done-title').textContent = title;
+  document.getElementById('done-sub').textContent = sub;
+  document.getElementById('done-xp').textContent = `+${xp} XP ⭐`;
+  spawnConfetti();
+  showScreen('screen-done');
+}
+
+function spawnConfetti() {
+  const cont = document.getElementById('confetti');
+  cont.innerHTML = '';
+  const colors = ['#2563EB','#7C3AED','#22C55E','#FACC15','#EF4444','#EC4899'];
+  for(let i = 0; i < 60; i++) {
+    const p = document.createElement('div');
+    p.className = 'conf-piece';
+    p.style.cssText = `left:${Math.random()*100}%;top:-20px;background:${colors[Math.floor(Math.random()*colors.length)]};animation-delay:${Math.random()*1.5}s;animation-duration:${1.5+Math.random()}s;width:${6+Math.random()*10}px;height:${6+Math.random()*10}px;border-radius:${Math.random()>0.5?'50%':'3px'}`;
+    cont.appendChild(p);
+  }
+  setTimeout(() => cont.innerHTML = '', 4000);
+}
+
+// ===== HELPERS =====
+function checkAnswer(userAns, task) {
+  const u = userAns.trim().toLowerCase().replace(/\s+/g,'');
+  const c = task.answer.toLowerCase().replace(/\s+/g,'');
+  return u === c;
+}
+
+function addXP(amount) {
+  ST.xp += amount;
+  lsSave();
+  updateAllXP();
+  if(ST.user) document.getElementById('home-xp').textContent = `⭐ ${ST.xp} XP заработано`;
+}
+
+function markSolved(taskId, data) {
+  ST.solvedTasks[taskId] = data;
+  const taskObj = TASKS.find(t => t.id === taskId);
+  if(taskObj) {
+    if(taskObj.topic.toLowerCase().includes('дроб')) {
+      const frCount = Object.values(ST.solvedTasks).filter((_,i) => TASKS[i] && TASKS[i].topic.toLowerCase().includes('дроб')).length;
+      if(frCount >= 5) grantAchievement('fraction_master');
+    }
+  }
+  const totalSolved = Object.keys(ST.solvedTasks).length;
+  if(totalSolved >= 10) grantAchievement('calculator');
+  lsSave();
+}
+
+function addMistake(topic, type) {
+  ST.mistakes.push({topic, type, date: Date.now()});
+  if(ST.mistakes.length > 50) ST.mistakes = ST.mistakes.slice(-50);
+  lsSave();
+}
+
+function grantAchievement(id) {
+  if(!ST.achievements.includes(id)) {
+    ST.achievements.push(id);
+    lsSave();
+  }
+}
+</script>
+</body>
+</html>
