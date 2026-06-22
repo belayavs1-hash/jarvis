@@ -7154,13 +7154,15 @@ function openZone(zone) {
         const total = (sec.topicIds || []).length;
         const pct = total ? Math.round(doneCount / total * 100) : 0;
         const isDone = doneCount === total && total > 0;
-        return `<div onclick="openSection('${sec.id}')" style="padding:16px;border-radius:20px;background:${isDone?'rgba(34,197,94,.12)':'rgba(255,255,255,.07)'};border:1.5px solid ${isDone?'rgba(34,197,94,.35)':'rgba(255,255,255,.12)'};cursor:pointer;transition:all .2s;position:relative;box-shadow:0 4px 18px rgba(0,0,0,.25);backdrop-filter:blur(10px)" onmouseover="this.style.transform='translateY(-3px)';this.style.background='${isDone?'rgba(34,197,94,.18)':'rgba(255,255,255,.12)'}'" onmouseout="this.style.transform='';this.style.background='${isDone?'rgba(34,197,94,.12)':'rgba(255,255,255,.07)'}'">
-          <div style="position:absolute;right:12px;top:12px;font-size:11px;font-weight:700;color:rgba(255,255,255,.4)">§${sec.page||''}</div>
-          <div style="width:40px;height:40px;border-radius:14px;background:rgba(37,99,235,.3);color:#93c5fd;display:grid;place-items:center;font-weight:900;font-size:18px;margin-bottom:10px;border:1px solid rgba(37,99,235,.4)">${sec.icon}</div>
-          <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px;line-height:1.3;padding-right:24px">${sec.name}</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:10px">${total} тем${total===1?'а':total<5?'ы':''}${doneCount>0?' · '+doneCount+'/'+total+' пройдено':''}</div>
-          <div style="height:4px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#22c55e,#3b82f6);border-radius:99px"></div></div>
-          <button onclick="event.stopPropagation();openSection('${sec.id}')" style="width:100%;padding:9px;border-radius:12px;background:${isDone?'rgba(34,197,94,.25)':'rgba(37,99,235,.35)'};color:${isDone?'#86efac':'#93c5fd'};font-weight:800;font-size:12px;border:1px solid ${isDone?'rgba(34,197,94,.4)':'rgba(37,99,235,.5)'};cursor:pointer">${isDone?'✅ Повторить':'Открыть →'}</button>
+        const accent = isDone ? '#22c55e' : '#2563eb';
+        return `<div onclick="openSection('${sec.id}')" style="padding:16px;border-radius:20px;background:#fff;border:1.5px solid #e7e9f1;cursor:pointer;transition:all .2s;position:relative;box-shadow:0 4px 14px rgba(0,0,0,.1);overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 28px rgba(0,0,0,.18)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(0,0,0,.1)'">
+          <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${accent}"></div>
+          <div style="position:absolute;right:12px;top:14px;font-size:11px;font-weight:700;color:#94a3b8">§${sec.page||''}</div>
+          <div style="width:40px;height:40px;border-radius:14px;background:#edf3ff;color:#2563eb;display:grid;place-items:center;font-weight:900;font-size:18px;margin-bottom:10px;margin-top:6px">${sec.icon}</div>
+          <div style="font-size:13px;font-weight:800;color:#17213c;margin-bottom:6px;line-height:1.3;padding-right:24px">${sec.name}</div>
+          <div style="font-size:11px;color:#64748b;margin-bottom:10px">${total} тем${total===1?'а':total<5?'ы':''}${doneCount>0?' · '+doneCount+'/'+total+' пройдено':''}</div>
+          <div style="height:4px;background:#e8edf5;border-radius:99px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#22c55e,#3b82f6);border-radius:99px"></div></div>
+          <button onclick="event.stopPropagation();openSection('${sec.id}')" style="width:100%;padding:9px;border-radius:12px;background:${isDone?'#16a34a':'#1a2744'};color:#fff;font-weight:800;font-size:12px;border:none;cursor:pointer">${isDone?'✅ Повторить':'Открыть →'}</button>
         </div>`;
       }).join('')}
       </div>
@@ -7184,12 +7186,14 @@ function openSection(sectionId) {
   const list = document.getElementById('topic-list');
   list.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">` + topics.map((t, i) => {
     const done = ST.doneTopics[t.id];
-    return `<div onclick="openTaskInputForTopic('${t.id}')" style="padding:16px;border-radius:20px;background:${done?'rgba(34,197,94,.12)':'rgba(255,255,255,.07)'};border:1.5px solid ${done?'rgba(34,197,94,.35)':'rgba(255,255,255,.12)'};cursor:pointer;transition:all .2s;box-shadow:0 4px 18px rgba(0,0,0,.25);position:relative;backdrop-filter:blur(10px)" onmouseover="this.style.transform='translateY(-3px)';this.style.background='${done?'rgba(34,197,94,.18)':'rgba(255,255,255,.13)'}'" onmouseout="this.style.transform='';this.style.background='${done?'rgba(34,197,94,.12)':'rgba(255,255,255,.07)'}'">
-      <div style="position:absolute;right:10px;top:10px;font-size:10px;font-weight:700;color:${done?'#86efac':'rgba(250,204,21,.8)'}">${done?'✅':'+'+t.xp+' XP'}</div>
-      <div style="width:36px;height:36px;border-radius:12px;background:rgba(124,58,237,.3);color:#c4b5fd;display:grid;place-items:center;font-weight:900;font-size:13px;margin-bottom:8px;font-family:var(--pixel);border:1px solid rgba(124,58,237,.4)">${t.id.replace(/[a-z]/g,'')}</div>
-      <div style="font-size:12px;font-weight:800;color:#fff;margin-bottom:5px;line-height:1.3;padding-right:20px">${t.name}</div>
-      <div style="font-size:10px;color:rgba(255,255,255,.45);margin-bottom:10px;line-height:1.4">${t.keywords ? t.keywords.slice(0,3).join(', ') : ''}</div>
-      <button onclick="event.stopPropagation();openTaskInputForTopic('${t.id}')" style="width:100%;padding:8px;border-radius:10px;background:${done?'rgba(34,197,94,.25)':'rgba(124,58,237,.35)'};color:${done?'#86efac':'#c4b5fd'};font-weight:800;font-size:11px;border:1px solid ${done?'rgba(34,197,94,.4)':'rgba(124,58,237,.5)'};cursor:pointer">${done?'✅ Повторить':'Разобрать →'}</button>
+    const topicAccent = done ? '#22c55e' : '#7c3aed';
+    return `<div onclick="openTaskInputForTopic('${t.id}')" style="padding:16px;border-radius:20px;background:#fff;border:1.5px solid #e7e9f1;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(0,0,0,.1);position:relative;overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 28px rgba(0,0,0,.18)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(0,0,0,.1)'">
+      <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${topicAccent}"></div>
+      <div style="position:absolute;right:10px;top:12px;font-size:10px;font-weight:800;color:${done?'#16a34a':'#f59e0b'}">${done?'✅':'+'+t.xp+' XP'}</div>
+      <div style="width:36px;height:36px;border-radius:12px;background:#f3e8ff;color:#7c3aed;display:grid;place-items:center;font-weight:900;font-size:13px;margin-bottom:8px;margin-top:6px;font-family:var(--pixel)">${t.id.replace(/[a-z]/g,'')}</div>
+      <div style="font-size:12px;font-weight:800;color:#17213c;margin-bottom:5px;line-height:1.3;padding-right:20px">${t.name}</div>
+      <div style="font-size:10px;color:#64748b;margin-bottom:10px;line-height:1.4">${t.keywords ? t.keywords.slice(0,3).join(', ') : ''}</div>
+      <button onclick="event.stopPropagation();openTaskInputForTopic('${t.id}')" style="width:100%;padding:8px;border-radius:10px;background:${done?'#16a34a':'#7c3aed'};color:#fff;font-weight:800;font-size:11px;border:none;cursor:pointer">${done?'✅ Повторить':'Разобрать →'}</button>
     </div>`;
   }).join('') + `</div>`;
 
