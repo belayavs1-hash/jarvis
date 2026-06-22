@@ -581,55 +581,72 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 </div>
 
 <!-- ======= LOGIN ======= -->
-<div id="screen-login" class="screen active">
-  <div class="login-wrap">
-    <div class="login-logo">
-      <span class="logo-icon">🎮</span>
-      <div class="logo-title">ПЯТЫЙ УРОВЕНЬ</div>
-      <div class="logo-sub">Учебный мир для 5 класса · СПб</div>
+<div id="screen-login" class="screen active" style="align-items:center;justify-content:center;padding:20px;min-height:100vh">
+
+  <!-- Плавающие символы -->
+  <div style="position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;overflow:hidden;z-index:0">
+    <div style="position:absolute;top:8%;left:7%;font-size:28px;opacity:.18;animation:bob 3s ease-in-out infinite">➕</div>
+    <div style="position:absolute;top:15%;right:10%;font-size:22px;opacity:.15;animation:bob 4s ease-in-out infinite .8s">✕</div>
+    <div style="position:absolute;top:40%;left:4%;font-size:20px;opacity:.15;animation:bob 3.5s ease-in-out infinite 1.2s">½</div>
+    <div style="position:absolute;bottom:20%;right:6%;font-size:26px;opacity:.18;animation:bob 4s ease-in-out infinite .4s">∑</div>
+    <div style="position:absolute;bottom:35%;left:10%;font-size:18px;opacity:.12;animation:bob 3s ease-in-out infinite 2s">π</div>
+    <div style="position:absolute;top:60%;right:12%;font-size:24px;opacity:.14;animation:bob 3.5s ease-in-out infinite 1.6s">²</div>
+  </div>
+
+  <div style="position:relative;z-index:1;width:100%;max-width:400px">
+
+    <!-- Персонаж и заголовок -->
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-size:80px;animation:bob 2.5s ease-in-out infinite;display:inline-block;filter:drop-shadow(0 8px 24px rgba(124,58,237,.6))">🧙</div>
+      <div style="font-family:var(--pixel);font-size:15px;color:#fff;margin-top:14px;letter-spacing:2px;text-shadow:0 0 20px rgba(124,58,237,.8)">ПЯТЫЙ УРОВЕНЬ</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:6px;font-weight:600">Учебный мир · Математика</div>
     </div>
-    <div class="card">
-      <div class="field-group">
-        <label class="field-label">Как тебя зовут?</label>
-        <input id="inp-name" class="input" type="text" placeholder="Напиши своё имя" autofocus onkeydown="if(event.key==='Enter')doLogin()">
+
+    <!-- Карточка входа -->
+    <div style="background:rgba(255,255,255,.06);backdrop-filter:blur(20px);border:1.5px solid rgba(255,255,255,.14);border-radius:28px;padding:28px 24px;box-shadow:0 24px 60px rgba(0,0,0,.4)">
+
+      <!-- Имя -->
+      <div style="margin-bottom:20px">
+        <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">⚔️ Имя героя</div>
+        <input id="inp-name" type="text" placeholder="Напиши своё имя..." autofocus onkeydown="if(event.key==='Enter')doLogin()"
+          style="width:100%;padding:15px 18px;border-radius:16px;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font-family:var(--body);font-size:16px;font-weight:700;outline:none;transition:border-color .2s"
+          onfocus="this.style.borderColor='rgba(124,58,237,.8)'" onblur="this.style.borderColor='rgba(255,255,255,.18)'">
       </div>
-      <div class="field-group">
-        <label class="field-label">Кто ты?</label>
-        <div class="role-row">
-          <div class="role-card sel" id="rc-pupil" onclick="setRole('pupil')">
-            <span class="ri">🎒</span>
-            <strong>Ученик</strong>
-            <span>Учусь и прокачиваюсь</span>
+
+      <!-- Роль -->
+      <div style="margin-bottom:24px">
+        <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">🎭 Кто ты?</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div id="rc-pupil" onclick="setRole('pupil')" style="padding:16px 12px;border-radius:18px;border:2px solid rgba(124,58,237,.6);background:rgba(124,58,237,.2);cursor:pointer;text-align:center;transition:all .2s">
+            <div style="font-size:32px;margin-bottom:8px">🎒</div>
+            <div style="font-size:14px;font-weight:900;color:#fff">Ученик</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:3px">Учусь и прокачиваюсь</div>
           </div>
-          <div class="role-card" id="rc-parent" onclick="setRole('parent')">
-            <span class="ri">🛡️</span>
-            <strong>Родитель</strong>
-            <span>Смотрю прогресс</span>
+          <div id="rc-parent" onclick="setRole('parent')" style="padding:16px 12px;border-radius:18px;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);cursor:pointer;text-align:center;transition:all .2s">
+            <div style="font-size:32px;margin-bottom:8px">🛡️</div>
+            <div style="font-size:14px;font-weight:900;color:rgba(255,255,255,.7)">Родитель</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:3px">Смотрю прогресс</div>
           </div>
         </div>
       </div>
-      <div class="field-group" id="mode-group">
-        <label class="field-label">Как общаться с Умником?</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-          <div class="role-card sel" id="rm-text" onclick="setInputMode('text')" style="padding:12px 8px">
-            <span class="ri">⌨️</span>
-            <strong style="font-size:12px">Текст</strong>
-            <span>Пишу</span>
-          </div>
-          <div class="role-card" id="rm-voice" onclick="setInputMode('voice')" style="padding:12px 8px">
-            <span class="ri">🎤</span>
-            <strong style="font-size:12px">Голос</strong>
-            <span>Говорю</span>
-          </div>
-          <div class="role-card" id="rm-both" onclick="setInputMode('both')" style="padding:12px 8px">
-            <span class="ri">🔀</span>
-            <strong style="font-size:12px">Оба</strong>
-            <span>Как удобно</span>
-          </div>
-        </div>
+
+      <!-- Режим ввода (скрытый, сохраняем text по умолчанию) -->
+      <div id="mode-group" style="display:none">
+        <input type="hidden" id="rm-text">
+        <input type="hidden" id="rm-voice">
+        <input type="hidden" id="rm-both">
       </div>
-      <button class="btn-main" onclick="doLogin()">🚀 ПОЕХАЛИ!</button>
+
+      <!-- Кнопка -->
+      <button onclick="doLogin()" style="width:100%;padding:18px;border-radius:18px;border:none;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;font-family:var(--pixel);font-size:12px;letter-spacing:2px;cursor:pointer;transition:all .2s;box-shadow:0 8px 28px rgba(124,58,237,.5);display:flex;align-items:center;justify-content:center;gap:10px"
+        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 14px 36px rgba(124,58,237,.6)'"
+        onmouseout="this.style.transform='';this.style.boxShadow='0 8px 28px rgba(124,58,237,.5)'">
+        🚀 НАЧАТЬ МИССИЮ
+      </button>
     </div>
+
+    <!-- XP-подсказка -->
+    <div style="text-align:center;margin-top:16px;font-size:12px;color:rgba(255,255,255,.35)">⭐ За каждую тему — опыт и достижения</div>
   </div>
 </div>
 
@@ -6983,13 +7000,19 @@ let _inputMode = 'text';
 
 function setRole(r) {
   _role = r;
-  document.getElementById('rc-pupil').classList.toggle('sel', r === 'pupil');
-  document.getElementById('rc-parent').classList.toggle('sel', r === 'parent');
-  document.getElementById('mode-group').style.display = r === 'pupil' ? '' : 'none';
+  const pupilCard = document.getElementById('rc-pupil');
+  const parentCard = document.getElementById('rc-parent');
+  if (pupilCard) {
+    pupilCard.style.borderColor = r === 'pupil' ? 'rgba(124,58,237,.8)' : 'rgba(255,255,255,.12)';
+    pupilCard.style.background = r === 'pupil' ? 'rgba(124,58,237,.25)' : 'rgba(255,255,255,.05)';
+  }
+  if (parentCard) {
+    parentCard.style.borderColor = r === 'parent' ? 'rgba(124,58,237,.8)' : 'rgba(255,255,255,.12)';
+    parentCard.style.background = r === 'parent' ? 'rgba(124,58,237,.25)' : 'rgba(255,255,255,.05)';
+  }
 }
 function setInputMode(m) {
   _inputMode = m;
-  ['text','voice','both'].forEach(x => document.getElementById('rm-' + x).classList.toggle('sel', x === m));
 }
 function doLogin() {
   const name = document.getElementById('inp-name').value.trim();
