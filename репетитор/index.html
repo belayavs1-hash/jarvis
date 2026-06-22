@@ -597,11 +597,21 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 
   <div style="position:relative;z-index:1;width:100%;max-width:400px">
 
-    <!-- Персонаж и заголовок -->
-    <div style="text-align:center;margin-bottom:28px">
-      <div style="font-size:80px;animation:bob 2.5s ease-in-out infinite;display:inline-block;filter:drop-shadow(0 8px 24px rgba(124,58,237,.6))">🧙</div>
-      <div style="font-family:var(--pixel);font-size:15px;color:#fff;margin-top:14px;letter-spacing:2px;text-shadow:0 0 20px rgba(124,58,237,.8)">ПЯТЫЙ УРОВЕНЬ</div>
-      <div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:6px;font-weight:600">Учебный мир · Математика</div>
+    <!-- Логотип -->
+    <div style="text-align:center;margin-bottom:28px;display:flex;align-items:center;justify-content:center;gap:14px">
+      <!-- Кубик с цифрой 5 -->
+      <div style="position:relative;width:64px;height:64px;animation:bob 2.5s ease-in-out infinite;display:inline-block;flex-shrink:0">
+        <div style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#2563eb,#1d4ed8);box-shadow:0 6px 20px rgba(37,99,235,.55),inset 0 1px 0 rgba(255,255,255,.25);display:grid;place-items:center">
+          <span style="font-family:var(--pixel);font-size:28px;color:#fff;line-height:1">5</span>
+        </div>
+        <span style="position:absolute;top:-6px;right:-6px;font-size:18px;line-height:1">✨</span>
+        <span style="position:absolute;top:-10px;left:4px;font-size:12px;line-height:1">⭐</span>
+      </div>
+      <!-- Текст -->
+      <div style="text-align:left">
+        <div style="font-size:22px;font-weight:900;color:#fff;letter-spacing:.5px;line-height:1.1">Пятый уровень</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:4px;font-weight:500">ИИ-репетитор по математике</div>
+      </div>
     </div>
 
     <!-- Карточка входа -->
