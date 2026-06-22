@@ -54,6 +54,8 @@ body { font-family: var(--body); background: radial-gradient(circle at 20% 10%, 
   align-items: center; justify-content: center;
   background: var(--bg);
   padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
 .login-wrap { width: 100%; max-width: 420px; }
 .login-logo { text-align: center; margin-bottom: 32px; }
@@ -583,8 +585,8 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 <!-- ======= LOGIN ======= -->
 <div id="screen-login" class="screen active" style="align-items:center;justify-content:center;padding:20px;min-height:100vh">
 
-  <!-- Плавающие символы -->
-  <div style="position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;overflow:hidden;z-index:0">
+  <!-- Плавающие символы — только на экране входа -->
+  <div style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;overflow:hidden;z-index:0">
     <div style="position:absolute;top:8%;left:7%;font-size:28px;opacity:.18;animation:bob 3s ease-in-out infinite">➕</div>
     <div style="position:absolute;top:15%;right:10%;font-size:22px;opacity:.15;animation:bob 4s ease-in-out infinite .8s">✕</div>
     <div style="position:absolute;top:40%;left:4%;font-size:20px;opacity:.15;animation:bob 3.5s ease-in-out infinite 1.2s">½</div>
@@ -617,15 +619,15 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
       <div style="margin-bottom:24px">
         <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">🎭 Кто ты?</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div id="rc-pupil" onclick="setRole('pupil')" style="padding:16px 12px;border-radius:18px;border:2px solid rgba(124,58,237,.6);background:rgba(124,58,237,.2);cursor:pointer;text-align:center;transition:all .2s">
+          <div id="rc-pupil" onclick="setRole('pupil')" style="padding:16px 12px;border-radius:18px;border:2px solid rgba(124,58,237,.8);background:rgba(124,58,237,.2);cursor:pointer;text-align:center;transition:all .2s;box-shadow:0 0 16px rgba(124,58,237,.3)">
             <div style="font-size:32px;margin-bottom:8px">🎒</div>
             <div style="font-size:14px;font-weight:900;color:#fff">Ученик</div>
             <div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:3px">Учусь и прокачиваюсь</div>
           </div>
-          <div id="rc-parent" onclick="setRole('parent')" style="padding:16px 12px;border-radius:18px;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);cursor:pointer;text-align:center;transition:all .2s">
+          <div id="rc-parent" onclick="setRole('parent')" style="padding:16px 12px;border-radius:18px;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.07);cursor:pointer;text-align:center;transition:all .2s;box-shadow:0 0 12px rgba(255,255,255,.05)">
             <div style="font-size:32px;margin-bottom:8px">🛡️</div>
-            <div style="font-size:14px;font-weight:900;color:rgba(255,255,255,.7)">Родитель</div>
-            <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:3px">Смотрю прогресс</div>
+            <div style="font-size:14px;font-weight:900;color:#fff">Родитель</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:3px">Смотрю прогресс</div>
           </div>
         </div>
       </div>
@@ -7182,7 +7184,7 @@ function openZone(zone) {
         return `<div onclick="openSection('${sec.id}')" style="padding:16px;border-radius:20px;background:#fff;border:1.5px solid #e7e9f1;cursor:pointer;transition:all .2s;position:relative;box-shadow:0 4px 14px rgba(0,0,0,.1);overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 28px rgba(0,0,0,.18)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(0,0,0,.1)'">
           <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${accent}"></div>
           <div style="position:absolute;right:12px;top:14px;font-size:11px;font-weight:700;color:#94a3b8">§${sec.page||''}</div>
-          <div style="width:40px;height:40px;border-radius:14px;background:#edf3ff;color:#2563eb;display:grid;place-items:center;font-weight:900;font-size:18px;margin-bottom:10px;margin-top:6px">${sec.icon}</div>
+          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#edf3ff,#dbeafe);color:#2563eb;display:grid;place-items:center;font-weight:900;font-size:20px;margin-bottom:10px;margin-top:6px;border:2px solid rgba(37,99,235,.2);box-shadow:0 2px 8px rgba(37,99,235,.15)">${sec.icon}</div>
           <div style="font-size:13px;font-weight:800;color:#17213c;margin-bottom:6px;line-height:1.3;padding-right:24px">${sec.name}</div>
           <div style="font-size:11px;color:#64748b;margin-bottom:10px">${total} тем${total===1?'а':total<5?'ы':''}${doneCount>0?' · '+doneCount+'/'+total+' пройдено':''}</div>
           <div style="height:4px;background:#e8edf5;border-radius:99px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#22c55e,#3b82f6);border-radius:99px"></div></div>
@@ -7214,7 +7216,7 @@ function openSection(sectionId) {
     return `<div onclick="openTaskInputForTopic('${t.id}')" style="padding:16px;border-radius:20px;background:#fff;border:1.5px solid #e7e9f1;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(0,0,0,.1);position:relative;overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 28px rgba(0,0,0,.18)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(0,0,0,.1)'">
       <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${topicAccent}"></div>
       <div style="position:absolute;right:10px;top:12px;font-size:10px;font-weight:800;color:${done?'#16a34a':'#f59e0b'}">${done?'✅':'+'+t.xp+' XP'}</div>
-      <div style="width:36px;height:36px;border-radius:12px;background:#f3e8ff;color:#7c3aed;display:grid;place-items:center;font-weight:900;font-size:13px;margin-bottom:8px;margin-top:6px;font-family:var(--pixel)">${t.id.replace(/[a-z]/g,'')}</div>
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f3e8ff,#ede9fe);color:#7c3aed;display:grid;place-items:center;font-weight:900;font-size:11px;margin-bottom:8px;margin-top:6px;font-family:var(--pixel);border:2px solid rgba(124,58,237,.25);box-shadow:0 2px 8px rgba(124,58,237,.12)">${t.id.replace(/[a-z]/g,'')}</div>
       <div style="font-size:12px;font-weight:800;color:#17213c;margin-bottom:5px;line-height:1.3;padding-right:20px">${t.name}</div>
       <div style="font-size:10px;color:#64748b;margin-bottom:10px;line-height:1.4">${t.keywords ? t.keywords.slice(0,3).join(', ') : ''}</div>
       <button onclick="event.stopPropagation();openTaskInputForTopic('${t.id}')" style="width:100%;padding:8px;border-radius:10px;background:${done?'#16a34a':'#7c3aed'};color:#fff;font-weight:800;font-size:11px;border:none;cursor:pointer">${done?'✅ Повторить':'Разобрать →'}</button>

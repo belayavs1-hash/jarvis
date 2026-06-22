@@ -7,26 +7,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #4a4580;
-  --bg2: #3d3970;
-  --bg3: #5a5690;
+  --bg: #1a2744;
+  --bg2: #142040;
+  --bg3: #223058;
   --card: #ffffff;
-  --border: #d8d4f0;
-  --accent: #6c63ff;
-  --accent2: #ff7043;
-  --accent-light: #ede9ff;
-  --math-color: #e67e22;
-  --math-bg: #fff8ee;
-  --russian-color: #0288d1;
-  --russian-bg: #e8f4fd;
-  --english-color: #2e7d32;
+  --border: #d0d8f0;
+  --accent: #2979ff;
+  --accent2: #ff6d00;
+  --accent-light: #e3eeff;
+  --math-color: #ff6d00;
+  --math-bg: #fff3e0;
+  --russian-color: #00b0ff;
+  --russian-bg: #e1f5fe;
+  --english-color: #00c853;
   --english-bg: #e8f5e9;
-  --speech-color: #8e24aa;
+  --speech-color: #d500f9;
   --speech-bg: #f3e5f5;
-  --text: #1a1f36;
-  --text2: #4a5568;
-  --text3: #8896b0;
-  --green: #27ae60;
+  --text: #1a2744;
+  --text2: #3d4f7c;
+  --text3: #7a8ab0;
+  --green: #00c853;
   --red: #e53935;
   --pixel: 'Press Start 2P', monospace;
   --body: 'Nunito', sans-serif;
@@ -34,18 +34,19 @@
   --shadow-md: 0 8px 28px rgba(0,0,0,.22);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--body); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+body { font-family: var(--body); background: radial-gradient(circle at 20% 10%, #1a3a8f 0, #0e1933 40%, #080d1c 100%) fixed; background-attachment: fixed; color: var(--text); min-height: 100vh; overflow-x: hidden; }
 
 /* SCREENS */
 .screen { display: none; min-height: 100vh; flex-direction: column; }
 .screen.active { display: flex; }
 /* Inner screens get white bg; home stays transparent (shows body bg) */
-#screen-zone, #screen-task, #screen-chat, #screen-cheat, #screen-mycheat,
-#screen-mindmap, #screen-know, #screen-test, #screen-ach, #screen-bonus,
-#screen-parent, #screen-rule, #screen-trainer, #screen-trainer-arena,
+#screen-zone, #screen-section, #screen-task, #screen-chat,
+#screen-cheat, #screen-mycheat, #screen-mindmap, #screen-know,
+#screen-test, #screen-ach, #screen-bonus, #screen-parent,
+#screen-rule, #screen-trainer, #screen-trainer-arena,
 #screen-trainer-result, #screen-column-arena, #screen-mental-arena,
-#screen-word-arena, #screen-section {
-  background: #f5f3ff;
+#screen-word-arena {
+  background: radial-gradient(circle at 20% 10%, #1a3a8f 0, #101833 35%, #090e20 75%);
 }
 
 /* ===== LOGIN ===== */
@@ -53,6 +54,8 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
   align-items: center; justify-content: center;
   background: var(--bg);
   padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
 .login-wrap { width: 100%; max-width: 420px; }
 .login-logo { text-align: center; margin-bottom: 32px; }
@@ -64,9 +67,9 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 .card { background: var(--card); border: 1.5px solid var(--border); border-radius: 20px; padding: 28px; box-shadow: var(--shadow); }
 .field-label { font-size: 12px; font-weight: 700; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block; }
 .field-group { margin-bottom: 20px; }
-.input { background: var(--bg2); border: 1.5px solid var(--border); border-radius: 12px; padding: 13px 16px; color: var(--text); font-family: var(--body); font-size: 15px; width: 100%; outline: none; transition: border-color .2s, box-shadow .2s; font-weight: 600; }
-.input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
-.input::placeholder { color: var(--text3); }
+.input { background: rgba(255,255,255,.08); border: 1.5px solid rgba(255,255,255,.15); border-radius: 12px; padding: 13px 16px; color: #fff; font-family: var(--body); font-size: 15px; width: 100%; outline: none; transition: border-color .2s, box-shadow .2s; font-weight: 600; }
+.input:focus { border-color: rgba(37,99,235,.7); box-shadow: 0 0 0 3px rgba(37,99,235,.2); }
+.input::placeholder { color: rgba(255,255,255,.35); }
 
 .role-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .role-card { background: var(--bg2); border: 2px solid var(--border); border-radius: 14px; padding: 16px 12px; cursor: pointer; text-align: center; transition: all .2s; }
@@ -125,7 +128,7 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 .zone-card { border-radius: 18px; border: 2px solid; padding: 18px 16px; cursor: pointer; transition: all .2s; position: relative; overflow: hidden; box-shadow: var(--shadow); }
 .zone-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
 .zone-card:active { transform: translateY(0); }
-.zone-card .z-bg { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 64px; opacity: .10; pointer-events: none; }
+.zone-card .z-bg { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 64px; opacity: .22; pointer-events: none; }
 .zone-inner { display: flex; gap: 14px; align-items: center; position: relative; }
 .zone-icon-box { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 30px; flex-shrink: 0; border: 2px solid; }
 .zone-info { flex: 1; }
@@ -133,28 +136,36 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 .zone-desc { font-size: 12px; opacity: .75; margin-top: 2px; }
 .zone-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 999px; border: 1px solid; margin-top: 5px; text-transform: uppercase; letter-spacing: .5px; }
 .zone-lvl { font-family: var(--pixel); font-size: 8px; opacity: .6; margin-top: 4px; }
-.zone-arrow { font-size: 18px; margin-left: auto; opacity: .5; }
+.zone-arrow { font-size: 22px; margin-left: auto; opacity: .85; font-weight: 700; }
 
 /* Math */
-.math .zone-card { border-color: rgba(255,255,255,.25); background: #fff; border-left: 5px solid #f59e0b; }
-.math .zone-icon-box { background: #fff8ee; border-color: #f59e0b44; }
-.math .zone-name { color: #b45309; }
-.math .zone-tag { color: #b45309; border-color: #f59e0b55; background: #fef9ee; }
+.math .zone-card { border-color: rgba(255,109,0,.4); background: rgba(14,25,51,.72); border-left: 5px solid #ff6d00; backdrop-filter: blur(12px); }
+.math .zone-icon-box { background: rgba(255,109,0,.2); border-color: rgba(255,109,0,.5); }
+.math .zone-name { color: #ffab40; }
+.math .zone-desc { color: rgba(255,255,255,.7); }
+.math .zone-arrow { color: #ffab40; }
+.math .prog-bar { background: rgba(255,255,255,.15); }
 /* Russian */
-.russian .zone-card { border-color: rgba(255,255,255,.25); background: #fff; border-left: 5px solid #0288d1; }
-.russian .zone-icon-box { background: #e1f5fe; border-color: #0288d155; }
-.russian .zone-name { color: #01579b; }
-.russian .zone-tag { color: #01579b; border-color: #0288d155; background: #f0f9ff; }
+.russian .zone-card { border-color: rgba(0,176,255,.4); background: rgba(14,25,51,.72); border-left: 5px solid #00b0ff; backdrop-filter: blur(12px); }
+.russian .zone-icon-box { background: rgba(0,176,255,.2); border-color: rgba(0,176,255,.5); }
+.russian .zone-name { color: #64d8ff; }
+.russian .zone-desc { color: rgba(255,255,255,.7); }
+.russian .zone-arrow { color: #64d8ff; }
+.russian .prog-bar { background: rgba(255,255,255,.15); }
 /* English */
-.english .zone-card { border-color: rgba(255,255,255,.25); background: #fff; border-left: 5px solid #2e7d32; }
-.english .zone-icon-box { background: #f1f8e9; border-color: #2e7d3255; }
-.english .zone-name { color: #1b5e20; }
-.english .zone-tag { color: #1b5e20; border-color: #2e7d3255; background: #f0fdf4; }
+.english .zone-card { border-color: rgba(0,200,83,.4); background: rgba(14,25,51,.72); border-left: 5px solid #00c853; backdrop-filter: blur(12px); }
+.english .zone-icon-box { background: rgba(0,200,83,.2); border-color: rgba(0,200,83,.5); }
+.english .zone-name { color: #69f0ae; }
+.english .zone-desc { color: rgba(255,255,255,.7); }
+.english .zone-arrow { color: #69f0ae; }
+.english .prog-bar { background: rgba(255,255,255,.15); }
 /* Speech */
-.speech .zone-card { border-color: rgba(255,255,255,.25); background: #fff; border-left: 5px solid #8e24aa; }
-.speech .zone-icon-box { background: #fce4ec; border-color: #8e24aa55; }
-.speech .zone-name { color: #6a1b9a; }
-.speech .zone-tag { color: #6a1b9a; border-color: #8e24aa55; background: #fdf4ff; }
+.speech .zone-card { border-color: rgba(213,0,249,.4); background: rgba(14,25,51,.72); border-left: 5px solid #d500f9; backdrop-filter: blur(12px); }
+.speech .zone-icon-box { background: rgba(213,0,249,.2); border-color: rgba(213,0,249,.5); }
+.speech .zone-name { color: #ea80fc; }
+.speech .zone-desc { color: rgba(255,255,255,.7); }
+.speech .zone-arrow { color: #ea80fc; }
+.speech .prog-bar { background: rgba(255,255,255,.15); }
 
 /* Progress bar */
 .prog-bar { height: 5px; background: rgba(255,255,255,.2); border-radius: 99px; margin-top: 8px; overflow: hidden; }
@@ -162,11 +173,11 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 
 /* ===== ZONE MAP (topic list) ===== */
 #screen-zone { max-width: 480px; margin: 0 auto; width: 100%; }
-.zone-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,.15); background: rgba(0,0,0,.12); }
-.zone-header-title { font-size: 14px; font-weight: 900; color: #fff; }
+.zone-header { display: flex; align-items: center; gap: 12px; padding: 16px 16px; border-bottom: 1px solid rgba(255,255,255,.15); background: linear-gradient(135deg, #1a3a8f 0%, #7c3aed 100%); }
+.zone-header-title { font-size: 15px; font-weight: 900; color: #fff; }
 .zone-header-icon { font-size: 22px; }
-.back-btn { background: rgba(255,255,255,.15); border: none; cursor: pointer; font-size: 20px; color: #fff; padding: 6px 10px; border-radius: 10px; transition: all .15s; }
-.back-btn:hover { background: rgba(255,255,255,.25); color: #fff; }
+.back-btn { background: rgba(255,255,255,.2); border: none; cursor: pointer; font-size: 20px; color: #fff; padding: 6px 10px; border-radius: 10px; transition: all .15s; }
+.back-btn:hover { background: rgba(255,255,255,.35); color: #fff; }
 /* back-btn defined under .zone-header */
 .zone-header-title { font-size: 14px; font-weight: 900; }
 .zone-header-icon { font-size: 22px; }
@@ -187,27 +198,27 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 
 /* ===== TASK INPUT ===== */
 #screen-task { max-width: 480px; margin: 0 auto; width: 100%; }
-.task-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.task-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,.1); background: rgba(10,15,35,.6); backdrop-filter: blur(12px); }
 .task-body { flex: 1; padding: 16px; overflow-y: auto; }
-.task-title { font-size: 16px; font-weight: 900; margin-bottom: 4px; }
-.task-subtitle { font-size: 13px; color: var(--text2); margin-bottom: 16px; line-height: 1.5; }
+.task-title { font-size: 16px; font-weight: 900; margin-bottom: 4px; color: #fff; }
+.task-subtitle { font-size: 13px; color: rgba(255,255,255,.6); margin-bottom: 16px; line-height: 1.5; }
 textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14px; }
-.task-photo-block { display: flex; align-items: center; gap: 14px; padding: 18px 16px; background: linear-gradient(135deg,var(--accent-light),#ede9ff80); border: 2px dashed var(--accent); border-radius: 16px; cursor: pointer; transition: border-color .2s, box-shadow .2s; width: 100%; box-sizing: border-box; }
-.task-photo-block:hover { box-shadow: var(--shadow-md); }
-.task-wizard-block { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+.task-photo-block { display: flex; align-items: center; gap: 14px; padding: 18px 16px; background: rgba(37,99,235,.15); border: 2px dashed rgba(37,99,235,.5); border-radius: 16px; cursor: pointer; transition: border-color .2s, box-shadow .2s; width: 100%; box-sizing: border-box; }
+.task-photo-block:hover { box-shadow: 0 8px 24px rgba(0,0,0,.3); border-color: rgba(37,99,235,.8); }
+.task-wizard-block { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 14px; padding: 14px; }
 .quick-examples { margin-top: 12px; }
 .quick-label { font-size: 11px; color: var(--text3); font-weight: 700; margin-bottom: 8px; display: block; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .tag { background: var(--bg3); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 700; color: var(--text2); cursor: pointer; transition: all .15s; }
 .tag:hover { border-color: var(--accent); color: var(--accent); }
 
-.or-divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; color: var(--text3); font-size: 12px; }
-.or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.or-divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; color: rgba(255,255,255,.45); font-size: 12px; }
+.or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.15); }
 
 /* Manual task input */
 .topic-selector { display: flex; flex-direction: column; gap: 8px; }
-.topic-pill { background: var(--bg3); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all .15s; display: flex; align-items: center; gap: 10px; }
-.topic-pill:hover, .topic-pill.sel { border-color: var(--accent); background: var(--accent-light); }
+.topic-pill { background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.12); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all .15s; display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,.85); }
+.topic-pill:hover, .topic-pill.sel { border-color: rgba(37,99,235,.6); background: rgba(37,99,235,.2); color: #fff; }
 .topic-pill .tp-icon { font-size: 18px; }
 .topic-pill .tp-text { font-size: 13px; font-weight: 700; }
 
@@ -219,9 +230,9 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 .chat-info .cstatus { font-size: 11px; color: var(--text3); }
 .chat-hright { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 
-.task-badge { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin: 8px 14px; font-size: 12px; display: flex; align-items: flex-start; gap: 10px; }
+.task-badge { background: rgba(20,26,53,.85); border: 1px solid rgba(255,255,255,.12); border-radius: 14px; padding: 10px 14px; margin: 8px 14px; font-size: 12px; display: flex; align-items: flex-start; gap: 10px; backdrop-filter: blur(8px); }
 .task-badge-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-.task-badge-text { flex: 1; line-height: 1.5; color: var(--text2); }
+.task-badge-text { flex: 1; line-height: 1.5; color: rgba(255,255,255,.7); }
 .task-badge-text strong { color: var(--text); }
 .task-badge-change { font-size: 11px; color: var(--text3); cursor: pointer; display: block; margin-top: 4px; }
 .task-badge-change:hover { color: var(--text2); }
@@ -232,15 +243,15 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 .msg.bot { align-self: flex-start; }
 .m-avatar { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
 .m-bubble { padding: 11px 14px; border-radius: 14px; font-size: 14px; line-height: 1.65; font-weight: 600; }
-.msg.bot .m-bubble { background: var(--card); border: 1.5px solid var(--border); border-top-left-radius: 4px; box-shadow: var(--shadow); }
-.msg.user .m-bubble { background: var(--accent); color: #fff; border-top-right-radius: 4px; }
+.msg.bot .m-bubble { background: rgba(20,26,53,.85); border: 1px solid rgba(255,255,255,.12); border-top-left-radius: 4px; color: #e8efff; backdrop-filter: blur(8px); }
+.msg.user .m-bubble { background: #2979ff; color: #fff; border-top-right-radius: 4px; box-shadow: 0 4px 14px rgba(41,121,255,.35); }
 
 /* Hint dots */
 .hint-row { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text3); margin-bottom: 6px; }
 .hdot { width: 8px; height: 8px; border-radius: 50%; background: var(--bg3); border: 1.5px solid var(--border); transition: all .3s; }
 .hdot.used { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 8px var(--accent); }
 
-.chat-input-area { padding: 10px 14px; border-top: 1px solid var(--border); }
+.chat-input-area { padding: 10px 14px; border-top: 1px solid rgba(255,255,255,.1); background: rgba(10,15,35,.9); backdrop-filter: blur(12px); }
 .chat-row { display: flex; gap: 8px; align-items: flex-end; }
 .chat-row textarea { flex: 1; resize: none; min-height: 44px; max-height: 100px; line-height: 1.5; padding: 10px 13px; font-size: 14px; }
 .send-btn { width: 44px; height: 44px; background: var(--accent); border: none; border-radius: 12px; cursor: pointer; font-size: 18px; flex-shrink: 0; transition: all .15s; color: #fff; font-weight: 900; box-shadow: 0 2px 8px rgba(108,99,255,.35); }
@@ -378,8 +389,9 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 #screen-ach { max-width: 480px; margin: 0 auto; width: 100%; }
 .ach-body { flex: 1; padding: 16px; overflow-y: auto; }
 .ach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.ach-card { background: var(--card); border: 1.5px solid; border-radius: 14px; padding: 16px 14px; transition: all .2s; }
-.ach-card.unlocked { border-color: var(--accent); background: var(--accent-light); }
+.ach-card { background: #fff; border: 1.5px solid #e7e9f1; border-radius: 14px; padding: 16px 14px; transition: all .2s; position: relative; overflow: hidden; }
+.ach-card.unlocked { border-color: #fbbf24; background: #fff; }
+.ach-card.unlocked::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #f59e0b, #7c3aed); }
 .ach-card.locked { border-color: var(--border); opacity: .45; }
 .ach-icon { font-size: 30px; margin-bottom: 8px; }
 .ach-name { font-size: 12px; font-weight: 900; margin-bottom: 4px; }
@@ -423,13 +435,13 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 #screen-parent { max-width: 480px; margin: 0 auto; width: 100%; }
 .parent-body { flex: 1; padding: 16px; overflow-y: auto; }
 .stat-row { display: flex; gap: 10px; margin-bottom: 16px; }
-.stat-box { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 12px; text-align: center; }
+.stat-box { flex: 1; background: #fff; border: 1.5px solid #e7e9f1; border-radius: 12px; padding: 14px 12px; text-align: center; }
 .stat-num { font-family: var(--pixel); font-size: 18px; color: var(--accent); display: block; margin-bottom: 4px; }
 .stat-label { font-size: 11px; color: var(--text2); }
-.insight-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
-.insight-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px; font-weight: 800; }
-.insight-body { font-size: 13px; color: var(--text2); line-height: 1.6; }
-.zone-prog-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.insight-card { background: #fff; border: 1.5px solid #e7e9f1; border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+.insight-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 13px; font-weight: 800; color: #17213c; }
+.insight-body { font-size: 13px; color: #475569; line-height: 1.6; }
+.zone-prog-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
 .zone-prog-item:last-child { border-bottom: none; }
 .zp-icon { font-size: 18px; }
 .zp-info { flex: 1; }
@@ -571,55 +583,72 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 </div>
 
 <!-- ======= LOGIN ======= -->
-<div id="screen-login" class="screen active">
-  <div class="login-wrap">
-    <div class="login-logo">
-      <span class="logo-icon">🎮</span>
-      <div class="logo-title">ПЯТЫЙ УРОВЕНЬ</div>
-      <div class="logo-sub">Учебный мир для 5 класса · СПб</div>
+<div id="screen-login" class="screen active" style="align-items:center;justify-content:center;padding:20px;min-height:100vh">
+
+  <!-- Плавающие символы — только на экране входа -->
+  <div style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;overflow:hidden;z-index:0">
+    <div style="position:absolute;top:8%;left:7%;font-size:28px;opacity:.18;animation:bob 3s ease-in-out infinite">➕</div>
+    <div style="position:absolute;top:15%;right:10%;font-size:22px;opacity:.15;animation:bob 4s ease-in-out infinite .8s">✕</div>
+    <div style="position:absolute;top:40%;left:4%;font-size:20px;opacity:.15;animation:bob 3.5s ease-in-out infinite 1.2s">½</div>
+    <div style="position:absolute;bottom:20%;right:6%;font-size:26px;opacity:.18;animation:bob 4s ease-in-out infinite .4s">∑</div>
+    <div style="position:absolute;bottom:35%;left:10%;font-size:18px;opacity:.12;animation:bob 3s ease-in-out infinite 2s">π</div>
+    <div style="position:absolute;top:60%;right:12%;font-size:24px;opacity:.14;animation:bob 3.5s ease-in-out infinite 1.6s">²</div>
+  </div>
+
+  <div style="position:relative;z-index:1;width:100%;max-width:400px">
+
+    <!-- Персонаж и заголовок -->
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-size:80px;animation:bob 2.5s ease-in-out infinite;display:inline-block;filter:drop-shadow(0 8px 24px rgba(124,58,237,.6))">🧙</div>
+      <div style="font-family:var(--pixel);font-size:15px;color:#fff;margin-top:14px;letter-spacing:2px;text-shadow:0 0 20px rgba(124,58,237,.8)">ПЯТЫЙ УРОВЕНЬ</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:6px;font-weight:600">Учебный мир · Математика</div>
     </div>
-    <div class="card">
-      <div class="field-group">
-        <label class="field-label">Как тебя зовут?</label>
-        <input id="inp-name" class="input" type="text" placeholder="Напиши своё имя" autofocus onkeydown="if(event.key==='Enter')doLogin()">
+
+    <!-- Карточка входа -->
+    <div style="background:rgba(255,255,255,.06);backdrop-filter:blur(20px);border:1.5px solid rgba(255,255,255,.14);border-radius:28px;padding:28px 24px;box-shadow:0 24px 60px rgba(0,0,0,.4)">
+
+      <!-- Имя -->
+      <div style="margin-bottom:20px">
+        <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">⚔️ Имя героя</div>
+        <input id="inp-name" type="text" placeholder="Напиши своё имя..." autofocus onkeydown="if(event.key==='Enter')doLogin()"
+          style="width:100%;padding:15px 18px;border-radius:16px;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font-family:var(--body);font-size:16px;font-weight:700;outline:none;transition:border-color .2s"
+          onfocus="this.style.borderColor='rgba(124,58,237,.8)'" onblur="this.style.borderColor='rgba(255,255,255,.18)'">
       </div>
-      <div class="field-group">
-        <label class="field-label">Кто ты?</label>
-        <div class="role-row">
-          <div class="role-card sel" id="rc-pupil" onclick="setRole('pupil')">
-            <span class="ri">🎒</span>
-            <strong>Ученик</strong>
-            <span>Учусь и прокачиваюсь</span>
+
+      <!-- Роль -->
+      <div style="margin-bottom:24px">
+        <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">🎭 Кто ты?</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div id="rc-pupil" onclick="setRole('pupil')" style="padding:16px 12px;border-radius:18px;border:2px solid rgba(124,58,237,.8);background:rgba(124,58,237,.2);cursor:pointer;text-align:center;transition:all .2s;box-shadow:0 0 16px rgba(124,58,237,.3)">
+            <div style="font-size:32px;margin-bottom:8px">🎒</div>
+            <div style="font-size:14px;font-weight:900;color:#fff">Ученик</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:3px">Учусь и прокачиваюсь</div>
           </div>
-          <div class="role-card" id="rc-parent" onclick="setRole('parent')">
-            <span class="ri">🛡️</span>
-            <strong>Родитель</strong>
-            <span>Смотрю прогресс</span>
+          <div id="rc-parent" onclick="setRole('parent')" style="padding:16px 12px;border-radius:18px;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.07);cursor:pointer;text-align:center;transition:all .2s;box-shadow:0 0 12px rgba(255,255,255,.05)">
+            <div style="font-size:32px;margin-bottom:8px">🛡️</div>
+            <div style="font-size:14px;font-weight:900;color:#fff">Родитель</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:3px">Смотрю прогресс</div>
           </div>
         </div>
       </div>
-      <div class="field-group" id="mode-group">
-        <label class="field-label">Как общаться с Умником?</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-          <div class="role-card sel" id="rm-text" onclick="setInputMode('text')" style="padding:12px 8px">
-            <span class="ri">⌨️</span>
-            <strong style="font-size:12px">Текст</strong>
-            <span>Пишу</span>
-          </div>
-          <div class="role-card" id="rm-voice" onclick="setInputMode('voice')" style="padding:12px 8px">
-            <span class="ri">🎤</span>
-            <strong style="font-size:12px">Голос</strong>
-            <span>Говорю</span>
-          </div>
-          <div class="role-card" id="rm-both" onclick="setInputMode('both')" style="padding:12px 8px">
-            <span class="ri">🔀</span>
-            <strong style="font-size:12px">Оба</strong>
-            <span>Как удобно</span>
-          </div>
-        </div>
+
+      <!-- Режим ввода (скрытый, сохраняем text по умолчанию) -->
+      <div id="mode-group" style="display:none">
+        <input type="hidden" id="rm-text">
+        <input type="hidden" id="rm-voice">
+        <input type="hidden" id="rm-both">
       </div>
-      <button class="btn-main" onclick="doLogin()">🚀 ПОЕХАЛИ!</button>
+
+      <!-- Кнопка -->
+      <button onclick="doLogin()" style="width:100%;padding:18px;border-radius:18px;border:none;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;font-family:var(--pixel);font-size:12px;letter-spacing:2px;cursor:pointer;transition:all .2s;box-shadow:0 8px 28px rgba(124,58,237,.5);display:flex;align-items:center;justify-content:center;gap:10px"
+        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 14px 36px rgba(124,58,237,.6)'"
+        onmouseout="this.style.transform='';this.style.boxShadow='0 8px 28px rgba(124,58,237,.5)'">
+        🚀 НАЧАТЬ МИССИЮ
+      </button>
     </div>
+
+    <!-- XP-подсказка -->
+    <div style="text-align:center;margin-top:16px;font-size:12px;color:rgba(255,255,255,.35)">⭐ За каждую тему — опыт и достижения</div>
   </div>
 </div>
 
@@ -642,19 +671,25 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
       </div>
     </div>
 
+    <div id="continue-banner" style="display:none;margin-bottom:14px;background:#fff;border-radius:18px;border:2px solid var(--accent);padding:14px 16px;box-shadow:0 4px 16px rgba(108,99,255,.15);cursor:pointer" onclick="resumeLastSession()">
+      <div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">▶ Продолжить</div>
+      <div id="continue-task" style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px"></div>
+      <div id="continue-meta" style="font-size:11px;color:var(--text3)"></div>
+    </div>
+
     <div class="section-title">🗺 Выбери зону</div>
     <div class="zone-grid">
       <div class="math" onclick="openZone('math')">
         <div class="zone-card">
           <div class="z-bg">⚙️</div>
           <div class="zone-inner">
-            <div class="zone-icon-box" style="border-color:#f59e0b44;background:#f59e0b18">⚙️</div>
+            <div class="zone-icon-box">⚙️</div>
             <div class="zone-info">
-              <div class="zone-name" style="color:var(--math-color)">Математическая Шахта</div>
+              <div class="zone-name">Математическая Шахта</div>
               <div class="zone-desc">Числа, дроби, проценты, уравнения</div>
-              <div class="prog-bar mt1"><div class="prog-fill" id="prog-math" style="width:0%;background:var(--math-color)"></div></div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-math" style="background:#ffab40"></div></div>
             </div>
-            <div class="zone-arrow" style="color:var(--math-color)">›</div>
+            <div class="zone-arrow">›</div>
           </div>
         </div>
       </div>
@@ -662,13 +697,13 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
         <div class="zone-card">
           <div class="z-bg">🏰</div>
           <div class="zone-inner">
-            <div class="zone-icon-box" style="border-color:#7ec8e344;background:#7ec8e318">🏰</div>
+            <div class="zone-icon-box">🏰</div>
             <div class="zone-info">
-              <div class="zone-name" style="color:var(--russian-color)">Башня Русского</div>
+              <div class="zone-name">Башня Русского</div>
               <div class="zone-desc">Орфография, пунктуация, сочинения</div>
-              <div class="prog-bar mt1"><div class="prog-fill" id="prog-russian" style="width:0%;background:var(--russian-color)"></div></div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-russian" style="background:#64d8ff"></div></div>
             </div>
-            <div class="zone-arrow" style="color:var(--russian-color)">›</div>
+            <div class="zone-arrow">›</div>
           </div>
         </div>
       </div>
@@ -676,13 +711,13 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
         <div class="zone-card">
           <div class="z-bg">🌳</div>
           <div class="zone-inner">
-            <div class="zone-icon-box" style="border-color:#90ee9044;background:#90ee9018">🌳</div>
+            <div class="zone-icon-box">🌳</div>
             <div class="zone-info">
-              <div class="zone-name" style="color:var(--english-color)">Английская Деревня</div>
+              <div class="zone-name">Английская Деревня</div>
               <div class="zone-desc">Слова, грамматика, чтение, перевод</div>
-              <div class="prog-bar mt1"><div class="prog-fill" id="prog-english" style="width:0%;background:var(--english-color)"></div></div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-english" style="background:#69f0ae"></div></div>
             </div>
-            <div class="zone-arrow" style="color:var(--english-color)">›</div>
+            <div class="zone-arrow">›</div>
           </div>
         </div>
       </div>
@@ -690,13 +725,13 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
         <div class="zone-card">
           <div class="z-bg">🔮</div>
           <div class="zone-inner">
-            <div class="zone-icon-box" style="border-color:#dda0dd44;background:#dda0dd18">🔮</div>
+            <div class="zone-icon-box">🔮</div>
             <div class="zone-info">
-              <div class="zone-name" style="color:var(--speech-color)">Мастерская Речи</div>
+              <div class="zone-name">Мастерская Речи</div>
               <div class="zone-desc">Сочинения, изложения, описание</div>
-              <div class="prog-bar mt1"><div class="prog-fill" id="prog-speech" style="width:0%;background:var(--speech-color)"></div></div>
+              <div class="prog-bar mt1"><div class="prog-fill" id="prog-speech" style="background:#ea80fc"></div></div>
             </div>
-            <div class="zone-arrow" style="color:var(--speech-color)">›</div>
+            <div class="zone-arrow">›</div>
           </div>
         </div>
       </div>
@@ -717,25 +752,42 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 
 <!-- ======= ZONE (chapters/sections) ======= -->
 <div id="screen-zone" class="screen">
-  <div class="zone-header">
-    <button class="back-btn" onclick="goHome()">←</button>
-    <span id="zh-icon" class="zone-header-icon"></span>
-    <span id="zh-title" class="zone-header-title"></span>
+  <div id="zone-hero-header" style="padding:20px 18px 0;background:transparent;position:relative">
+    <button class="back-btn" onclick="goHome()" style="margin-bottom:14px;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:8px 14px;border-radius:10px">← Назад</button>
+    <div id="zone-hero-panel" style="background:rgba(20,26,53,.82);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:22px;position:relative;overflow:hidden;backdrop-filter:blur(18px);margin-bottom:20px;box-shadow:0 18px 50px rgba(0,0,0,.28)">
+      <div id="zone-hero-glow" style="position:absolute;right:-60px;top:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(77,171,247,.4),transparent 70%);pointer-events:none"></div>
+      <span id="zh-badge" style="display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border-radius:999px;background:rgba(56,184,107,.14);color:#9df0bd;border:1px solid rgba(56,184,107,.25);font-size:12px;font-weight:700;margin-bottom:14px"></span>
+      <h2 id="zh-title" style="font-size:26px;font-weight:900;color:#fff;margin:0 0 8px;line-height:1.1"></h2>
+      <p id="zh-desc" style="font-size:14px;color:rgba(255,255,255,.7);margin:0;line-height:1.55"></p>
+      <div id="zh-prog-row" style="display:flex;align-items:center;gap:10px;margin-top:14px">
+        <div style="flex:1;height:6px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden"><div id="zh-prog-fill" style="height:100%;border-radius:99px;background:linear-gradient(90deg,#38b86b,#3b82f6);transition:width .5s ease;width:0%"></div></div>
+        <span id="zh-prog-label" style="font-size:12px;font-weight:700;color:rgba(255,255,255,.7);white-space:nowrap"></span>
+      </div>
+    </div>
   </div>
-  <div class="zone-body">
+  <div class="zone-body" style="padding:0 18px 20px">
     <div id="section-list"></div>
   </div>
 </div>
 
 <!-- ======= SECTION (topic list inside paragraph) ======= -->
 <div id="screen-section" class="screen">
-  <div class="zone-header">
-    <button class="back-btn" id="sec-back-btn" onclick="show('screen-zone')">←</button>
-    <span id="sec-icon" class="zone-header-icon"></span>
-    <span id="sec-title" class="zone-header-title"></span>
+  <div style="padding:16px 18px 0;background:transparent">
+    <button class="back-btn" onclick="show('screen-zone')" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:8px 14px;border-radius:10px;margin-bottom:14px">← Назад</button>
+    <div style="background:rgba(20,26,53,.82);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:20px;margin-bottom:16px;backdrop-filter:blur(18px);box-shadow:0 18px 50px rgba(0,0,0,.28);position:relative;overflow:hidden">
+      <div style="position:absolute;right:-40px;top:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(59,130,246,.35),transparent 70%);pointer-events:none"></div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        <span id="sec-icon" style="font-size:28px"></span>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px">Параграф</div>
+          <div id="sec-title" style="font-size:18px;font-weight:900;color:#fff;line-height:1.2"></div>
+        </div>
+      </div>
+      <div id="zone-quest"></div>
+    </div>
   </div>
-  <div class="zone-body">
-    <div id="zone-quest"></div>
+  <div style="flex:1;overflow-y:auto;padding:0 18px 20px">
+    <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">ТЕМЫ</div>
     <div class="topic-list" id="topic-list"></div>
   </div>
 </div>
@@ -752,18 +804,25 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 
 <!-- ======= TASK INPUT ======= -->
 <div id="screen-task" class="screen">
-  <div class="task-header">
-    <button class="back-btn" id="task-back-btn">←</button>
-    <span id="task-zone-icon" style="font-size:22px"></span>
-    <span id="task-zone-title" style="font-size:14px;font-weight:900"></span>
+  <div style="padding:14px 18px 0">
+    <button class="back-btn" id="task-back-btn" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:8px 14px;border-radius:10px;margin-bottom:14px">← Назад</button>
+    <div style="background:linear-gradient(135deg,rgba(255,109,0,.85),rgba(220,70,0,.9));border:1.5px solid rgba(255,150,50,.5);border-radius:22px;padding:18px 20px;margin-bottom:16px;backdrop-filter:blur(18px);box-shadow:0 8px 28px rgba(255,109,0,.35)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span id="task-zone-icon" style="font-size:28px"></span>
+        <div>
+          <div id="task-zone-title" style="font-size:16px;font-weight:900;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.3)"></div>
+          <div id="task-topic-sub" style="font-size:12px;color:rgba(255,255,255,.8);margin-top:2px"></div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="task-body" id="task-body">
     <!-- Блок 1: Сделала сама — фото -->
     <label id="photo-label" class="task-photo-block" onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='var(--border)'">
       <span style="font-size:36px">📷</span>
       <div>
-        <div style="font-size:15px;font-weight:900;color:var(--text)">Сделала сама</div>
-        <div style="font-size:12px;color:var(--text3);margin-top:3px">Сфотографируй решение — Умник проверит</div>
+        <div style="font-size:15px;font-weight:900;color:#fff">Сделала сама</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.65);margin-top:3px">Сфотографируй решение — Умник проверит</div>
       </div>
       <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none" onchange="openPhotoCheck();onPhotoSelected(event)">
     </label>
@@ -774,11 +833,11 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
     <!-- Блок 2: Разобрать с Умником — голос + текст + номер -->
     <div class="task-wizard-block">
       <!-- Голос -->
-      <button id="task-mic-btn" onclick="toggleTaskVoice()" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;width:100%;cursor:pointer;transition:all .2s;font-family:var(--body);margin-bottom:10px">
+      <button id="task-mic-btn" onclick="toggleTaskVoice()" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);border-radius:10px;width:100%;cursor:pointer;transition:all .2s;font-family:var(--body);margin-bottom:10px">
         <span id="task-mic-icon" style="font-size:22px">🎤</span>
         <div style="text-align:left">
-          <div id="task-mic-label" style="font-size:13px;font-weight:800;color:var(--text)">Надиктовать задание</div>
-          <div id="task-mic-sub" style="font-size:11px;color:var(--text3)">Нажми и скажи условие задачи</div>
+          <div id="task-mic-label" style="font-size:13px;font-weight:800;color:#fff">Надиктовать задание</div>
+          <div id="task-mic-sub" style="font-size:11px;color:rgba(255,255,255,.55)">Нажми и скажи условие задачи</div>
         </div>
       </button>
 
@@ -786,7 +845,7 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
       <textarea id="task-input" class="input" rows="2" placeholder="Или напиши условие задачи..." style="margin-bottom:10px" oninput="updateTaskStartBtn()"></textarea>
 
       <!-- Номер из учебника -->
-      <div style="font-size:11px;color:var(--text3);margin-bottom:6px;letter-spacing:.5px">ИЛИ ВЫБЕРИ НОМЕР ИЗ УЧЕБНИКА</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px;letter-spacing:.5px;font-weight:700">ИЛИ ВЫБЕРИ НОМЕР ИЗ УЧЕБНИКА</div>
       <div class="topic-selector" id="mini-topic-list"></div>
 
       <!-- Кнопки старта -->
@@ -799,18 +858,18 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 </div>
 
 <!-- ======= CHAT ======= -->
-<div id="screen-chat" class="screen">
-  <div class="chat-header">
-    <button class="back-btn" onclick="goToTask()">←</button>
+<div id="screen-chat" class="screen" style="background:radial-gradient(circle at 20% 10%,#1a3a8f 0,#101833 35%,#090e20 75%)">
+  <div class="chat-header" style="background:rgba(20,26,53,.9);border-bottom:1px solid rgba(255,255,255,.1);backdrop-filter:blur(12px)">
+    <button class="back-btn" onclick="goToTask()" style="color:#fff;background:rgba(255,255,255,.15)">←</button>
     <div class="chat-char">🧙</div>
     <div class="chat-info">
-      <div class="cname">Умник</div>
-      <div class="cstatus" id="chat-status">онлайн</div>
+      <div class="cname" style="color:#fff">Умник</div>
+      <div class="cstatus" id="chat-status" style="color:rgba(255,255,255,.6)">онлайн</div>
     </div>
     <div class="chat-hright">
-      <button class="icon-btn" onclick="openCheatSheet()" title="Шпаргалка">📋</button>
-      <button class="icon-btn" onclick="openTest()" title="Тест по теме">✏️</button>
-      <button class="icon-btn" onclick="goHome()" title="На главную">🏠</button>
+      <button class="icon-btn" onclick="openCheatSheet()" title="Шпаргалка" style="color:#fff">📋</button>
+      <button class="icon-btn" onclick="openTest()" title="Тест по теме" style="color:#fff">✏️</button>
+      <button class="icon-btn" onclick="goHome()" title="На главную" style="color:#fff">🏠</button>
     </div>
   </div>
   <div id="task-badge" class="task-badge" style="display:none;cursor:pointer" onclick="toggleTaskBadge()">
@@ -6886,6 +6945,7 @@ let ST = {
   doneTopics: {},    // {topicId: true}
   doneExercises: [], // ['1.1','1.2',...] пройденные задачи
   progress: [],      // session logs
+  lastSession: null, // {zone, topicId, task, ts, msgCount} — последняя незавершённая сессия
   stageIdx: 0,
   loading: false,
   prevScreen: 'screen-zone',
@@ -6898,12 +6958,27 @@ function loadState() {
   ST.xp = LS.load('xp', 0);
   ST.doneTopics = LS.load('done', {});
   ST.progress = LS.load('progress', []);
+  ST.lastSession = LS.load('lastSession', null);
 }
 function saveState() {
   LS.save('user', ST.user);
   LS.save('xp', ST.xp);
   LS.save('done', ST.doneTopics);
   LS.save('progress', ST.progress);
+  LS.save('lastSession', ST.lastSession);
+}
+function saveLastSession() {
+  if (!ST.zone || !ST.task) return;
+  const isDone = ST.topicId ? !!ST.doneTopics[ST.topicId] : false;
+  if (isDone) { ST.lastSession = null; LS.save('lastSession', null); return; }
+  ST.lastSession = {
+    zone: ST.zone,
+    topicId: ST.topicId || null,
+    task: ST.task,
+    ts: Date.now(),
+    msgCount: ST.msgs.length,
+  };
+  LS.save('lastSession', ST.lastSession);
 }
 
 // ============================================================
@@ -6927,13 +7002,19 @@ let _inputMode = 'text';
 
 function setRole(r) {
   _role = r;
-  document.getElementById('rc-pupil').classList.toggle('sel', r === 'pupil');
-  document.getElementById('rc-parent').classList.toggle('sel', r === 'parent');
-  document.getElementById('mode-group').style.display = r === 'pupil' ? '' : 'none';
+  const pupilCard = document.getElementById('rc-pupil');
+  const parentCard = document.getElementById('rc-parent');
+  if (pupilCard) {
+    pupilCard.style.borderColor = r === 'pupil' ? 'rgba(124,58,237,.8)' : 'rgba(255,255,255,.12)';
+    pupilCard.style.background = r === 'pupil' ? 'rgba(124,58,237,.25)' : 'rgba(255,255,255,.05)';
+  }
+  if (parentCard) {
+    parentCard.style.borderColor = r === 'parent' ? 'rgba(124,58,237,.8)' : 'rgba(255,255,255,.12)';
+    parentCard.style.background = r === 'parent' ? 'rgba(124,58,237,.25)' : 'rgba(255,255,255,.05)';
+  }
 }
 function setInputMode(m) {
   _inputMode = m;
-  ['text','voice','both'].forEach(x => document.getElementById('rm-' + x).classList.toggle('sel', x === m));
 }
 function doLogin() {
   const name = document.getElementById('inp-name').value.trim();
@@ -6986,6 +7067,62 @@ function renderHome() {
   const hasSaved = JSON.parse(localStorage.getItem('myCheatsheets') || '[]').length > 0;
   const btn = document.getElementById('btn-mycheat');
   if (btn) btn.style.display = hasSaved ? '' : 'none';
+
+  // Баннер «Продолжить»
+  const banner = document.getElementById('continue-banner');
+  const ls = ST.lastSession;
+  const topicNotDone = !ls?.topicId || !ST.doneTopics[ls.topicId];
+  if (banner && ls && ls.zone && ls.task && topicNotDone) {
+    const cur = CURRICULUM[ls.zone];
+    const topic = ls.topicId && cur && cur.topics.find(t => t.id === ls.topicId);
+    const topicName = topic ? topic.name : ls.task.slice(0, 60) + (ls.task.length > 60 ? '…' : '');
+    const ago = Math.round((Date.now() - ls.ts) / 60000);
+    const agoStr = ago < 2 ? 'только что' : ago < 60 ? `${ago} мин назад` : `${Math.round(ago/60)} ч назад`;
+    document.getElementById('continue-task').textContent = topicName;
+    document.getElementById('continue-meta').textContent = `${cur ? cur.name : ls.zone} · ${ls.msgCount} сообщ. · ${agoStr}`;
+    banner.style.display = '';
+  } else if (banner) {
+    banner.style.display = 'none';
+  }
+}
+
+function resumeLastSession() {
+  const ls = ST.lastSession;
+  if (!ls || !ls.zone || !ls.task) return;
+  ST.zone = ls.zone;
+  ST.topicId = ls.topicId || null;
+  ST.task = ls.task;
+  ST.checkOnly = false;
+  ST.msgs = [];
+  ST.hints = 0;
+  ST.stageIdx = 0;
+  ST.loading = false;
+  ST.bonusShown = false;
+  ST._topicWasDoneBeforeSession = false;
+  CHEAT_SESSION.active = false;
+  const cur = CURRICULUM[ST.zone];
+  const topicName = ST.topicId ? cur.topics.find(t => t.id === ST.topicId)?.name || '' : '';
+  document.getElementById('tb-subject').textContent = cur.name + (topicName ? ': ' + topicName : '');
+  const task = ls.task;
+  document.getElementById('tb-text').textContent = task.length > 120 ? task.slice(0, 120) + '…' : task;
+  document.getElementById('tb-full').textContent = task;
+  document.getElementById('tb-full').style.display = 'none';
+  document.getElementById('tb-toggle').textContent = '▼ показать полностью';
+  document.getElementById('task-badge').style.display = '';
+  document.getElementById('chat-msgs').innerHTML = '';
+  document.getElementById('chat-input').value = '';
+  document.getElementById('send-btn').disabled = true;
+  updateHints();
+  applyInputMode();
+  show('screen-chat');
+  saveState();
+  setTimeout(async () => {
+    showTyping();
+    const resumePrompt = `Мы продолжаем занятие. Поздоровайся коротко (1 фраза) и напомни, что мы остановились на задании: «${task.slice(0, 100)}». Задай ОДИН наводящий вопрос по первому шагу.`;
+    const opener = await askClaude(resumePrompt);
+    removeTyping();
+    addBotMsg(opener);
+  }, 400);
 }
 
 function getDailyRepeatTopic(zone) {
@@ -7020,24 +7157,41 @@ function openZone(zone) {
     chapterMap[sec.chapter].push(sec);
   });
 
+  // Hero-шапка зоны
+  const totalTopics = (cur.topics || []).length;
+  const doneTotal = (cur.topics || []).filter(t => ST.doneTopics[t.id]).length;
+  const pctTotal = totalTopics ? Math.round(doneTotal / totalTopics * 100) : 0;
+  document.getElementById('zh-badge').textContent = `${cur.icon} ${cur.name}`;
+  document.getElementById('zh-desc').textContent = cur.desc || 'Выбери параграф и начни разбираться';
+  document.getElementById('zh-prog-fill').style.width = pctTotal + '%';
+  document.getElementById('zh-prog-label').textContent = `${doneTotal}/${totalTopics} тем`;
+
+  // Окраска glow под зону
+  const zoneGlowColors = { math: 'rgba(255,109,0,.35)', russian: 'rgba(0,176,255,.35)', english: 'rgba(0,200,83,.35)', speech: 'rgba(213,0,249,.35)' };
+  document.getElementById('zone-hero-glow').style.background = `radial-gradient(circle,${zoneGlowColors[ST.zone]||'rgba(77,171,247,.35)'},transparent 70%)`;
+
   const list = document.getElementById('section-list');
   list.innerHTML = chapters.map(ch => `
-    <div style="margin-bottom:6px">
-      <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase;padding:10px 0 6px">${ch}</div>
-      ${chapterMap[ch].map(sec => {
+    <div style="margin-bottom:20px">
+      <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase;padding:0 0 10px;margin-bottom:2px">${ch}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      ${chapterMap[ch].map((sec, idx) => {
         const doneCount = (sec.topicIds || []).filter(id => ST.doneTopics[id]).length;
         const total = (sec.topicIds || []).length;
         const pct = total ? Math.round(doneCount / total * 100) : 0;
-        return `<div class="topic-item" onclick="openSection('${sec.id}')" style="margin-bottom:6px">
-          <span style="font-size:22px;flex-shrink:0">${sec.icon}</span>
-          <div class="t-info">
-            <div class="t-name" style="font-size:13px">${sec.name}</div>
-            <div class="t-sub">стр. ${sec.page} · ${total} тем${total===1?'а':total<5?'ы':''}${doneCount>0?' · '+doneCount+'/'+total+' пройдено':''}</div>
-            <div class="prog-bar mt1" style="height:3px"><div class="prog-fill" style="width:${pct}%;background:var(--accent)"></div></div>
-          </div>
-          <div style="font-size:18px;color:var(--text3)">›</div>
+        const isDone = doneCount === total && total > 0;
+        const accent = isDone ? '#22c55e' : '#2563eb';
+        return `<div onclick="openSection('${sec.id}')" style="padding:16px;border-radius:20px;background:#fff;border:1.5px solid #e7e9f1;cursor:pointer;transition:all .2s;position:relative;box-shadow:0 4px 14px rgba(0,0,0,.1);overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 28px rgba(0,0,0,.18)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(0,0,0,.1)'">
+          <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${accent}"></div>
+          <div style="position:absolute;right:12px;top:14px;font-size:11px;font-weight:700;color:#94a3b8">§${sec.page||''}</div>
+          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#edf3ff,#dbeafe);color:#2563eb;display:grid;place-items:center;font-weight:900;font-size:20px;margin-bottom:10px;margin-top:6px;border:2px solid rgba(37,99,235,.2);box-shadow:0 2px 8px rgba(37,99,235,.15)">${sec.icon}</div>
+          <div style="font-size:13px;font-weight:800;color:#17213c;margin-bottom:6px;line-height:1.3;padding-right:24px">${sec.name}</div>
+          <div style="font-size:11px;color:#64748b;margin-bottom:10px">${total} тем${total===1?'а':total<5?'ы':''}${doneCount>0?' · '+doneCount+'/'+total+' пройдено':''}</div>
+          <div style="height:4px;background:#e8edf5;border-radius:99px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#22c55e,#3b82f6);border-radius:99px"></div></div>
+          <button onclick="event.stopPropagation();openSection('${sec.id}')" style="width:100%;padding:9px;border-radius:12px;background:${isDone?'#16a34a':'#1a2744'};color:#fff;font-weight:800;font-size:12px;border:none;cursor:pointer">${isDone?'✅ Повторить':'Открыть →'}</button>
         </div>`;
       }).join('')}
+      </div>
     </div>`).join('');
 
   show('screen-zone');
@@ -7056,20 +7210,18 @@ function openSection(sectionId) {
 
   const topics = (sec.topicIds || []).map(id => cur.topics.find(t => t.id === id)).filter(Boolean);
   const list = document.getElementById('topic-list');
-  list.innerHTML = topics.map(t => {
+  list.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">` + topics.map((t, i) => {
     const done = ST.doneTopics[t.id];
-    return `<div class="topic-item${done ? ' done' : ''}" onclick="openTaskInputForTopic('${t.id}')">
-      <span class="t-num" style="font-size:8px">${t.id.replace(/[a-z]/g,'')}</span>
-      <div class="t-info">
-        <div class="t-name">${t.name}</div>
-        <div class="t-sub" style="font-size:10px">${t.keywords ? t.keywords.slice(0,4).join(', ') : ''}</div>
-      </div>
-      <div>
-        <div class="t-status">${done ? '✅' : '○'}</div>
-        <div class="t-xp text-xs" style="color:var(--accent);text-align:right">+${t.xp} XP</div>
-      </div>
+    const topicAccent = done ? '#22c55e' : '#7c3aed';
+    return `<div onclick="openTaskInputForTopic('${t.id}')" style="padding:16px;border-radius:20px;background:#fff;border:1.5px solid #e7e9f1;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(0,0,0,.1);position:relative;overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 28px rgba(0,0,0,.18)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(0,0,0,.1)'">
+      <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${topicAccent}"></div>
+      <div style="position:absolute;right:10px;top:12px;font-size:10px;font-weight:800;color:${done?'#16a34a':'#f59e0b'}">${done?'✅':'+'+t.xp+' XP'}</div>
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f3e8ff,#ede9fe);color:#7c3aed;display:grid;place-items:center;font-weight:900;font-size:11px;margin-bottom:8px;margin-top:6px;font-family:var(--pixel);border:2px solid rgba(124,58,237,.25);box-shadow:0 2px 8px rgba(124,58,237,.12)">${t.id.replace(/[a-z]/g,'')}</div>
+      <div style="font-size:12px;font-weight:800;color:#17213c;margin-bottom:5px;line-height:1.3;padding-right:20px">${t.name}</div>
+      <div style="font-size:10px;color:#64748b;margin-bottom:10px;line-height:1.4">${t.keywords ? t.keywords.slice(0,3).join(', ') : ''}</div>
+      <button onclick="event.stopPropagation();openTaskInputForTopic('${t.id}')" style="width:100%;padding:8px;border-radius:10px;background:${done?'#16a34a':'#7c3aed'};color:#fff;font-weight:800;font-size:11px;border:none;cursor:pointer">${done?'✅ Повторить':'Разобрать →'}</button>
     </div>`;
-  }).join('');
+  }).join('') + `</div>`;
 
   show('screen-section');
 }
@@ -7097,7 +7249,14 @@ function renderTaskInput() {
   const cur = CURRICULUM[ST.zone];
   document.getElementById('task-zone-icon').textContent = cur.icon;
   document.getElementById('task-zone-title').textContent = cur.name;
-  document.getElementById('task-back-btn').onclick = () => show('screen-zone');
+  document.getElementById('task-back-btn').onclick = () => show(ST.topicId ? 'screen-section' : 'screen-zone');
+  const subEl = document.getElementById('task-topic-sub');
+  if (subEl) {
+    if (ST.topicId) {
+      const topic = cur.topics.find(t => t.id === ST.topicId);
+      subEl.textContent = topic ? topic.name : '';
+    } else { subEl.textContent = 'Своё задание'; }
+  }
   const ta = document.getElementById('task-input');
   ta.value = '';
   if (ST.topicId) {
@@ -7228,6 +7387,7 @@ function sendMsg() {
   el.value = '';
   updateSendBtn();
   addUserMsg(text);
+  saveLastSession();
   if (handleCheatAnswer(text)) return;
   // Текстовый триггер «дальше» тоже работает
   const lower = text.toLowerCase().trim();
@@ -7411,6 +7571,7 @@ function addBotMsg(text) {
   d.innerHTML = `<div class="m-avatar">🧙</div><div class="m-bubble">${escHtml(text)}</div>`;
   msgs.appendChild(d);
   scrollDown();
+  saveLastSession();
 }
 function addUserMsg(text) {
   const msgs = document.getElementById('chat-msgs');
@@ -7492,6 +7653,8 @@ function showPraise() {
 function manualTopicDone() {
   if (ST.topicId) ST.doneTopics[ST.topicId] = true;
   ST.bonusShown = true;
+  ST.lastSession = null;
+  LS.save('lastSession', null);
   saveState();
   checkAchievements();
   showTopicDone();
@@ -7503,6 +7666,8 @@ function showDoneChatBtn() {
 }
 
 function showTopicDone() {
+  ST.lastSession = null;
+  LS.save('lastSession', null);
   const cur = CURRICULUM[ST.zone];
   const topic = cur && cur.topics.find(t => t.id === ST.topicId);
   const topicName = topic ? topic.name : 'Тема';
@@ -7865,9 +8030,9 @@ function showParent() {
     </div>
 
     <!-- СОВЕТ -->
-    <div style="background:linear-gradient(135deg,#001a2a,#000e18);border:2px solid #7fd8f544;border-radius:16px;padding:16px;margin-bottom:12px">
+    <div style="background:linear-gradient(135deg,#1e3a5f,#0f1f3d);border:2px solid rgba(127,216,245,.3);border-radius:16px;padding:16px;margin-bottom:12px">
       <div style="font-family:var(--pixel);font-size:9px;color:#7fd8f5;letter-spacing:1px;margin-bottom:8px">💡 СОВЕТ РОДИТЕЛЮ</div>
-      <div style="font-size:13px;color:var(--text);line-height:1.7">${advice}</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.7">${advice}</div>
     </div>
 
     <!-- ТРЕНАЖЁРЫ -->
