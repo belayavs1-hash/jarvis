@@ -54,8 +54,6 @@ body { font-family: var(--body); background: radial-gradient(circle at 20% 10%, 
   align-items: center; justify-content: center;
   background: var(--bg);
   padding: 20px;
-  position: relative;
-  overflow: hidden;
 }
 .login-wrap { width: 100%; max-width: 420px; }
 .login-logo { text-align: center; margin-bottom: 32px; }
@@ -585,8 +583,8 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 <!-- ======= LOGIN ======= -->
 <div id="screen-login" class="screen active" style="align-items:center;justify-content:center;padding:20px;min-height:100vh">
 
-  <!-- Плавающие символы — только на экране входа -->
-  <div style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;overflow:hidden;z-index:0">
+  <!-- Плавающие символы -->
+  <div style="position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;overflow:hidden;z-index:0">
     <div style="position:absolute;top:8%;left:7%;font-size:28px;opacity:.18;animation:bob 3s ease-in-out infinite">➕</div>
     <div style="position:absolute;top:15%;right:10%;font-size:22px;opacity:.15;animation:bob 4s ease-in-out infinite .8s">✕</div>
     <div style="position:absolute;top:40%;left:4%;font-size:20px;opacity:.15;animation:bob 3.5s ease-in-out infinite 1.2s">½</div>
@@ -597,21 +595,11 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
 
   <div style="position:relative;z-index:1;width:100%;max-width:400px">
 
-    <!-- Логотип -->
-    <div style="text-align:center;margin-bottom:28px;display:flex;align-items:center;justify-content:center;gap:14px">
-      <!-- Кубик с цифрой 5 -->
-      <div style="position:relative;width:64px;height:64px;animation:bob 2.5s ease-in-out infinite;display:inline-block;flex-shrink:0">
-        <div style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#2563eb,#1d4ed8);box-shadow:0 6px 20px rgba(37,99,235,.55),inset 0 1px 0 rgba(255,255,255,.25);display:grid;place-items:center">
-          <span style="font-family:var(--pixel);font-size:28px;color:#fff;line-height:1">5</span>
-        </div>
-        <span style="position:absolute;top:-6px;right:-6px;font-size:18px;line-height:1">✨</span>
-        <span style="position:absolute;top:-10px;left:4px;font-size:12px;line-height:1">⭐</span>
-      </div>
-      <!-- Текст -->
-      <div style="text-align:left">
-        <div style="font-size:22px;font-weight:900;color:#fff;letter-spacing:.5px;line-height:1.1">Пятый уровень</div>
-        <div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:4px;font-weight:500">ИИ-репетитор по математике</div>
-      </div>
+    <!-- Персонаж и заголовок -->
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-size:80px;animation:bob 2.5s ease-in-out infinite;display:inline-block;filter:drop-shadow(0 8px 24px rgba(124,58,237,.6))">🧙</div>
+      <div style="font-family:var(--pixel);font-size:15px;color:#fff;margin-top:14px;letter-spacing:2px;text-shadow:0 0 20px rgba(124,58,237,.8)">ПЯТЫЙ УРОВЕНЬ</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:6px;font-weight:600">Учебный мир · Математика</div>
     </div>
 
     <!-- Карточка входа -->
@@ -629,15 +617,15 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
       <div style="margin-bottom:24px">
         <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">🎭 Кто ты?</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div id="rc-pupil" onclick="setRole('pupil')" style="padding:16px 12px;border-radius:18px;border:2px solid rgba(124,58,237,.8);background:rgba(124,58,237,.2);cursor:pointer;text-align:center;transition:all .2s;box-shadow:0 0 16px rgba(124,58,237,.3)">
+          <div id="rc-pupil" onclick="setRole('pupil')" style="padding:16px 12px;border-radius:18px;border:2px solid rgba(124,58,237,.6);background:rgba(124,58,237,.2);cursor:pointer;text-align:center;transition:all .2s">
             <div style="font-size:32px;margin-bottom:8px">🎒</div>
             <div style="font-size:14px;font-weight:900;color:#fff">Ученик</div>
             <div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:3px">Учусь и прокачиваюсь</div>
           </div>
-          <div id="rc-parent" onclick="setRole('parent')" style="padding:16px 12px;border-radius:18px;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.07);cursor:pointer;text-align:center;transition:all .2s;box-shadow:0 0 12px rgba(255,255,255,.05)">
+          <div id="rc-parent" onclick="setRole('parent')" style="padding:16px 12px;border-radius:18px;border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);cursor:pointer;text-align:center;transition:all .2s">
             <div style="font-size:32px;margin-bottom:8px">🛡️</div>
-            <div style="font-size:14px;font-weight:900;color:#fff">Родитель</div>
-            <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:3px">Смотрю прогресс</div>
+            <div style="font-size:14px;font-weight:900;color:rgba(255,255,255,.7)">Родитель</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:3px">Смотрю прогресс</div>
           </div>
         </div>
       </div>
@@ -789,7 +777,7 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
         <span id="sec-icon" style="font-size:28px"></span>
         <div>
-          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px">Параграф</div>
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px">Тема</div>
           <div id="sec-title" style="font-size:18px;font-weight:900;color:#fff;line-height:1.2"></div>
         </div>
       </div>
@@ -797,7 +785,7 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
     </div>
   </div>
   <div style="flex:1;overflow-y:auto;padding:0 18px 20px">
-    <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">ТЕМЫ</div>
+    <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">ЗАДАНИЯ</div>
     <div class="topic-list" id="topic-list"></div>
   </div>
 </div>
@@ -855,7 +843,7 @@ textarea.input { resize: none; min-height: 80px; line-height: 1.6; font-size: 14
       <textarea id="task-input" class="input" rows="2" placeholder="Или напиши условие задачи..." style="margin-bottom:10px" oninput="updateTaskStartBtn()"></textarea>
 
       <!-- Номер из учебника -->
-      <div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px;letter-spacing:.5px;font-weight:700">ИЛИ ВЫБЕРИ НОМЕР ИЗ УЧЕБНИКА</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px;letter-spacing:.5px;font-weight:700">ИЛИ ВЫБЕРИ ПАРАГРАФ → ТЕМУ → НОМЕР</div>
       <div class="topic-selector" id="mini-topic-list"></div>
 
       <!-- Кнопки старта -->
@@ -2556,6 +2544,8 @@ function renderRuleResult() {
 
 function goToTaskFromRule() {
   const cur = CURRICULUM[ST.zone];
+  const sec = (cur.sections || []).find(s => (s.topicIds || []).includes(ST.topicId));
+  ST.currentNavSection = sec ? sec.id : null;
   const topic = cur.topics.find(t => t.id === ST.topicId);
   if (topic && topic.exercises && topic.exercises.length) {
     renderExercisePicker(topic);
@@ -6961,6 +6951,7 @@ let ST = {
   prevScreen: 'screen-zone',
   checkOnly: false,
   nextExToLoad: null,
+  currentNavSection: null,
 };
 
 function loadState() {
@@ -7172,7 +7163,7 @@ function openZone(zone) {
   const doneTotal = (cur.topics || []).filter(t => ST.doneTopics[t.id]).length;
   const pctTotal = totalTopics ? Math.round(doneTotal / totalTopics * 100) : 0;
   document.getElementById('zh-badge').textContent = `${cur.icon} ${cur.name}`;
-  document.getElementById('zh-desc').textContent = cur.desc || 'Выбери параграф и начни разбираться';
+  document.getElementById('zh-desc').textContent = cur.desc || 'Выбери тему и начни разбираться';
   document.getElementById('zh-prog-fill').style.width = pctTotal + '%';
   document.getElementById('zh-prog-label').textContent = `${doneTotal}/${totalTopics} тем`;
 
@@ -7194,7 +7185,7 @@ function openZone(zone) {
         return `<div onclick="openSection('${sec.id}')" style="padding:16px;border-radius:20px;background:#fff;border:1.5px solid #e7e9f1;cursor:pointer;transition:all .2s;position:relative;box-shadow:0 4px 14px rgba(0,0,0,.1);overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 28px rgba(0,0,0,.18)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(0,0,0,.1)'">
           <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${accent}"></div>
           <div style="position:absolute;right:12px;top:14px;font-size:11px;font-weight:700;color:#94a3b8">§${sec.page||''}</div>
-          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#edf3ff,#dbeafe);color:#2563eb;display:grid;place-items:center;font-weight:900;font-size:20px;margin-bottom:10px;margin-top:6px;border:2px solid rgba(37,99,235,.2);box-shadow:0 2px 8px rgba(37,99,235,.15)">${sec.icon}</div>
+          <div style="width:40px;height:40px;border-radius:14px;background:#edf3ff;color:#2563eb;display:grid;place-items:center;font-weight:900;font-size:18px;margin-bottom:10px;margin-top:6px">${sec.icon}</div>
           <div style="font-size:13px;font-weight:800;color:#17213c;margin-bottom:6px;line-height:1.3;padding-right:24px">${sec.name}</div>
           <div style="font-size:11px;color:#64748b;margin-bottom:10px">${total} тем${total===1?'а':total<5?'ы':''}${doneCount>0?' · '+doneCount+'/'+total+' пройдено':''}</div>
           <div style="height:4px;background:#e8edf5;border-radius:99px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#22c55e,#3b82f6);border-radius:99px"></div></div>
@@ -7226,7 +7217,7 @@ function openSection(sectionId) {
     return `<div onclick="openTaskInputForTopic('${t.id}')" style="padding:16px;border-radius:20px;background:#fff;border:1.5px solid #e7e9f1;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(0,0,0,.1);position:relative;overflow:hidden" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 28px rgba(0,0,0,.18)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(0,0,0,.1)'">
       <div style="position:absolute;top:0;left:0;right:0;height:4px;background:${topicAccent}"></div>
       <div style="position:absolute;right:10px;top:12px;font-size:10px;font-weight:800;color:${done?'#16a34a':'#f59e0b'}">${done?'✅':'+'+t.xp+' XP'}</div>
-      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f3e8ff,#ede9fe);color:#7c3aed;display:grid;place-items:center;font-weight:900;font-size:11px;margin-bottom:8px;margin-top:6px;font-family:var(--pixel);border:2px solid rgba(124,58,237,.25);box-shadow:0 2px 8px rgba(124,58,237,.12)">${t.id.replace(/[a-z]/g,'')}</div>
+      <div style="width:36px;height:36px;border-radius:12px;background:#f3e8ff;color:#7c3aed;display:grid;place-items:center;font-weight:900;font-size:13px;margin-bottom:8px;margin-top:6px;font-family:var(--pixel)">${t.id.replace(/[a-z]/g,'')}</div>
       <div style="font-size:12px;font-weight:800;color:#17213c;margin-bottom:5px;line-height:1.3;padding-right:20px">${t.name}</div>
       <div style="font-size:10px;color:#64748b;margin-bottom:10px;line-height:1.4">${t.keywords ? t.keywords.slice(0,3).join(', ') : ''}</div>
       <button onclick="event.stopPropagation();openTaskInputForTopic('${t.id}')" style="width:100%;padding:8px;border-radius:10px;background:${done?'#16a34a':'#7c3aed'};color:#fff;font-weight:800;font-size:11px;border:none;cursor:pointer">${done?'✅ Повторить':'Разобрать →'}</button>
@@ -7237,6 +7228,7 @@ function openSection(sectionId) {
 }
 function openTaskInput() {
   ST.topicId = null;
+  ST.currentNavSection = null;
   ST.prevScreen = 'screen-zone';
   renderTaskInput();
   show('screen-task');
@@ -7246,6 +7238,9 @@ function openTaskInputForTopic(topicId) {
     openRule(topicId);
   } else {
     ST.topicId = topicId;
+    const cur = CURRICULUM[ST.zone];
+    const sec = (cur.sections || []).find(s => (s.topicIds || []).includes(topicId));
+    ST.currentNavSection = sec ? sec.id : null;
     ST.prevScreen = 'screen-zone';
     renderTaskInput();
     show('screen-task');
@@ -7277,26 +7272,62 @@ function renderTaskInput() {
   } else {
     ta.placeholder = `Напиши условие задачи или свой вопрос...`;
   }
-  // Mini topic list: если тема выбрана и есть задания — показываем кнопки номеров
+  // Mini navigator: параграф → тема → номер
   const ml = document.getElementById('mini-topic-list');
   if (ST.topicId) {
+    // Уровень 3: номера заданий
     const topic = cur.topics.find(t => t.id === ST.topicId);
+    const sectionOfTopic = (cur.sections || []).find(s => (s.topicIds || []).includes(ST.topicId));
+    const breadcrumb = sectionOfTopic
+      ? `<div style="font-size:11px;color:rgba(255,255,255,.45);margin-bottom:8px;display:flex;align-items:center;gap:4px;flex-wrap:wrap">
+          <button onclick="ST.currentNavSection=null;ST.topicId=null;renderTaskInput()" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:11px;cursor:pointer;padding:0;font-family:var(--body);font-weight:700">Параграфы</button>
+          <span style="opacity:.4">›</span>
+          <button onclick="ST.topicId=null;renderTaskInput()" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:11px;cursor:pointer;padding:0;font-family:var(--body);font-weight:700">${sectionOfTopic.name}</button>
+          <span style="opacity:.4">›</span>
+          <span style="color:#fff;font-weight:700">${topic ? topic.name : ''}</span>
+        </div>`
+      : '';
     if (topic && topic.exercises && topic.exercises.length) {
-      ml.innerHTML = `<div class="ex-grid">${
-        topic.exercises.slice(0, 12).map(n =>
+      ml.innerHTML = breadcrumb + `<div class="ex-grid">${
+        topic.exercises.slice(0, 20).map(n =>
           `<button class="ex-btn" data-num="${n}" onclick="pickExercise('${n}')">№${n}</button>`
         ).join('')
       }</div>`;
     } else {
-      ml.innerHTML = '';
+      ml.innerHTML = breadcrumb;
     }
+  } else if (ST.currentNavSection) {
+    // Уровень 2: темы внутри параграфа
+    const sec = (cur.sections || []).find(s => s.id === ST.currentNavSection);
+    const topics = sec ? (sec.topicIds || []).map(id => cur.topics.find(t => t.id === id)).filter(Boolean) : [];
+    ml.innerHTML = `
+      <div style="font-size:11px;color:rgba(255,255,255,.45);margin-bottom:8px;display:flex;align-items:center;gap:4px">
+        <button onclick="ST.currentNavSection=null;renderTaskInput()" style="background:none;border:none;color:rgba(255,255,255,.55);font-size:11px;cursor:pointer;padding:0;font-family:var(--body);font-weight:700">Параграфы</button>
+        <span style="opacity:.4">›</span>
+        <span style="color:#fff;font-weight:700">${sec ? sec.name : ''}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+      ${topics.map(t => {
+        const done = ST.doneTopics && ST.doneTopics[t.id];
+        return `<button onclick="ST.topicId='${t.id}';renderTaskInput()" style="text-align:left;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--body);display:flex;justify-content:space-between;align-items:center">
+          <span>${t.name}</span>
+          <span style="font-size:10px;opacity:.6;white-space:nowrap;margin-left:8px">${done ? '✅' : '+' + t.xp + ' XP'}</span>
+        </button>`;
+      }).join('')}
+      </div>`;
   } else {
-    ml.innerHTML = cur.topics.slice(0, 6).map(t =>
-      `<div class="topic-pill${ST.topicId === t.id ? ' sel' : ''}" onclick="selectTopic('${t.id}')">
-        <span class="tp-icon">${cur.icon}</span>
-        <span class="tp-text">${t.name}</span>
-      </div>`
-    ).join('');
+    // Уровень 1: список параграфов
+    const sections = cur.sections || [];
+    ml.innerHTML = `<div style="display:flex;flex-direction:column;gap:6px">
+      ${sections.map(sec => {
+        const doneCount = (sec.topicIds || []).filter(id => ST.doneTopics && ST.doneTopics[id]).length;
+        const total = (sec.topicIds || []).length;
+        return `<button onclick="ST.currentNavSection='${sec.id}';renderTaskInput()" style="text-align:left;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--body);display:flex;justify-content:space-between;align-items:center">
+          <span>${sec.icon} ${sec.name}</span>
+          <span style="font-size:10px;opacity:.55;white-space:nowrap;margin-left:8px">${doneCount}/${total}</span>
+        </button>`;
+      }).join('')}
+    </div>`;
   }
 }
 function setExample(el) {
